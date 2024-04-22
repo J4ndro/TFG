@@ -1,12 +1,18 @@
-const pages = [Home];
+const pages = [Home, Alimentos];
 
-const components = [Header, Banner];
+const components = [Header, Banner, Stats];
 
 export { pages, components };
 
 function Home() {
   return {
-    view: () => [m(Header), m(Banner)],
+    view: () => [m(Header), m(Banner), m(Stats)],
+  };
+}
+
+function Alimentos() {
+  return {
+    view: () => [m(Header)],
   };
 }
 
@@ -75,7 +81,7 @@ function Header() {
           },
         }, */
         {
-          href: "#",
+          href: "#!/Alimentos",
           item: {
             label: "Alimentos",
             options: [],
@@ -123,12 +129,6 @@ function Header() {
       m(
         "div",
         {
-          onmouseenter: (e) => {
-            e.target.style.background = "white";
-          },
-          onmouseleave: (e) => {
-            e.target.style.background = null;
-          },
           style: {
             height: "81px",
             left: "0px",
@@ -154,12 +154,22 @@ function Header() {
               },
             },
             m("img", {
-              src: "images/logo.svg",
+              src: "images/logo.png",
+              style: {
+                width: "70px",
+                height: "70px",
+              },
             })
           ),
           m(
             "ul",
             {
+              onmouseenter: (e) => {
+                e.target.style.background = "white";
+              },
+              onmouseleave: (e) => {
+                e.target.style.background = null;
+              },
               style: {
                 "-webkit-box-align": "center",
                 "align-items": "center",
@@ -172,6 +182,8 @@ function Header() {
                 margin: "0px 0px -1px",
                 padding: "0px",
                 outline: "rgb(0, 0, 0) none 0px",
+                transition: "all 0.4s ease",
+                borderRadius: "33px",
               },
             },
             [this.state.model.itemsMenu.map((i) => m(Menu, i))]
@@ -189,6 +201,14 @@ function Header() {
                 margin: "0px",
                 padding: "0px",
                 outline: "rgb(0, 0, 0) none 0px",
+                borderRadius: "33px",
+                transition: "all 0.4s ease",
+              },
+              onmouseenter: (e) => {
+                e.target.style.background = "white";
+              },
+              onmouseleave: (e) => {
+                e.target.style.background = null;
               },
             },
             [
@@ -197,9 +217,9 @@ function Header() {
                 {
                   style: {
                     "margin-right": "20px",
+                    "margin-left": "33px",
                     cursor: "pointer",
                     transition: "all 0.2s ease-in-out 0s",
-                    "-webkit-box-align": "center",
                     "align-items": "center",
                     display: "flex",
                     "box-sizing": "border-box",
@@ -225,10 +245,10 @@ function Header() {
                 "a",
                 {
                   style: {
-                    "margin-right": "20px",
+                    "margin-right": "33px",
+                    "margin-left": "20px",
                     cursor: "pointer",
                     transition: "all 0.2s ease-in-out 0s",
-                    "-webkit-box-align": "center",
                     "align-items": "center",
                     display: "flex",
                     "box-sizing": "border-box",
@@ -282,10 +302,10 @@ function Header() {
             },
             style: {
               "margin-right": "40px",
+              "margin-left": "40px",
               position: "relative",
               height: "82px",
               "list-style": "outside none none",
-              "-webkit-box-align": "center",
               "align-items": "center",
               display: "flex",
               "box-sizing": "border-box",
@@ -297,7 +317,7 @@ function Header() {
             m(
               "a",
               {
-                href: "#",
+                href: attrs.href,
                 onmouseenter: (e) => {
                   e.target.style.textDecoration = "underline";
                 },
@@ -362,6 +382,7 @@ function Header() {
                         attrs.item.label === "Tienda" ? "row" : "column",
                       "background-color": "rgb(255, 255, 255)",
                       left: "-16px",
+                      borderRadius: "33px",
                       opacity:
                         dropdownState.isVisible || dropdownState.isHovered
                           ? "1"
@@ -398,6 +419,8 @@ function Header() {
                           style: {
                             display: "flex",
                             flexDirection: "column",
+                            "border-bottom-left-radius": "33px",
+                            "border-bottom-right-radius": "33px",
                             // padding: "0px",
                             left: "0px",
                             padding: "16px",
@@ -654,7 +677,7 @@ function Banner() {
             },
             m("img", {
               class: "img-fluid col-12 h-120 ",
-              src: "images/Product_7@4x.jpg",
+              src: "images/carrusel1.jpg",
             })
           ),
           m(
@@ -665,7 +688,7 @@ function Banner() {
             },
             m("img", {
               class: "img-fluid col-12 h-120 ",
-              src: "images/Product_8@4x.jpg",
+              src: "images/carrusel2.jpg",
             })
           ),
           m(
@@ -676,8 +699,186 @@ function Banner() {
             },
             m("img", {
               class: "img-fluid col-12 h-120 ",
-              src: "images/Product_11@4x.jpg",
+              src: "images/carrusel3.jpg",
             })
+          )
+        )
+      ),
+    ],
+  };
+}
+
+function Stats() {
+  let aria1 = true;
+  let backgroundColor = "white"; // Estado inicial del fondo
+
+  return {
+    view: () => [
+      m(
+        "div",
+        {
+          class: "card text-center",
+        },
+        m(
+          "div",
+          {
+            class: "card-header",
+          },
+          m(
+            "ul",
+            {
+              class: "nav nav-tabs card-header-tabs",
+            },
+            [
+              m(
+                "li",
+                {
+                  class: "nav-item",
+                },
+                m(
+                  "a",
+                  {
+                    onclick: (e) => {
+                      e.target.setAttribute("aria-selected", aria1);
+                    },
+                    class: "nav-link active",
+                    href: "#",
+                    id: "home-tab",
+                    "data-bs-toggle": "tab",
+                    "data-bs-target": "#home",
+                    type: "button",
+                    role: "tab",
+                    "aria-controls": "home",
+                    "aria-selected": "true",
+                  },
+                  "Macros"
+                )
+              ),
+              m(
+                "li",
+                {
+                  class: "nav-item",
+                },
+                m(
+                  "a",
+                  {
+                    onclick: (e) => {
+                      e.target.setAttribute("aria-selected", aria1);
+                    },
+                    class: "nav-link",
+                    href: "#",
+                    id: "profile-tab",
+                    "data-bs-toggle": "tab",
+                    "data-bs-target": "#profile",
+                    type: "button",
+                    role: "tab",
+                    "aria-controls": "profile",
+                    "aria-selected": "false",
+                  },
+                  "Estadisticas"
+                )
+              ),
+            ]
+          )
+        ),
+        m(
+          "div",
+          {
+            class: "card-body",
+          },
+          m(
+            "div",
+            {
+              class: "tab-content",
+              id: "myTabContent",
+            },
+            m(
+              "div",
+              {
+                class: "tab-pane fade show active py-5 h1",
+                id: "home",
+                role: "tabpanel",
+                "aria-labelledby": "home-tab",
+              },
+              "Aqui estan las macros",
+              m(
+                "div",
+                {
+                  class: "progress my-5",
+                  style: {
+                    height: "100px",
+                  },
+                },
+                [
+                  m(
+                    "div",
+                    {
+                      class: "progress-bar h4",
+                      "aria-valuenow": "33",
+                      "aria-valuemin": "0",
+                      "aria-valuemax": "100",
+                      style: {
+                        width: "33%",
+                        margin: 0,
+                      },
+                    },
+                    "Proteinas"
+                  ),
+                  m(
+                    "div",
+                    {
+                      class: "progress-bar bg-success h4",
+                      "aria-valuenow": "13",
+                      "aria-valuemin": "0",
+                      "aria-valuemax": "100",
+                      style: {
+                        width: "13%",
+                        margin: 0,
+                      },
+                    },
+                    "Carbohidratos"
+                  ),
+                  m(
+                    "div",
+                    {
+                      class: "progress-bar bg-info h4",
+                      "aria-valuenow": "23",
+                      "aria-valuemin": "0",
+                      "aria-valuemax": "100",
+                      style: {
+                        width: "23%",
+                        margin: 0,
+                      },
+                    },
+                    "Grasas"
+                  ),
+                ]
+              ),
+              m(
+                "a",
+                {
+                  class:
+                    "btn btn-primary d-flex align-items-center justify-content-center mx-auto w-25",
+                  href: "#",
+                  style: {
+                    width: "100%",
+                    height: "55px",
+                    marginTop: "20px",
+                  },
+                },
+                "Ir al perfil"
+              )
+            ),
+            m(
+              "div",
+              {
+                class: "tab-pane fade show py-5",
+                id: "profile",
+                role: "tabpanel",
+                "aria-labelledby": "profile-tab",
+              },
+              "Aqui estan las stats"
+            )
           )
         )
       ),
