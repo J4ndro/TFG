@@ -1,9 +1,10 @@
-const pages = [Home, Alimentos];
+const pages = [Home, Alimentos, MiPerfil, Suscripcion];
 
-const components = [Header, Banner, Stats];
+const components = [Header, Banner, Stats, AsidePerfil];
 
 export { pages, components };
 
+//!! PAGES
 function Home() {
   return {
     view: () => [m(Header), m(Banner), m(Stats)],
@@ -16,6 +17,18 @@ function Alimentos() {
   };
 }
 
+function MiPerfil() {
+  return {
+    view: () => [m(Header), m(AsidePerfil)],
+  };
+}
+
+function Suscripcion() {
+  return {
+    view: () => [m(Header), m(Suscripciones)],
+  };
+}
+//!! COMPONENTS
 function Header() {
   return {
     model: {
@@ -98,14 +111,14 @@ function Header() {
           },
         },
         {
-          href: "#",
+          href: "#!MiPerfil",
           item: {
             label: "Mi Perfil",
             options: [
               { label: "Configuracion", items: "", href: "#" },
               { label: "Historial", items: "", href: "#" },
               { label: "Estadisticas", items: "", href: "#" },
-              { label: "Perfil", items: "", href: "#" },
+              { label: "Perfil", items: "", href: "#!MiPerfil" },
             ],
           },
         },
@@ -123,6 +136,13 @@ function Header() {
             ],
           },
         },
+        {
+          href: "#!Suscripcion",
+          item: {
+            label: "Mi Suscripcion",
+            options: [],
+          },
+        },
       ],
     },
     view: () => [
@@ -133,7 +153,7 @@ function Header() {
             height: "81px",
             left: "0px",
             padding: "0px 50px",
-            position: "absolute",
+            position: "relative",
             width: "100%",
             "z-index": "1",
             "box-sizing": "border-box",
@@ -166,9 +186,11 @@ function Header() {
             {
               onmouseenter: (e) => {
                 e.target.style.background = "white";
+                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
               },
               onmouseleave: (e) => {
                 e.target.style.background = null;
+                e.target.style.boxShadow = null;
               },
               style: {
                 "-webkit-box-align": "center",
@@ -206,9 +228,11 @@ function Header() {
               },
               onmouseenter: (e) => {
                 e.target.style.background = "white";
+                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
               },
               onmouseleave: (e) => {
                 e.target.style.background = null;
+                e.target.style.boxShadow = null;
               },
             },
             [
@@ -882,6 +906,126 @@ function Stats() {
           )
         )
       ),
+    ],
+  };
+}
+
+function AsidePerfil() {
+  return {
+    view: () => [
+      m(
+        "div",
+        {
+          class: "col-12",
+        },
+        [
+          m("div", {
+            class: "col-4",
+          }),
+          m("div", {
+            class: "col-8",
+          }),
+        ]
+      ),
+    ],
+  };
+}
+
+function Suscripciones() {
+  return {
+    view: () => [
+      m(".pricing-header.p-3.pb-md-4.mx-auto.text-center.col-8", [
+        m("h1.display-4.fw-normal", "Suscripcion"),
+        m(
+          "p.fs-5.text-muted",
+          "Podras suscribirte a nuestro servicio para poder acceder a nuestro contenido gratuitamente o pagando una cuota mensual."
+        ),
+      ]),
+      m(".row.row-cols-1.row-cols-md-3.mb-3.text-center.mx-auto.col-8", [
+        m(".col", [
+          m(".card.mb-4.rounded-3.shadow-sm", [
+            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Plan Gratuito")]),
+            m(".card-body", [
+              m(
+                "h1.card-title.pricing-card-title",
+                "$0",
+                m("small.text-muted.fw-light", "/mes")
+              ),
+              m("ul.list-unstyled.mt-3.mb-4", [
+                m("li", "Acceso a tu perfil"),
+                m("li", "Seguimiento de tus alimentos"),
+                m("li", "Listado de menus"),
+                m("li", "Help center access"),
+              ]),
+              m(
+                "button.w-100.btn.btn-lg.btn-outline-primary",
+                {
+                  onclick: function () {
+                    /* Handle sign up for free click event */
+                  },
+                },
+                "Tu plan actual"
+              ),
+            ]),
+          ]),
+        ]),
+        m(".col", [
+          m(".card.mb-4.rounded-3.shadow-sm", [
+            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Vita Pro")]),
+            m(".card-body", [
+              m(
+                "h1.card-title.pricing-card-title",
+                "$15",
+                m("small.text-muted.fw-light", "/mes")
+              ),
+              m("ul.list-unstyled.mt-3.mb-4", [
+                m("li", "20 users included"),
+                m("li", "10 GB of storage"),
+                m("li", "Priority email support"),
+                m("li", "Help center access"),
+              ]),
+              m(
+                "button.w-100.btn.btn-lg.btn-primary",
+                {
+                  onclick: function () {
+                    /* Handle get started click event */
+                  },
+                },
+                "Get started"
+              ),
+            ]),
+          ]),
+        ]),
+        m(".col", [
+          m(".card.mb-4.rounded-3.shadow-sm.border-primary", [
+            m(".card-header.py-3.text-white.bg-primary.border-primary", [
+              m("h4.my-0.fw-normal", "Vita Family"),
+            ]),
+            m(".card-body", [
+              m(
+                "h1.card-title.pricing-card-title",
+                "$29",
+                m("small.text-muted.fw-light", "/mes")
+              ),
+              m("ul.list-unstyled.mt-3.mb-4", [
+                m("li", "30 users included"),
+                m("li", "15 GB of storage"),
+                m("li", "Phone and email support"),
+                m("li", "Help center access"),
+              ]),
+              m(
+                "button.w-100.btn.btn-lg.btn-primary",
+                {
+                  onclick: function () {
+                    /* Handle contact us click event */
+                  },
+                },
+                "Contact us"
+              ),
+            ]),
+          ]),
+        ]),
+      ]),
     ],
   };
 }
