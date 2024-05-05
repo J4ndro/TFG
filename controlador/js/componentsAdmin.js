@@ -1,33 +1,16 @@
-const pages = [Home, Alimentos, Perfil, Suscripcion];
+const pages = [Home];
 
-const components = [Header, Banner, Stats, AsidePerfil];
+const components = [Header, ListaUser];
 
 export { pages, components };
 
 //!! PAGES
 function Home() {
   return {
-    view: () => [m(Header), m(Banner), m(Stats), m(Seccion)],
+    view: () => [m(Header), m(ListaUser)],
   };
 }
 
-function Alimentos() {
-  return {
-    view: () => [m(Header), m(Seccion), m(Banner)],
-  };
-}
-
-function Perfil() {
-  return {
-    view: () => [m(Header), m(AsidePerfil)],
-  };
-}
-
-function Suscripcion() {
-  return {
-    view: () => [m(Header), m(Suscripciones)],
-  };
-}
 //!! COMPONENTS
 function Header() {
   return {
@@ -676,376 +659,349 @@ function Header() {
   }
 }
 
-function Banner() {
+function ListaUser() {
+  let showModal = false;
   return {
     view: () => [
       m(
-        "div",
+        "button",
         {
-          class: "carousel slide col-12 mx-auto px-auto h-10",
-          "data-bs-ride": "carousel",
-          style: {
-            height: "500px",
+          class: "btn btn-primary my-5 mx-5 ",
+          onclick: () => {
+            showModal = true;
           },
         },
-        m(
-          "div",
-          {
-            class: "carousel-inner h-100 bg-dark",
+        "AÑADIR"
+      ),
+      showModal &&
+        m(ModalForm, {
+          showModal: showModal,
+          onClose: function () {
+            showModal = false; // Ocultar el modal cuando se llame a onClose
           },
+        }),
+      m(
+        "table",
+        {
+          class: " table table-striped my-5 px-5 mx-auto  ",
+        },
+        m(
+          "thead",
+          m("tr", [
+            m("th", { scope: "col" }, "Id Usuario"),
+            m("th", { scope: "col" }, "Nombre"),
+            m("th", { scope: "col" }, "Apellido"),
+            m("th", { scope: "col" }, "Email"),
+            m("th", { scope: "col" }, "Administrador"),
+            m("th", { scope: "col" }, "Acciones"),
+          ])
+        ),
+        m("tbody", [m(Listar)])
+      ),
+    ],
+  };
+}
+function Listar() {
+  let datos = []; // Inicializa datos como un array vacío
+
+  // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
+  fetch("../controlador/Usuarios/mostrar.php", {
+    method: "GET",
+    headers: { "Content-Type": "application/json" },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      console.log(data);
+      datos = data; // Actualiza datos cuando se reciban los datos
+      m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+    });
+
+  // Devuelve un componente que muestra los datos
+  return {
+    view: () => [
+      datos.map((i) => [
+        m(
+          "tr",
+          m("th", i.id_usuario),
+          m("td", i.nombre),
+          m("td", i.apellido),
+          m("td", i.email),
+          m("td", i.administrador),
           m(
-            "div",
-            {
-              class:
-                "carousel-item justify-content-center align-items-center active h-100",
-            },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel1.jpg",
-            })
-          ),
-          m(
-            "div",
-            {
-              class:
-                "carousel-item justify-content-center align-items-flex-start h-100",
-            },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel2.jpg",
-            })
-          ),
-          m(
-            "div",
-            {
-              class:
-                "carousel-item justify-content-center align-items-center h-100",
-            },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel3.jpg",
-            })
+            "td",
+            m("div", { class: "d-flex justify-content-around" }, [
+              m(
+                "button",
+                {
+                  class: "btn btn-success",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetalles",
+                  onclick: () => {
+                    Detalles(i.id_usuario);
+                  },
+                  onInsert: function (data) {
+                    Insertar(data);
+                    showModal = false; // Ocultar el modal después de insertar los datos
+                  },
+                },
+                "Detalles"
+              ),
+              m("button", { class: "btn btn-primary" }, "Modificar"),
+              m(
+                "button",
+                {
+                  class: "btn btn-danger",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetalles",
+                  onclick: () => {
+                    Borrar(i.id_usuario);
+                  },
+                },
+                "Eliminar"
+              ),
+            ])
           )
+        ),
+      ]),
+    ],
+  };
+}
+
+function Detalles(id) {
+  let datos = [];
+  fetch("../controlador/Usuarios/detalle.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      // m.redraw();
+      console.log(data);
+      datos = data;
+      console.log(datos);
+      // m.redraw();
+    });
+
+  return {
+    view: () => [
+      datos.map((i) =>
+        m(
+          "div#modalDetalles",
+          { tabindex: "-1", class: "modal", role: "dialog" },
+          [
+            m("div", { class: "modal-dialog", role: "document" }, [
+              m("div", { class: "modal-content" }, [
+                m("div", { class: "modal-header" }, [
+                  m("h5.modal-title", console.log(i.nombre)),
+                  m(
+                    "button.close",
+                    { type: "button", "aria-label": "Close", class: "close" },
+                    [m("span", { "aria-hidden": "true" }, "x")]
+                  ),
+                ]),
+                m("div", { class: "modal-body" }, [
+                  m("p", "ID:" + i.id_usuario),
+                ]),
+                m("div", { clas: "modal-footer" }, [
+                  m(
+                    "button.btn.btn-primary",
+                    { type: "button" },
+                    "Guardar Cambios"
+                  ),
+                  m(
+                    "button.btn.btn-secondary",
+                    { type: "button", "data-dismiss": "modal" },
+                    "Cerrar"
+                  ),
+                ]),
+              ]),
+            ]),
+          ]
         )
       ),
     ],
   };
 }
 
-function Stats() {
-  let aria1 = true;
-  let backgroundColor = "white"; // Estado inicial del fondo
+function Borrar(id) {
+  fetch("../controlador/Usuarios/borrar.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      console.log(data);
+      window.location.reload();
+      m.redraw();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
 
-  return {
-    view: () => [
-      m(
-        "div",
-        {
-          class: "card text-center",
+function Insertar(data) {
+  console.log(data);
+  fetch("../controlador/Usuarios/insertar.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      console.log(data);
+      window.location.reload();
+      m.redraw();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+  return {};
+}
+
+const ModalForm = {
+  view: (vnode) => {
+    let nombre = "";
+    let apellido = "";
+    let email = "";
+    let pwd = "";
+    let isAdmin = false;
+
+    return m(
+      ".modal.fade.show",
+      {
+        style: {
+          display: vnode.attrs.showModal ? "block" : "none",
         },
-        m(
-          "div",
-          {
-            class: "card-header",
-          },
-          m(
-            "ul",
-            {
-              class: "nav nav-tabs card-header-tabs",
-            },
-            [
+      },
+      [
+        m(".modal-dialog", [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Añadir Usuario"),
               m(
-                "li",
+                "button.close",
                 {
-                  class: "nav-item",
-                },
-                m(
-                  "a",
-                  {
-                    onclick: (e) => {
-                      e.target.setAttribute("aria-selected", aria1);
-                    },
-                    class: "nav-link active",
-                    href: "#",
-                    id: "home-tab",
-                    "data-bs-toggle": "tab",
-                    "data-bs-target": "#home",
-                    type: "button",
-                    role: "tab",
-                    "aria-controls": "home",
-                    "aria-selected": "true",
+                  "data-dismiss": "modal",
+                  ariaLabel: "Close",
+                  onclick: function () {
+                    vnode.attrs.onClose(); // Llama a la función onClose del padre para cerrar el modal
                   },
-                  "Macros"
-                )
-              ),
-              m(
-                "li",
-                {
-                  class: "nav-item",
                 },
-                m(
-                  "a",
-                  {
-                    onclick: (e) => {
-                      e.target.setAttribute("aria-selected", aria1);
-                    },
-                    class: "nav-link",
-                    href: "#",
-                    id: "profile-tab",
-                    "data-bs-toggle": "tab",
-                    "data-bs-target": "#profile",
-                    type: "button",
-                    role: "tab",
-                    "aria-controls": "profile",
-                    "aria-selected": "false",
-                  },
-                  "Estadisticas"
-                )
+                m("span", { "aria-hidden": "true" }, "×")
               ),
-            ]
-          )
-        ),
-        m(
-          "div",
-          {
-            class: "card-body",
-          },
-          m(
-            "div",
-            {
-              class: "tab-content",
-              id: "myTabContent",
-            },
-            m(
-              "div",
-              {
-                class: "tab-pane fade show active py-5 h1",
-                id: "home",
-                role: "tabpanel",
-                "aria-labelledby": "home-tab",
-              },
-              "Aqui estan las macros",
+            ]),
+            m(".modal-body", [
               m(
-                "div",
+                "form",
                 {
-                  class: "progress my-5",
-                  style: {
-                    height: "100px",
+                  onsubmit: function (event) {
+                    event.preventDefault(); // Evitar el envío del formulario por defecto
+                    // Llamar a la función Insertar con los datos del formulario
+                    vnode.attrs.onInsert({
+                      nombre: nombre,
+                      apellido: apellido,
+                      email: email,
+                      pwd: pwd,
+                      isAdmin: isAdmin,
+                    });
                   },
                 },
                 [
-                  m(
-                    "div",
-                    {
-                      class: "progress-bar h4",
-                      "aria-valuenow": "33",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "33%",
-                        margin: 0,
-                      },
-                    },
-                    "Proteinas"
-                  ),
-                  m(
-                    "div",
-                    {
-                      class: "progress-bar bg-success h4",
-                      "aria-valuenow": "13",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "13%",
-                        margin: 0,
-                      },
-                    },
-                    "Carbohidratos"
-                  ),
-                  m(
-                    "div",
-                    {
-                      class: "progress-bar bg-info h4",
-                      "aria-valuenow": "23",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "23%",
-                        margin: 0,
-                      },
-                    },
-                    "Grasas"
-                  ),
+                  // Definición de campos del formulario
+                  m(".form-group", [
+                    m("label", { for: "nombre" }, "Nombre"),
+                    m("input.form-control", {
+                      type: "text",
+                      id: "nombre",
+                      value: nombre,
+                    }),
+                  ]),
+                  m(".form-group", [
+                    m("label", { for: "apellido" }, "Apellido"),
+                    m("input.form-control", {
+                      type: "text",
+                      id: "apellido",
+                      value: apellido,
+                    }),
+                  ]),
+                  m(".form-group", [
+                    m("label", { for: "email" }, "Email"),
+                    m("input.form-control", {
+                      type: "email",
+                      id: "email",
+                      value: email,
+                    }),
+                  ]),
+                  m(".form-group", [
+                    m("label", { for: "pwd" }, "Contraseña"),
+                    m("input.form-control", {
+                      type: "password",
+                      id: "pwd",
+                      value: pwd,
+                    }),
+                  ]),
+                  m(".form-group", [
+                    m("label", { for: "admin" }, "Administrador"),
+                    m("input.form-check-input", {
+                      type: "checkbox",
+                      id: "admin",
+                    }),
+                  ]),
                 ]
               ),
+            ]),
+            m(".modal-footer", [
               m(
-                "a",
+                "button.btn.btn-secondary",
                 {
-                  class:
-                    "btn btn-primary d-flex align-items-center justify-content-center mx-auto w-25",
-                  href: "#",
-                  style: {
-                    width: "100%",
-                    height: "55px",
-                    marginTop: "20px",
-                  },
-                },
-                "Ir al perfil"
-              )
-            ),
-            m(
-              "div",
-              {
-                class: "tab-pane fade show py-5",
-                id: "profile",
-                role: "tabpanel",
-                "aria-labelledby": "profile-tab",
-              },
-              "Aqui estan las stats"
-            )
-          )
-        )
-      ),
-    ],
-  };
-}
-
-function AsidePerfil() {
-  return {
-    view: () => [
-      m(
-        "div",
-        {
-          class: "col-12",
-        },
-        [
-          m("div", {
-            class: "col-4",
-          }),
-          m("div", {
-            class: "col-8",
-          }),
-        ]
-      ),
-    ],
-  };
-}
-
-function Suscripciones() {
-  return {
-    view: () => [
-      m(".pricing-header.p-3.pb-md-4.mx-auto.text-center.col-8", [
-        m("h1.display-4.fw-normal", "Suscripcion"),
-        m(
-          "p.fs-5.text-muted",
-          "Podras suscribirte a nuestro servicio para poder acceder a nuestro contenido gratuitamente o pagando una cuota mensual."
-        ),
-      ]),
-      m(".row.row-cols-1.row-cols-md-3.mb-3.text-center.mx-auto.col-8", [
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm", [
-            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Plan Gratuito")]),
-            m(".card-body", [
-              m(
-                "h1.card-title.pricing-card-title",
-                "$0",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "Acceso a tu perfil"),
-                m("li", "Seguimiento de tus alimentos"),
-                m("li", "Listado de menus"),
-                m("li", "Help center access"),
-              ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-outline-primary",
-                {
+                  "data-dismiss": "modal",
                   onclick: function () {
-                    /* Handle sign up for free click event */
+                    vnode.attrs.onClose();
                   },
                 },
-                "Tu plan actual"
+                "Cancelar"
+              ),
+              m(
+                "button.btn.btn-primary",
+                {
+                  type: "submit", // Cambiar el tipo de botón a submit para activar el controlador de eventos del formulario
+                },
+                "Guardar"
               ),
             ]),
           ]),
         ]),
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm", [
-            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Vita Pro")]),
-            m(".card-body", [
-              m(
-                "h1.card-title.pricing-card-title",
-                "$15",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "20 users included"),
-                m("li", "10 GB of storage"),
-                m("li", "Priority email support"),
-                m("li", "Help center access"),
-              ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-primary",
-                {
-                  onclick: function () {
-                    /* Handle get started click event */
-                  },
-                },
-                "Get started"
-              ),
-            ]),
-          ]),
-        ]),
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm.border-primary", [
-            m(".card-header.py-3.text-white.bg-primary.border-primary", [
-              m("h4.my-0.fw-normal", "Vita Family"),
-            ]),
-            m(".card-body", [
-              m(
-                "h1.card-title.pricing-card-title",
-                "$29",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "30 users included"),
-                m("li", "15 GB of storage"),
-                m("li", "Phone and email support"),
-                m("li", "Help center access"),
-              ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-primary",
-                {
-                  onclick: function () {
-                    /* Handle contact us click event */
-                  },
-                },
-                "Contact us"
-              ),
-            ]),
-          ]),
-        ]),
-      ]),
-    ],
-  };
-}
-
-function Seccion() {
-  return {
-    view: () => [
-      m(
-        "div",
-        {
-          class: "py-5 px-5 col-12 d-flex justify-content-end",
-        },
-        m(
-          "button",
-          {
-            class: "btn btn-lg btn-primary",
-          },
-          "AÑADIR"
-        )
-      ),
-    ],
-  };
-}
+      ]
+    );
+  },
+};
