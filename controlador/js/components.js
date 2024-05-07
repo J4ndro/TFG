@@ -1,850 +1,734 @@
-const pages = [Home, Alimentos, Perfil, Suscripcion];
+const pages = [Home, Menus, Perfil, Suscripcion];
 
-const components = [Header, Banner, Stats, PerfilSection];
+const components = [Header, Hero, Info, PerfilSection];
 
 export { pages, components };
 
 //!! PAGES
 function Home() {
   return {
-    view: () => [m(Header), m(Banner), m(Stats), m(Seccion)],
+    view: () => [m(Header), m(Hero), m(Info), m(HeroFooter), m(Footer)],
   };
 }
 
-function Alimentos() {
+function Menus() {
   return {
-    view: () => [m(Header), m(Seccion)],
+    view: () => [m(Header), m(Seccion), m(Footer)],
   };
 }
 
 function Perfil() {
   return {
-    view: () => [m(Header), m(PerfilSection)],
+    view: () => [m(Header), m(PerfilSection), m(Footer)],
   };
 }
 
 function Suscripcion() {
   return {
-    view: () => [m(Header), m(Suscripciones)],
+    view: () => [m(Header), m(Suscripciones), m(Footer)],
   };
 }
 //!! COMPONENTS
+
 function Header() {
   return {
-    model: {
-      itemsMenu: [
-        {
-          href: "#",
-          item: {
-            label: "Home",
-            options: [],
-          },
-        },
-
-        {
-          href: "#!Alimentos",
-          item: {
-            label: "Alimentos",
-            options: [],
-          },
-        },
-        {
-          href: "#",
-          item: {
-            label: "Rutina",
-            options: [
-              { label: "Ejercicios", items: "", href: "#" },
-              { label: "Comidas", items: "", href: "#" },
-            ],
-          },
-        },
-        {
-          href: "#",
-          item: {
-            label: "Otros",
-            options: [
-              { label: "Contacto", items: "", href: "#" },
-              { label: "Proximamente", items: "", href: "#" },
-              { label: "Envios y devoluciones", items: "", href: "#" },
-              { label: "FAQ", items: "", href: "#" },
-              { label: "Terminos y Conidiciones", items: "", href: "#" },
-              { label: "Politica y privacidad", items: "", href: "#" },
-            ],
-          },
-        },
-        {
-          href: "#!Suscripcion",
-          item: {
-            label: "Mi Suscripcion",
-            options: [],
-          },
-        },
-      ],
-    },
     view: () => [
       m(
-        "div",
-        {
-          style: {
-            height: "81px",
-            left: "0px",
-            padding: "0px 50px",
-            position: "relative",
-            width: "100%",
-            "z-index": "1",
-            "box-sizing": "border-box",
-            margin: "0px",
-            outline: "rgb(0, 0, 0) none 0px",
-            transition: "all 0.4s ease",
-            display: "flex",
-            justifyContent: "space-between",
-          },
-        },
+        "header",
+        { id: "header", class: "fixed-top d-flex align-items-center" },
         [
           m(
             "div",
             {
-              style: {
-                display: "flex",
-                alignItems: "center",
-              },
-            },
-            m("img", {
-              src: "../images/logo.png",
-              style: {
-                width: "70px",
-                height: "70px",
-              },
-            })
-          ),
-          m(
-            "ul",
-            {
-              onmouseenter: (e) => {
-                e.target.style.background = "white";
-                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-              },
-              onmouseleave: (e) => {
-                e.target.style.background = null;
-                e.target.style.boxShadow = null;
-              },
-              style: {
-                "-webkit-box-align": "center",
-                "align-items": "center",
-                display: "flex",
-                "-webkit-box-pack": "center",
-                height: "82px",
-                "justify-content": "center",
-                "margin-bottom": "-1px",
-                "box-sizing": "border-box",
-                margin: "0px 0px -1px",
-                padding: "0px",
-                outline: "rgb(0, 0, 0) none 0px",
-                transition: "all 0.4s ease",
-                borderRadius: "33px",
-              },
-            },
-            [this.state.model.itemsMenu.map((i) => m(Menu, i))]
-          ),
-          m(
-            "div",
-            {
-              style: {
-                "align-items": "center",
-                display: "flex",
-                position: "relative",
-                "z-index": "10",
-                "box-sizing": "border-box",
-                margin: "0px",
-                padding: "0px",
-                outline: "rgb(0, 0, 0) none 0px",
-                borderRadius: "33px",
-                transition: "all 0.4s ease",
-              },
-              onmouseenter: (e) => {
-                e.target.style.background = "white";
-                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-              },
-              onmouseleave: (e) => {
-                e.target.style.background = null;
-                e.target.style.boxShadow = null;
-              },
+              class:
+                "container d-flex justify-content-between align-items-center",
             },
             [
-              m(
-                "a",
-                {
-                  onclick: () => {
-                    window.location.href = "../controlador/login/logout.php";
-                  },
-                  style: {
-                    "margin-right": "20px",
-                    "margin-left": "33px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out 0s",
-                    "align-items": "center",
-                    display: "flex",
-                    "box-sizing": "border-box",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                },
-                m("img", {
-                  src: "../images/search.svg",
-                  alt: "Search icon",
-                  style: {
-                    "border-style": "none",
-                    display: "block",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                })
-              ),
-
-              m(
-                "a",
-                {
-                  href: "#!Perfil",
-                  style: {
-                    "margin-right": "33px",
-                    "margin-left": "20px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out 0s",
-                    "align-items": "center",
-                    display: "flex",
-                    "box-sizing": "border-box",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                },
-                m("img", {
-                  src: "../images/search-2.svg",
-                  alt: "Authorization icon",
-                  style: {
-                    "border-style": "none",
-                    display: "block",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                })
-              ),
+              m("div", { class: "logo" }, [
+                m("h1", [
+                  m(
+                    "a",
+                    { href: "#" },
+                    m("img", {
+                      src: "../images/logo.png",
+                      alt: "",
+                      class: "img-fluid",
+                    })
+                  ),
+                ]),
+              ]),
+              m("nav", { id: "navbar", class: "navbar" }, [
+                m("ul", {}, [
+                  m("li", {}, [m("a", { class: "active", href: "#" }, "Home")]),
+                  m("li", {}, [m("a", { href: "#!Menus" }, "Menus")]),
+                  m("li", {}, [m("a", { href: "#!Platos" }, "Platos")]),
+                  m("li", { class: "dropdown" }, [
+                    m("a", { href: "#" }, [
+                      m("span", {}, "Otros"),
+                      m("i", { class: "bi bi-chevron-down" }),
+                    ]),
+                    m("ul", {}, [
+                      m("li", {}, [m("a", { href: "#" }, "Contacto")]),
+                      m("li", { class: "dropdown" }, [
+                        m("a", { href: "#" }, [
+                          m("span", {}, "About Us"),
+                          m("i", { class: "bi bi-chevron-right" }),
+                        ]),
+                        m("ul", {}, [
+                          m("li", {}, [
+                            m("a", { href: "#" }, "Deep Drop Down 1"),
+                          ]),
+                          m("li", {}, [
+                            m("a", { href: "#" }, "Deep Drop Down 2"),
+                          ]),
+                          m("li", {}, [
+                            m("a", { href: "#" }, "Deep Drop Down 3"),
+                          ]),
+                          m("li", {}, [
+                            m("a", { href: "#" }, "Deep Drop Down 4"),
+                          ]),
+                          m("li", {}, [
+                            m("a", { href: "#" }, "Deep Drop Down 5"),
+                          ]),
+                        ]),
+                      ]),
+                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 2")]),
+                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 3")]),
+                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 4")]),
+                    ]),
+                  ]),
+                  m("li", {}, [
+                    m("a", { href: "#!Suscripcion" }, "Mi Suscripción"),
+                  ]),
+                  m("li", {}, [m("a", { href: "#!Perfil" }, "Mi Perfil")]),
+                ]),
+                m("i", { class: "bi bi-list mobile-nav-toggle" }),
+              ]),
             ]
           ),
         ]
       ),
     ],
   };
-
-  function Menu() {
-    const dropdownState = {
-      isVisible: false,
-      toggleVisibility: function () {
-        dropdownState.isVisible = !dropdownState.isVisible;
-      },
-    };
-    return {
-      view: ({ attrs }) => [
-        m(
-          "li",
-          {
-            onmouseenter: () => {
-              dropdownState.isHovered = true; // Cuando el mouse entra en el menú desplegable
-              attrs.item.isDropdownVisible = true;
-            },
-            onmouseleave: () => {
-              dropdownState.isHovered = false;
-              // Cerrar el menú desplegable solo si el mouse no está dentro de él
-              if (!dropdownState.isHovered) {
-                dropdownState.isVisible = false;
-                attrs.item.isDropdownVisible = false;
-              }
-            },
-            style: {
-              "margin-right": "40px",
-              "margin-left": "40px",
-              position: "relative",
-              height: "82px",
-              "list-style": "outside none none",
-              "align-items": "center",
-              display: "flex",
-              "box-sizing": "border-box",
-              padding: "0px",
-              outline: "rgb(0, 0, 0) none 0px",
-            },
-          },
-          [
-            m(
-              "a",
-              {
-                href: attrs.href,
-                onmouseenter: (e) => {
-                  e.target.style.textDecoration = "underline";
-                },
-                onmouseleave: (e) => {
-                  e.target.style.textDecoration = "none";
-                },
-                style: {
-                  "border-bottom": "1px solid rgba(0, 0, 0, 0)",
-                  color: "rgb(0, 0, 0)",
-                  "font-size": "15px",
-                  "font-style": "normal",
-                  "font-weight": "700",
-                  "letter-spacing": "0.6px",
-                  "line-height": "19px",
-                  padding: "3px 0px",
-                  "text-align": "center",
-                  transition: "all 0.2s ease-in-out 0s",
-                  "background-color": "rgba(0, 0, 0, 0)",
-                  "text-decoration": "none solid rgb(0, 0, 0)",
-                  "box-sizing": "border-box",
-                  margin: "0px",
-                  outline: "rgb(0, 0, 0) none 0px",
-                },
-              },
-              [
-                attrs.item.label,
-                m("img", {
-                  src: "https://firstsight.design/levre/mono/wp-content/themes/levre/assets/img/chevron.svg",
-                  alt: "Chevron icon",
-                  style: {
-                    display: "none",
-                    "border-style": "none",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                }),
-              ]
-            ),
-            attrs.item.options.length > 0
-              ? m(
-                  "ul",
-                  {
-                    onmouseenter: () => {
-                      dropdownState.isHovered = true;
-                    },
-                    onmouseleave: () => {
-                      dropdownState.isHovered = false;
-                      if (!dropdownState.isHovered) {
-                        dropdownState.isVisible = false;
-                        attrs.item.isDropdownVisible = false;
-                      }
-                    },
-                    style: {
-                      /* display:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "flex"
-                          : "none", */
-                      display: "flex",
-                      flexDirection:
-                        attrs.item.label === "Tienda" ? "row" : "column",
-                      "background-color": "rgb(255, 255, 255)",
-                      left: "-16px",
-                      borderRadius: "33px",
-                      opacity:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "1"
-                          : "0",
-
-                      transform:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "scale(1)"
-                          : "scale(0)",
-
-                      margin: "auto",
-                      padding: "0px",
-                      position: "absolute",
-                      top: "99%",
-                      transition: "opacity 0.4s ease-in-out 0s",
-                      width: "200px",
-                      "z-index": "10",
-                      "box-sizing": "border-box",
-                      margin: "0px",
-                      outline: "rgb(0, 0, 0) none 0px",
-                    },
-                  },
-                  [
-                    attrs.item.options.map((option, index) =>
-                      m(
-                        "ul",
-                        {
-                          onmouseenter: () => {
-                            attrs.item.isDropdownVisible = true;
-                          },
-                          onmouseleave: () => {
-                            attrs.item.isDropdownVisible = false;
-                          },
-                          style: {
-                            display: "flex",
-                            flexDirection: "column",
-                            "border-bottom-left-radius": "33px",
-                            "border-bottom-right-radius": "33px",
-                            // padding: "0px",
-                            left: "0px",
-                            padding: "16px",
-                            margin: "0px",
-                            "max-width": "100%",
-                            "min-width": "100%",
-                            "padding-bottom": "0px",
-                            width: "100% !important",
-                            display: "flex",
-                            "flex-wrap": "wrap",
-                            "flex-direction": "column",
-                            position: "relative",
-                            "background-color": "rgb(255, 255, 255)",
-                            "margin-left": "auto",
-                            "margin-right": "auto",
-                            right: "0px",
-                            transition: "all 0.2s ease-in-out 0s",
-                            "z-index": "10",
-                            "box-sizing": "border-box",
-                            outline: "rgb(0, 0, 0) none 0px",
-                          },
-                        },
-                        option.items.length > 0
-                          ? m(
-                              "ul",
-                              {
-                                style: {
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  padding: "0px",
-                                  left: "0px",
-                                  margin: "0px",
-                                  "max-width": "100%",
-                                  "min-width": "100%",
-                                  "padding-bottom": "0px",
-                                  width: "100% !important",
-                                  display: "flex",
-                                  "flex-wrap": "wrap",
-                                  "flex-direction": "column",
-                                  position: "relative",
-                                  "background-color": "rgb(255, 255, 255)",
-                                  "margin-left": "auto",
-                                  "margin-right": "auto",
-                                  right: "0px",
-                                  transition: "all 0.2s ease-in-out 0s",
-                                  "z-index": "10",
-                                  "box-sizing": "border-box",
-                                  outline: "rgb(0, 0, 0) none 0px",
-                                },
-                              },
-                              m(
-                                "li",
-                                {
-                                  style: {
-                                    "margin-right": "0px",
-                                    "margin-bottom": "20px",
-                                    width: "100%",
-                                    height: "20px",
-                                    "list-style": "outside none none",
-                                    "-webkit-box-align": "center",
-                                    "align-items": "center",
-                                    display: "flex",
-                                    "box-sizing": "border-box",
-                                    padding: "0px",
-                                    outline: "rgb(0, 0, 0) none 0px",
-                                  },
-                                },
-                                m(
-                                  "a",
-                                  {
-                                    href: "#",
-                                    style: {
-                                      fontWeight:
-                                        index === 0 ? "bold" : "normal",
-                                      "-webkit-box-pack": "justify",
-                                      border: "0px none rgb(0, 0, 0)",
-                                      display: "flex",
-                                      "font-size": "14px",
-                                      "font-style": "normal",
-                                      "font-weight": "500",
-                                      "justify-content": "space-between",
-                                      "letter-spacing": "0.28px",
-                                      "line-height": "20px",
-                                      padding: "0px 16px",
-                                      width: "100%",
-                                      "text-align": "left",
-                                      "border-bottom": "0px none rgb(0, 0, 0)",
-                                      color: "rgb(0, 0, 0)",
-                                      transition: "all 0.2s ease-in-out 0s",
-                                      "background-color": "rgba(0, 0, 0, 0)",
-                                      "text-decoration":
-                                        "none solid rgb(0, 0, 0)",
-                                      "box-sizing": "border-box",
-                                      margin: "0px",
-                                      outline: "rgb(0, 0, 0) none 0px",
-                                      cursor: "pointer",
-                                    },
-                                    onmouseenter: (e) => {
-                                      e.target.style.textDecoration =
-                                        "underline";
-                                    },
-                                    onmouseleave: (e) => {
-                                      e.target.style.textDecoration = "none";
-                                    },
-                                  },
-                                  option.label
-                                )
-                              ),
-                              option.items.map((item) =>
-                                m(
-                                  "li",
-                                  {
-                                    style: {
-                                      "margin-right": "0px",
-                                      "margin-bottom": "20px",
-                                      width: "100%",
-                                      height: "20px",
-                                      "list-style": "outside none none",
-                                      "-webkit-box-align": "center",
-                                      "align-items": "center",
-                                      display: "flex",
-                                      "box-sizing": "border-box",
-                                      padding: "0px",
-                                      outline: "rgb(0, 0, 0) none 0px",
-                                    },
-                                  },
-                                  m(
-                                    "a",
-                                    {
-                                      href: "#",
-                                      style: {
-                                        "-webkit-box-pack": "justify",
-                                        border: "0px none rgb(0, 0, 0)",
-                                        display: "flex",
-                                        "font-size": "14px",
-                                        "font-style": "normal",
-                                        "font-weight": "500",
-                                        "justify-content": "space-between",
-                                        "letter-spacing": "0.28px",
-                                        "line-height": "20px",
-                                        padding: "0px 16px",
-                                        width: "100%",
-                                        "text-align": "left",
-                                        "border-bottom":
-                                          "0px none rgb(0, 0, 0)",
-                                        color: "rgb(0, 0, 0)",
-                                        transition: "all 0.2s ease-in-out 0s",
-                                        "background-color": "rgba(0, 0, 0, 0)",
-                                        "text-decoration":
-                                          "none solid rgb(0, 0, 0)",
-                                        "box-sizing": "border-box",
-                                        margin: "0px",
-                                        outline: "rgb(0, 0, 0) none 0px",
-                                        cursor: "pointer",
-                                      },
-                                      onmouseenter: (e) => {
-                                        e.target.style.textDecoration =
-                                          "underline";
-                                      },
-                                      onmouseleave: (e) => {
-                                        e.target.style.textDecoration = "none";
-                                      },
-                                    },
-                                    item.label
-                                  )
-                                )
-                              )
-                            )
-                          : m(
-                              "li",
-                              {
-                                style: {
-                                  "margin-right": "0px",
-                                  "margin-bottom": "20px",
-                                  width: "100%",
-                                  height: "20px",
-                                  "list-style": "outside none none",
-                                  "align-items": "center",
-                                  display: "flex",
-                                  "box-sizing": "border-box",
-                                  padding: "0px",
-                                  outline: "rgb(0, 0, 0) none 0px",
-                                },
-                              },
-                              m(
-                                "a",
-                                {
-                                  style: {
-                                    border: "0px none rgb(0, 0, 0)",
-                                    display: "flex",
-                                    "font-size": "14px",
-                                    "font-style": "normal",
-                                    "font-weight": "500",
-                                    "justify-content": "space-between",
-                                    "letter-spacing": "0.28px",
-                                    "line-height": "20px",
-                                    padding: "0px 16px",
-                                    width: "100%",
-                                    "text-align": "left",
-                                    "border-bottom": "0px none rgb(0, 0, 0)",
-                                    color: "rgb(0, 0, 0)",
-                                    transition: "all 0.2s ease-in-out 0s",
-                                    "background-color": "rgba(0, 0, 0, 0)",
-                                    "text-decoration":
-                                      "none solid rgb(0, 0, 0)",
-                                    margin: "0px",
-                                    outline: "rgb(0, 0, 0) none 0px",
-                                    cursor: "pointer",
-                                  },
-                                  onmouseenter: (e) => {
-                                    e.target.style.textDecoration = "underline";
-                                  },
-                                  onmouseleave: (e) => {
-                                    e.target.style.textDecoration = "none";
-                                  },
-                                },
-                                option.label
-                              )
-                            )
-                      )
-                    ),
-                  ]
-                )
-              : null,
-          ]
-        ),
-      ],
-    };
-  }
 }
 
-function Banner() {
+function Hero() {
   return {
     view: () => [
-      m(
-        "div",
-        {
-          class: "carousel slide col-12 mx-auto px-auto h-10",
-          "data-bs-ride": "carousel",
-          style: {
-            height: "500px",
-          },
-        },
-        m(
-          "div",
-          {
-            class: "carousel-inner h-100 bg-dark",
-          },
+      m("section", { class: "hero-section", id: "hero" }, [
+        m("div", { class: "wave" }, [
           m(
-            "div",
+            "svg",
             {
-              class:
-                "carousel-item justify-content-center align-items-center active h-100",
+              width: "100%",
+              height: "355px",
+              viewBox: "0 0 1920 355",
+              version: "1.1",
+              xmlns: "http://www.w3.org/2000/svg",
+              xmlns: "",
+              xlink: "http://www.w3.org/1999/xlink",
             },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel1.jpg",
-            })
+            [
+              m(
+                "g",
+                {
+                  id: "Page-1",
+                  stroke: "none",
+                  "stroke-width": "1",
+                  fill: "none",
+                  "fill-rule": "evenodd",
+                },
+                [
+                  m(
+                    "g",
+                    {
+                      id: "Apple-TV",
+                      transform: "translate(0.000000, -402.000000)",
+                      fill: "#FFFFFF",
+                    },
+                    [
+                      m("path", {
+                        d: "M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,757 L1017.15166,757 L0,757 L0,439.134243 Z",
+                        id: "Path",
+                      }),
+                    ]
+                  ),
+                ]
+              ),
+            ]
           ),
-          m(
-            "div",
-            {
-              class:
-                "carousel-item justify-content-center align-items-flex-start h-100",
-            },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel2.jpg",
-            })
-          ),
-          m(
-            "div",
-            {
-              class:
-                "carousel-item justify-content-center align-items-center h-100",
-            },
-            m("img", {
-              class: "img-fluid col-12 h-120 ",
-              src: "../images/carrusel3.jpg",
-            })
-          )
-        )
-      ),
+        ]),
+        m("div", { class: "container" }, [
+          m("div", { class: "row align-items-center" }, [
+            m("div", { class: "col-12 hero-text-image" }, [
+              m("div", { class: "row" }, [
+                m("div", { class: "col-lg-8 text-center text-lg-start" }, [
+                  m(
+                    "h1",
+                    { "data-aos": "fade-right" },
+                    "Tu Página Web Nutricional de confianza"
+                  ),
+                  m(
+                    "p",
+                    {
+                      class: "mb-5",
+                      "data-aos": "fade-right",
+                      "data-aos-delay": "100",
+                    },
+                    "Disfruta de todas las ventajas que te ofrece Vita."
+                  ),
+                  m(
+                    "p",
+                    {
+                      "data-aos": "fade-right",
+                      "data-aos-delay": "200",
+                      "data-aos-offset": "-500",
+                    },
+                    [
+                      m(
+                        "a",
+                        { href: "#", class: "btn btn-outline-white" },
+                        "Get started"
+                      ),
+                    ]
+                  ),
+                ]),
+                m("div", { class: "col-lg-4 iphone-wrap" }, [
+                  m("img", {
+                    src: "../images/phone_1.png",
+                    alt: "Image",
+                    class: "phone-1",
+                    "data-aos": "fade-right",
+                  }),
+                  m("img", {
+                    src: "../images/phone_2.png",
+                    alt: "Image",
+                    class: "phone-2",
+                    "data-aos": "fade-right",
+                    "data-aos-delay": "200",
+                  }),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
     ],
   };
 }
 
-function Stats() {
-  let aria1 = true;
-  let backgroundColor = "white"; // Estado inicial del fondo
-
+function Info() {
   return {
     view: () => [
-      m(
-        "div",
-        {
-          class: "card text-center",
-        },
-        m(
-          "div",
-          {
-            class: "card-header",
-          },
-          m(
-            "ul",
-            {
-              class: "nav nav-tabs card-header-tabs",
-            },
-            [
+      m("section", { class: "section" }, [
+        m("div", { class: "container" }, [
+          m("div", { class: "row justify-content-center text-center mb-5" }, [
+            m("div", { class: "col-md-5", "data-aos": "fade-up" }, [
               m(
-                "li",
-                {
-                  class: "nav-item",
-                },
-                m(
-                  "a",
-                  {
-                    onclick: (e) => {
-                      e.target.setAttribute("aria-selected", aria1);
-                    },
-                    class: "nav-link active",
-                    href: "#",
-                    id: "home-tab",
-                    "data-bs-toggle": "tab",
-                    "data-bs-target": "#home",
-                    type: "button",
-                    role: "tab",
-                    "aria-controls": "home",
-                    "aria-selected": "true",
-                  },
-                  "Macros"
-                )
+                "h2",
+                { class: "section-heading" },
+                "Ahorra tiempo usando Vita"
               ),
-              m(
-                "li",
-                {
-                  class: "nav-item",
-                },
-                m(
-                  "a",
-                  {
-                    onclick: (e) => {
-                      e.target.setAttribute("aria-selected", aria1);
-                    },
-                    class: "nav-link",
-                    href: "#",
-                    id: "profile-tab",
-                    "data-bs-toggle": "tab",
-                    "data-bs-target": "#profile",
-                    type: "button",
-                    role: "tab",
-                    "aria-controls": "profile",
-                    "aria-selected": "false",
-                  },
-                  "Estadisticas"
-                )
-              ),
-            ]
-          )
-        ),
-        m(
-          "div",
-          {
-            class: "card-body",
-          },
-          m(
-            "div",
-            {
-              class: "tab-content",
-              id: "myTabContent",
-            },
+            ]),
+          ]),
+          m("div", { class: "row" }, [
             m(
               "div",
               {
-                class: "tab-pane fade show active py-5 h1",
-                id: "home",
-                role: "tabpanel",
-                "aria-labelledby": "home-tab",
+                class: "col-md-4",
+                "data-aos": "fade-up",
+                "data-aos-delay": "",
               },
-              "Aqui estan las macros",
-              m(
-                "div",
-                {
-                  class: "progress my-5",
-                  style: {
-                    height: "100px",
-                  },
-                },
-                [
+              [
+                m("div", { class: "feature-1 text-center" }, [
+                  m("div", { class: "wrap-icon icon-1" }, [
+                    m("i", { class: "bi bi-people" }),
+                  ]),
+                  m("h3", { class: "mb-3" }, "Aumenta tu productividad"),
                   m(
-                    "div",
-                    {
-                      class: "progress-bar h4",
-                      "aria-valuenow": "33",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "33%",
-                        margin: 0,
-                      },
-                    },
-                    "Proteinas"
+                    "p",
+                    {},
+                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
                   ),
-                  m(
-                    "div",
-                    {
-                      class: "progress-bar bg-success h4",
-                      "aria-valuenow": "13",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "13%",
-                        margin: 0,
-                      },
-                    },
-                    "Carbohidratos"
-                  ),
-                  m(
-                    "div",
-                    {
-                      class: "progress-bar bg-info h4",
-                      "aria-valuenow": "23",
-                      "aria-valuemin": "0",
-                      "aria-valuemax": "100",
-                      style: {
-                        width: "23%",
-                        margin: 0,
-                      },
-                    },
-                    "Grasas"
-                  ),
-                ]
-              ),
-              m(
-                "a",
-                {
-                  class:
-                    "btn btn-primary d-flex align-items-center justify-content-center mx-auto w-25",
-                  href: "#",
-                  style: {
-                    width: "100%",
-                    height: "55px",
-                    marginTop: "20px",
-                  },
-                },
-                "Ir al perfil"
-              )
+                ]),
+              ]
             ),
             m(
               "div",
               {
-                class: "tab-pane fade show py-5",
-                id: "profile",
-                role: "tabpanel",
-                "aria-labelledby": "profile-tab",
+                class: "col-md-4",
+                "data-aos": "fade-up",
+                "data-aos-delay": "100",
               },
-              "Aqui estan las stats"
-            )
-          )
-        )
-      ),
+              [
+                m("div", { class: "feature-1 text-center" }, [
+                  m("div", { class: "wrap-icon icon-1" }, [
+                    m("i", { class: "bi bi-brightness-high" }),
+                  ]),
+                  m("h3", { class: "mb-3" }, "Mejora tu alimentación"),
+                  m(
+                    "p",
+                    {},
+                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                  ),
+                ]),
+              ]
+            ),
+            m(
+              "div",
+              {
+                class: "col-md-4",
+                "data-aos": "fade-up",
+                "data-aos-delay": "200",
+              },
+              [
+                m("div", { class: "feature-1 text-center" }, [
+                  m("div", { class: "wrap-icon icon-1" }, [
+                    m("i", { class: "bi bi-bar-chart" }),
+                  ]),
+                  m("h3", { class: "mb-3" }, "No pierdas tiempo"),
+                  m(
+                    "p",
+                    {},
+                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                  ),
+                ]),
+              ]
+            ),
+          ]),
+        ]),
+      ]),
+      m("section", { class: "section" }, [
+        m("div", { class: "container" }, [
+          m(
+            "div",
+            {
+              class: "row justify-content-center text-center mb-5",
+              "data-aos": "fade",
+            },
+            [
+              m("div", { class: "col-md-6 mb-5" }, [
+                m("img", {
+                  src: "../images/undraw_svg_1.svg",
+                  alt: "Image",
+                  class: "img-fluid",
+                }),
+              ]),
+            ]
+          ),
+          m("div", { class: "row" }, [
+            m("div", { class: "col-md-4" }, [
+              m("div", { class: "step" }, [
+                m("span", { class: "number" }, "01"),
+                m("h3", {}, "Inicia Sesion"),
+                m(
+                  "p",
+                  {},
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m("div", { class: "col-md-4" }, [
+              m("div", { class: "step" }, [
+                m("span", { class: "number" }, "02"),
+                m("h3", {}, "Create un perfil"),
+                m(
+                  "p",
+                  {},
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m("div", { class: "col-md-4" }, [
+              m("div", { class: "step" }, [
+                m("span", { class: "number" }, "03"),
+                m("h3", {}, "Disfruta de las ventajas"),
+                m(
+                  "p",
+                  {},
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section", { class: "section" }, [
+        m("div", { class: "container" }, [
+          m("div", { class: "row align-items-center" }, [
+            m("div", { class: "col-md-4 me-auto" }, [
+              m(
+                "h2",
+                { class: "mb-4" },
+                "Disfruta de una organización de tus comidas"
+              ),
+              m(
+                "p",
+                { class: "mb-4" },
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+              ),
+              m("p", {}, [
+                m(
+                  "a",
+                  { href: "#!Menus", class: "btn btn-primary" },
+                  "Ir ahora"
+                ),
+              ]),
+            ]),
+            m("div", { class: "col-md-6", "data-aos": "fade-left" }, [
+              m("img", {
+                src: "../images/undraw_svg_2.svg",
+                alt: "Image",
+                class: "img-fluid",
+              }),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section", { class: "section" }, [
+        m("div", { class: "container" }, [
+          m("div", { class: "row align-items-center" }, [
+            m("div", { class: "col-md-4 ms-auto order-2" }, [
+              m("h2", { class: "mb-4" }, "Danos tu Feedback"),
+              m(
+                "p",
+                { class: "mb-4" },
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+              ),
+              m("p", {}, [
+                m("a", { href: "#", class: "btn btn-primary" }, "Ir ahora"),
+              ]),
+            ]),
+            m("div", { class: "col-md-6", "data-aos": "fade-right" }, [
+              m("img", {
+                src: "../images/undraw_svg_3.svg",
+                alt: "Image",
+                class: "img-fluid",
+              }),
+            ]),
+          ]),
+        ]),
+      ]),
+    ],
+  };
+}
+
+function HeroFooter() {
+  return {
+    view: () => [
+      m("section.section.cta-section", [
+        m(".container", [
+          m(".row.align-items-center", [
+            m(".col-md-6.me-auto.text-center.text-md-start.mb-5.mb-md-0", [
+              m("h2", "Si tienes alguna duda. ¡Contáctanos!"),
+            ]),
+            m(".col-md-5.text-center.text-md-end", [
+              m("p", [
+                m("a.btn.d-inline-flex.align-items-center[href=#]", [
+                  m("i.bx.bxl-play-store"),
+                  m("span", "Ir ahora"),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ],
+  };
+}
+
+function Footer() {
+  return {
+    view: () => [
+      m("footer.footer", { role: "contentinfo" }, [
+        m(".container", [
+          m(".row", [
+            m(".col-md-4.mb-4.mb-md-0", [
+              m("h3", "About Vita"),
+              m(
+                "p",
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ea delectus pariatur, numquam aperiam dolore nam optio dolorem facilis itaque voluptatum recusandae deleniti minus animi."
+              ),
+              m("p.social", [
+                m("a[href=#]", [m("span.bi.bi-twitter")]),
+                m("a[href=#]", [m("span.bi.bi-facebook")]),
+                m("a[href=#]", [m("span.bi.bi-instagram")]),
+                m("a[href=#]", [m("span.bi.bi-linkedin")]),
+              ]),
+            ]),
+            m(".col-md-7.ms-auto", [
+              m(".row.site-section.pt-0", [
+                m(".col-md-6.mb-6.mb-md-0", [
+                  m("h3", "Navegación"),
+                  m("ul.list-unstyled", [
+                    m("li", [m("a[href=#!Suscripcion]", "Suscripción")]),
+                    m("li", [m("a[href=#]", "Comentarios")]),
+                    m("li", [m("a[href=#]", "Contacto")]),
+                  ]),
+                ]),
+                m(".col-md-6.mb-6.mb-md-0", [
+                  m("h3", "Servicios"),
+                  m("ul.list-unstyled", [
+                    m("li", [m("a[href=#]", "Equipo")]),
+                    m("li", [m("a[href=#]", "Collaboration")]),
+                    m("li", [m("a[href=#]", "Todos")]),
+                    m("li", [m("a[href=#]", "Events")]),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+          m(".row.justify-content-center.text-center", [
+            m(".col-md-7", [
+              m("p.copyright", "© Copyright Vita. All Rights Reserved"),
+            ]),
+          ]),
+        ]),
+      ]),
+    ],
+  };
+}
+
+function Testimonio() {
+  return {
+    view: () => [
+      m("section.section.border-top.border-bottom", [
+        m(".container", [
+          m(".row.justify-content-center.text-center.mb-5", [
+            m(".col-md-4", [m("h2.section-heading", "Review From Our Users")]),
+          ]),
+          m(".row.justify-content-center.text-center", [
+            m(".col-md-7", [
+              m(
+                ".testimonials-slider.swiper",
+                { "data-aos": "fade-up", "data-aos-delay": "100" },
+                [
+                  m(".swiper-wrapper", [
+                    m(".swiper-slide", [
+                      m(".review.text-center", [
+                        m("p.stars", [
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill.muted"),
+                        ]),
+                        m("h3", "Excellent App!"),
+                        m("blockquote", [
+                          m(
+                            "p",
+                            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ea delectus pariatur, numquam aperiam dolore nam optio dolorem facilis itaque voluptatum recusandae deleniti minus animi, provident voluptates consectetur maiores quos."
+                          ),
+                        ]),
+                        m("p.review-user", [
+                          m("img.img-fluid.rounded-circle.mb-3", {
+                            src: "assets/img/person_1.jpg",
+                            alt: "Image",
+                          }),
+                          m("span.d-block", [
+                            m("span.text-black", "Jean Doe"),
+                            ", — App User",
+                          ]),
+                        ]),
+                      ]),
+                    ]),
+                    m(".swiper-slide", [
+                      m(".review.text-center", [
+                        m("p.stars", [
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill.muted"),
+                        ]),
+                        m("h3", "This App is easy to use!"),
+                        m("blockquote", [
+                          m(
+                            "p",
+                            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ea delectus pariatur, numquam aperiam dolore nam optio dolorem facilis itaque voluptatum recusandae deleniti minus animi, provident voluptates consectetur maiores quos."
+                          ),
+                        ]),
+                        m("p.review-user", [
+                          m("img.img-fluid.rounded-circle.mb-3", {
+                            src: "assets/img/person_2.jpg",
+                            alt: "Image",
+                          }),
+                          m("span.d-block", [
+                            m("span.text-black", "Johan Smith"),
+                            ", — App User",
+                          ]),
+                        ]),
+                      ]),
+                    ]),
+                    m(".swiper-slide", [
+                      m(".review.text-center", [
+                        m("p.stars", [
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill"),
+                          m("span.bi.bi-star-fill.muted"),
+                        ]),
+                        m("h3", "Awesome functionality!"),
+                        m("blockquote", [
+                          m(
+                            "p",
+                            "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eius ea delectus pariatur, numquam aperiam dolore nam optio dolorem facilis itaque voluptatum recusandae deleniti minus animi, provident voluptates consectetur maiores quos."
+                          ),
+                        ]),
+                        m("p.review-user", [
+                          m("img.img-fluid.rounded-circle.mb-3", {
+                            src: "assets/img/person_3.jpg",
+                            alt: "Image",
+                          }),
+                          m("span.d-block", [
+                            m("span.text-black", "Jean Thunberg"),
+                            ", — App User",
+                          ]),
+                        ]),
+                      ]),
+                    ]),
+                  ]),
+                  m(".swiper-pagination"),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section.section", [
+        m(".container", [
+          m(
+            ".row.justify-content-center.text-center.mb-5",
+            { "data-aos": "fade-up" },
+            [
+              m(".col-md-5", [
+                m("h2.section-heading", "Save your time to using SoftLand"),
+              ]),
+            ]
+          ),
+          m(".row", [
+            m(".col-md-4", { "data-aos": "fade-up", "data-aos-delay": "" }, [
+              m(".feature-1.text-center", [
+                m(".wrap-icon.icon-1", [m("i.bi.bi-people")]),
+                m("h3.mb-3", "Explore Your Team"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m(".col-md-4", { "data-aos": "fade-up", "data-aos-delay": "100" }, [
+              m(".feature-1.text-center", [
+                m(".wrap-icon.icon-1", [m("i.bi.bi-brightness-high")]),
+                m("h3.mb-3", "Digital Whiteboard"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m(".col-md-4", { "data-aos": "fade-up", "data-aos-delay": "200" }, [
+              m(".feature-1.text-center", [
+                m(".wrap-icon.icon-1", [m("i.bi.bi-bar-chart")]),
+                m("h3.mb-3", "Design To Development"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section.section", [
+        m(".container", [
+          m(
+            ".row.justify-content-center.text-center.mb-5",
+            { "data-aos": "fade" },
+            [
+              m(".col-md-6.mb-5", [
+                m("img.img-fluid", {
+                  src: "assets/img/undraw_svg_1.svg",
+                  alt: "Image",
+                }),
+              ]),
+            ]
+          ),
+          m(".row", [
+            m(".col-md-4", [
+              m(".step", [
+                m("span.number", "01"),
+                m("h3", "Sign Up"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m(".col-md-4", [
+              m(".step", [
+                m("span.number", "02"),
+                m("h3", "Create Profile"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+            m(".col-md-4", [
+              m(".step", [
+                m("span.number", "03"),
+                m("h3", "Enjoy the app"),
+                m(
+                  "p",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rem, optio."
+                ),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section.section", [
+        m(".container", [
+          m(".row.align-items-center", [
+            m(".col-md-4.me-auto", [
+              m("h2.mb-4", "Seamlessly Communicate"),
+              m(
+                "p.mb-4",
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+              ),
+              m("p", [m("a.btn.btn-primary", { href: "#" }, "Download Now")]),
+            ]),
+            m(".col-md-6", { "data-aos": "fade-left" }, [
+              m("img.img-fluid", {
+                src: "assets/img/undraw_svg_2.svg",
+                alt: "Image",
+              }),
+            ]),
+          ]),
+        ]),
+      ]),
+      m("section.section", [
+        m(".container", [
+          m(".row.align-items-center", [
+            m(".col-md-4.ms-auto.order-2", [
+              m("h2.mb-4", "Gather Feedback"),
+              m(
+                "p.mb-4",
+                "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+              ),
+              m("p", [m("a.btn.btn-primary", { href: "#" }, "Download Now")]),
+            ]),
+            m(".col-md-6", { "data-aos": "fade-right" }, [
+              m("img.img-fluid", {
+                src: "assets/img/undraw_svg_3.svg",
+                alt: "Image",
+              }),
+            ]),
+          ]),
+        ]),
+      ]),
     ],
   };
 }
