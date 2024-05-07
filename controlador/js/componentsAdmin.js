@@ -19,7 +19,13 @@ function Home() {
 
 function Alimentos() {
   return {
-    view: () => [m(Header), m(ListaPlatos)],
+    view: () => [
+      m(Header),
+      m(ListaPlatos),
+      m(ModalPlatos),
+      m(DetallesModalPlatos),
+      m(ModificarModalPlatos),
+    ],
   };
 }
 
@@ -30,6 +36,11 @@ $(document).ready(function () {
     e.preventDefault();
     console.log(e);
     Insertar(e); // Llamar a la función de inserción
+  });
+  $("#FormularioPlatos").submit(function (e) {
+    e.preventDefault();
+    console.log(e);
+    InsertarPlato(e); // Llamar a la función de inserción
   });
 
   // Manejar el evento submit del formulario de modificación
@@ -51,227 +62,29 @@ $(document).ready(function () {
 
     window.location.reload();
   });
+  $("#form-modificarPlatos").submit(function (e) {
+    e.preventDefault();
+    var id = $("#id_plato").val();
+    console.log(id);
+    ModificarPlatos(id);
+    ocultarModificarModalPlatos();
+
+    // Mostrar mensaje de éxito en el contenedor de detalles
+    $("#detallesContainer").html("El plato se ha modificado correctamente");
+
+    // Modificar el título del modal
+    $(".modal-title").html("Plato Insertado");
+
+    // Mostrar el modal de detalles
+    $("#detallesModal").modal("show");
+
+    window.location.reload();
+  });
 });
-var ocultar;
 
-var Modal = {
-  view: function (vnode) {
-    return m(
-      ".modal",
-      {
-        id: "modalInsercion",
-        tabindex: "-1",
-        role: "dialog",
-        style: "display: none;",
-      },
-      [
-        m(".modal-dialog", { role: "document" }, [
-          m(".modal-content", [
-            m(".modal-header", [
-              m("h5.modal-title", "Insertar Cliente"),
-              m(
-                "button.close",
-                {
-                  type: "button",
-                  "aria-label": "Close",
-                  onclick: vnode.attrs.ocultarModal,
-                },
-                [m("span", { "aria-hidden": "true" }, "×")]
-              ),
-            ]),
-            m(".modal-body", [
-              // Formulario de inserción
-              m(
-                "form#miFormulario",
-                {
-                  method: "post",
-                  // action: "../controlador/Usuarios/Insertar.php",
-                },
-                [
-                  m("label", { for: "nombre" }, "nombre: "),
-                  m("input", { type: "text", id: "nombre", name: "nombre" }),
-                  m("br"),
-                  m("label", { for: "apellido" }, "apellido: "),
-                  m("input", {
-                    type: "text",
-                    id: "apellido",
-                    name: "apellido",
-                  }),
-                  m("br"),
-                  m("label", { for: "email" }, "email: "),
-                  m("input", { type: "text", id: "email", name: "email" }),
-                  m("br"),
-                  m("label", { for: "pwd" }, "pwd: "),
-                  m("input", { type: "text", id: "pwd", name: "pwd" }),
-                  m("br"),
-                  m("label", { for: "administrador" }, "administrador: "),
-                  m("input", {
-                    type: "checkbox",
-                    id: "administrador",
-                    value: "1",
-                    name: "administrador",
-                  }),
-                  " Sí",
-                  m("br"),
-                  m("input[type=submit]", { id: "enviar" }),
-                ]
-              ),
-            ]),
-          ]),
-        ]),
-      ]
-    );
-  },
-};
-var DetallesModal = {
-  view: function (vnode) {
-    return m(
-      ".modal",
-      {
-        id: "detallesModal",
-        tabindex: "-1",
-        role: "dialog",
-        style: "display: none;",
-      },
-      [
-        m(".modal-dialog", { role: "document" }, [
-          m(".modal-content", [
-            m(".modal-header", [
-              m("h5.modal-title", "Detalles del Cliente"),
-              m(
-                "button.close",
-                {
-                  type: "button",
-                  "aria-label": "Close",
-                  onclick: () => {
-                    vnode.attrs.ocultarModal;
-                    ocultar = true;
-                  },
-                },
-                [m("span", { "aria-hidden": "true" }, "×")]
-              ),
-            ]),
-            m(".modal-body#detallesContainer", [
-              // Aquí se mostrarán los detalles del cliente
-              // Puedes agregar contenido dinámico aquí si lo necesitas
-            ]),
-          ]),
-        ]),
-      ]
-    );
-  },
-};
-var ModificarModal = {
-  view: function (vnode) {
-    return m(
-      ".modal",
-      {
-        id: "modalModificar",
-        tabindex: "-1",
-        role: "dialog",
-        style: "display: none;",
-      },
-      [
-        m(".modal-dialog", { role: "document" }, [
-          m(".modal-content", [
-            m(".modal-header", [
-              m("h5.modal-title", "Modificar Cliente"),
-              m(
-                "button.close",
-                {
-                  type: "button",
-                  "aria-label": "Close",
-                  onclick: vnode.attrs.ocultarModal,
-                },
-                [m("span", { "aria-hidden": "true" }, "×")]
-              ),
-            ]),
-            m(".modal-body", [
-              // Formulario de modificación
-              m(
-                "form#form-modificar",
-                {
-                  method: "post",
-                  // action: "../controlador/Usuarios/modificar.php",
-                },
-                [
-                  m("input[type=hidden]", {
-                    id: "id_usuario",
-                    name: "id_usuario",
-                  }),
-                  m("label", { for: "nombre" }, "nombre: "),
-                  m("input", { type: "text", id: "nombre", name: "nombre" }),
-                  m("br"),
-                  m("label", { for: "apellido" }, "apellido: "),
-                  m("input", {
-                    type: "text",
-                    id: "apellido",
-                    name: "apellido",
-                  }),
-                  m("br"),
-                  m("label", { for: "email" }, "email: "),
-                  m("input", { type: "text", id: "email", name: "email" }),
-                  m("br"),
-                  m("label", { for: "pwd" }, "pwd: "),
-                  m("input", { type: "text", id: "pwd", name: "pwd" }),
-                  m("br"),
-                  m("label", { for: "administrador" }, "administrador: "),
-                  m("input", {
-                    type: "checkbox",
-                    id: "administrador",
-                    value: "1",
-                    name: "administrador",
-                  }),
-                  " Sí",
-                  m("br"),
-                  m("input[type=submit]", {
-                    id: "enviar2",
-                    onclick: () => {
-                      Modificar();
-                    },
-                  }),
-                ]
-              ),
-            ]),
-          ]),
-        ]),
-      ]
-    );
-  },
-};
-function mostrarModalInsercion() {
-  $("#modalInsercion").modal("show");
-}
-function ocultarInsertarModal() {
-  $("#modalInsercion").modal("hide");
-}
-
-function mostrarModalModificar(
-  id_usuario,
-  nombre,
-  apellido,
-  email,
-  pwd,
-  administrador
-) {
-  console.log(id_usuario);
-  $("#modalModificar").find('input[name="id_usuario"]').val(id_usuario);
-  $("#modalModificar").find('input[name="nombre"]').val(nombre);
-  $("#modalModificar").find('input[name="apellido"]').val(apellido);
-  $("#modalModificar").find('input[name="email"]').val(email);
-  $("#modalModificar").find('input[name="pwd"]').val(pwd);
-  $("#modalModificar").find('input[name="administrador"]').val(administrador);
-  $("#modalModificar").modal("show");
-  // Modificar(id_usuario);
-}
-function ocultarModificarModal() {
-  $("#modalModificar").modal("hide");
-}
 function Header() {
   return {
     model: {
-      topHeader:
-        " Oferta Black Friday: Ahorra hasta un 60% de descuento con el codigo BLACKFRIDAY ",
       itemsMenu: [
         {
           href: "#",
@@ -280,57 +93,6 @@ function Header() {
             options: [],
           },
         },
-        /*         {
-          href: null,
-          item: {
-            label: "Tienda",
-            options: [
-              {
-                label: "Productos",
-                items: [
-                  { label: "Producto v1", href: "#" },
-                  { label: "Producto v2", href: "#" },
-                  { label: "Video", href: "#" },
-                  { label: "Agrupado", href: "#" },
-                  { label: "Variable", href: "#" },
-                  { label: "Externo", href: "#" },
-                  { label: "Tarjeta Regalo", href: "#" },
-                  { label: "Rebajas", href: "#" },
-                  { label: "Nuevo", href: "#" },
-                  { label: "Sold out", href: "#" },
-                ],
-              },
-              {
-                label: "Catalogo",
-                items: [
-                  { label: "Catalogo v1", href: "#" },
-                  { label: "Catalogo v2", href: "#" },
-                  { label: "Filtro Izq", href: "#" },
-                  { label: "Filtro Dch", href: "#" },
-                ],
-              },
-              {
-                label: "Catalogo Columnas",
-                items: [
-                  { label: "2 columnas", href: "#" },
-                  { label: "3 columnas", href: "#" },
-                  { label: "4 columnas", href: "#" },
-                  { label: "5 columnas", href: "#" },
-                ],
-              },
-              {
-                label: "Paginas tienda",
-                items: [
-                  { label: "Mi cuenta", href: "#" },
-                  { label: "Lista deseados", href: "#" },
-                  { label: "Carro", href: "#" },
-                  { label: "Pagar", href: "#" },
-                  { label: "Localizar tu pedido", href: "#" },
-                ],
-              },
-            ],
-          },
-        }, */
         {
           href: "#!Alimentos",
           item: {
@@ -339,27 +101,12 @@ function Header() {
           },
         },
         {
-          href: "#",
+          href: "#!Menus",
           item: {
-            label: "Rutina",
-            options: [
-              { label: "Ejercicios", items: "", href: "#" },
-              { label: "Comidas", items: "", href: "#" },
-            ],
+            label: "Menus",
+            options: [],
           },
         },
-        /* {
-          href: "#!MiPerfil",
-          item: {
-            label: "Mi Perfil",
-            options: [
-              { label: "Configuracion", items: "", href: "#" },
-              { label: "Historial", items: "", href: "#" },
-              { label: "Estadisticas", items: "", href: "#" },
-              { label: "Perfil", items: "", href: "#!MiPerfil" },
-            ],
-          },
-        }, */
         {
           href: "#",
           item: {
@@ -476,6 +223,9 @@ function Header() {
               m(
                 "a",
                 {
+                  onclick: () => {
+                    window.location.href = "../controlador/login/logout.php";
+                  },
                   style: {
                     "margin-right": "20px",
                     "margin-left": "33px",
@@ -914,6 +664,207 @@ function Header() {
   }
 }
 
+//VARIABLES
+
+var ocultar;
+
+//MODALES
+
+var Modal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalInsercion",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Insertar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de inserción
+              m(
+                "form#miFormulario",
+                {
+                  method: "post",
+                },
+                [
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "apellido" }, "apellido: "),
+                  m("input", {
+                    type: "text",
+                    id: "apellido",
+                    name: "apellido",
+                  }),
+                  m("br"),
+                  m("label", { for: "email" }, "email: "),
+                  m("input", { type: "text", id: "email", name: "email" }),
+                  m("br"),
+                  m("label", { for: "pwd" }, "pwd: "),
+                  m("input", { type: "text", id: "pwd", name: "pwd" }),
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+
+var DetallesModal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "detallesModal",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Detalles del Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: () => {
+                    vnode.attrs.ocultarModal;
+                    ocultar = true;
+                  },
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body#detallesContainer", [
+              // Aquí se mostrarán los detalles del cliente
+              // Puedes agregar contenido dinámico aquí si lo necesitas
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+
+var ModificarModal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalModificar",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Modificar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de modificación
+              m(
+                "form#form-modificar",
+                {
+                  method: "post",
+                  // action: "../controlador/Usuarios/modificar.php",
+                },
+                [
+                  m("input[type=hidden]", {
+                    id: "id_usuario",
+                    name: "id_usuario",
+                  }),
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "apellido" }, "apellido: "),
+                  m("input", {
+                    type: "text",
+                    id: "apellido",
+                    name: "apellido",
+                  }),
+                  m("br"),
+                  m("label", { for: "email" }, "email: "),
+                  m("input", { type: "text", id: "email", name: "email" }),
+                  m("br"),
+                  m("label", { for: "pwd" }, "pwd: "),
+                  m("input", { type: "text", id: "pwd", name: "pwd" }),
+                  m("br"),
+                  m("br"),
+                  m("input[type=submit]", {
+                    id: "enviar2",
+                    onclick: () => {
+                      Modificar();
+                    },
+                  }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+
+function mostrarModalInsercion() {
+  $("#modalInsercion").modal("show");
+}
+
+function ocultarInsertarModal() {
+  $("#modalInsercion").modal("hide");
+}
+
+function mostrarModalModificar(id_usuario, nombre, apellido, email, pwd) {
+  console.log(id_usuario);
+  $("#modalModificar").find('input[name="id_usuario"]').val(id_usuario);
+  $("#modalModificar").find('input[name="nombre"]').val(nombre);
+  $("#modalModificar").find('input[name="apellido"]').val(apellido);
+  $("#modalModificar").find('input[name="email"]').val(email);
+  $("#modalModificar").find('input[name="pwd"]').val(pwd);
+  $("#modalModificar").modal("show");
+  // Modificar(id_usuario);
+}
+
+function ocultarModificarModal() {
+  $("#modalModificar").modal("hide");
+}
+
+//FUNCIONES
+
 function ListaUser() {
   let showModal = false;
   return {
@@ -947,7 +898,7 @@ function ListaUser() {
             m("th", { scope: "col" }, "Nombre"),
             m("th", { scope: "col" }, "Apellido"),
             m("th", { scope: "col" }, "Email"),
-            m("th", { scope: "col" }, "Administrador"),
+            m("th", { scope: "col" }, "Contraseñas"),
             m("th", { scope: "col" }, "Acciones"),
           ])
         ),
@@ -987,7 +938,7 @@ function ListaUser() {
             m("td", i.nombre),
             m("td", i.apellido),
             m("td", i.email),
-            m("td", i.administrador),
+            m("td", i.pwd),
             m(
               "td",
               m("div", { class: "d-flex justify-content-around" }, [
@@ -1016,8 +967,7 @@ function ListaUser() {
                         i.nombre,
                         i.apellido,
                         i.email,
-                        i.pwd,
-                        i.administrador
+                        i.pwd
                       );
                     },
                   },
@@ -1071,7 +1021,6 @@ function Detalles(id) {
             <p>Apellido: ${datos.apellido}</p>
             <p>Email: ${datos.email}</p>
             <p>Pwd: ${datos.pwd}</p>
-            <p>Administrador: ${datos.administrador}</p>
           `;
       console.log(detallesHtml);
       $(".modal-header").html("Detalles Clientes");
@@ -1177,12 +1126,293 @@ function Modificar(id) {
 
 //!!ALIMENTOS
 
+//Modales
+
+var ModalPlatos = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalInsercionPlatos",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Insertar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de inserción
+              m(
+                "form#FormularioPlatos",
+                {
+                  method: "post",
+                },
+                [
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "ingredientes" }, "ingredientes: "),
+                  m("input", {
+                    type: "text",
+                    id: "ingredientes",
+                    name: "ingredientes",
+                  }),
+                  m("br"),
+                  m("label", { for: "foto" }, "foto: "),
+                  m("input", {
+                    type: "text",
+                    id: "foto",
+                    name: "foto",
+                  }),
+                  m("br"),
+                  m("label", { for: "calorias" }, "calorias: "),
+                  m("input", {
+                    type: "text",
+                    id: "calorias",
+                    name: "calorias",
+                  }),
+                  m("br"),
+                  m("label", { for: "proteinas" }, "proteinas: "),
+                  m("input", {
+                    type: "text",
+                    id: "proteinas",
+                    name: "proteinas",
+                  }),
+                  m("br"),
+                  m("label", { for: "carbohidratos" }, "carbohidratos: "),
+                  m("input", {
+                    type: "text",
+                    id: "carbohidratos",
+                    name: "carbohidratos",
+                  }),
+                  m("br"),
+                  m("label", { for: "grasas" }, "grasas: "),
+                  m("input", {
+                    type: "text",
+                    id: "grasas",
+                    name: "grasas",
+                  }),
+                  m("br"),
+                  m("label", { for: "descripcion" }, "descripcion: "),
+                  m("input", {
+                    type: "textarea",
+                    id: "descripcion",
+                    name: "descripcion",
+                  }),
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var DetallesModalPlatos = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalDetallesPlatos",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Detalles del Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: () => {
+                    vnode.attrs.ocultarModal;
+                    ocultar = true;
+                  },
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body#detallesContainer", [
+              // Aquí se mostrarán los detalles del cliente
+              // Puedes agregar contenido dinámico aquí si lo necesitas
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var ModificarModalPlatos = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalModificarPlatos",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Modificar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de modificación
+              m(
+                "form#form-modificarPlatos",
+                {
+                  method: "post",
+                  // action: "../controlador/Usuarios/modificar.php",
+                },
+                [
+                  m("label", { for: "id_plato" }, "id_plato: "),
+                  m("input[type=text]", {
+                    readonly: "readonly",
+                    id: "id_plato",
+                    name: "id_plato",
+                  }),
+                  m("br"),
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "ingredientes" }, "ingredientes: "),
+                  m("input", {
+                    type: "text",
+                    id: "ingredientes",
+                    name: "ingredientes",
+                  }),
+                  m("br"),
+                  m("label", { for: "foto" }, "foto: "),
+                  m("input", {
+                    type: "text",
+                    id: "foto",
+                    name: "foto",
+                  }),
+                  m("br"),
+                  m("label", { for: "calorias" }, "calorias: "),
+                  m("input", {
+                    type: "text",
+                    id: "calorias",
+                    name: "calorias",
+                  }),
+                  m("br"),
+                  m("label", { for: "proteinas" }, "proteinas: "),
+                  m("input", {
+                    type: "text",
+                    id: "proteinas",
+                    name: "proteinas",
+                  }),
+                  m("br"),
+                  m("label", { for: "carbohidratos" }, "carbohidratos: "),
+                  m("input", {
+                    type: "text",
+                    id: "carbohidratos",
+                    name: "carbohidratos",
+                  }),
+                  m("br"),
+                  m("label", { for: "grasas" }, "grasas: "),
+                  m("input", {
+                    type: "text",
+                    id: "grasas",
+                    name: "grasas",
+                  }),
+                  m("br"),
+                  m("label", { for: "descripcion" }, "descripcion: "),
+                  m("input", {
+                    type: "textarea",
+                    id: "descripcion",
+                    name: "descripcion",
+                  }),
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+
+//Funciones Modales
+
+function mostrarModalInsercionPlatos() {
+  $("#modalInsercionPlatos").modal("show");
+}
+function ocultarInsertarModalPlatos() {
+  $("#modalInsercionPlatos").modal("hide");
+}
+function mostrarModalModificarPlatos(
+  id_plato,
+  nombre,
+  ingredientes,
+  foto,
+  calorias,
+  proteinas,
+  carbohidratos,
+  grasas,
+  descripcion
+) {
+  console.log(id_plato);
+  $("#modalModificarPlatos").find('input[name="id_plato"]').val(id_plato);
+  $("#modalModificarPlatos").find('input[name="nombre"]').val(nombre);
+  $("#modalModificarPlatos")
+    .find('input[name="ingredientes"]')
+    .val(ingredientes);
+  $("#modalModificarPlatos").find('input[name="foto"]').val(foto);
+  $("#modalModificarPlatos").find('input[name="calorias"]').val(calorias);
+  $("#modalModificarPlatos").find('input[name="proteinas"]').val(proteinas);
+  $("#modalModificarPlatos")
+    .find('input[name="carbohidratos"]')
+    .val(carbohidratos);
+  $("#modalModificarPlatos").find('input[name="grasas"]').val(grasas);
+  $("#modalModificarPlatos").find('input[name="descripcion"]').val(descripcion);
+  $("#modalModificarPlatos").modal("show");
+  // Modificar(id_usuario);
+}
+function ocultarModificarModalPlatos() {
+  $("#modalModificarPlatos").modal("hide");
+}
+
+//Funciones
+
 function ListaPlatos() {
   let showModal = false;
 
   // Función para obtener los datos de los platos
   function fetchPlatosData() {
-    fetch("../controlador/Alimentos/mostrar.php", {
+    fetch("../controlador/Platos/mostrar.php", {
       method: "GET",
       headers: { "Content-Type": "application/json" },
     })
@@ -1225,9 +1455,9 @@ function ListaPlatos() {
                 {
                   class: "btn btn-success",
                   "data-toggle": "modal",
-                  "data-target": "#modalDetalles",
+                  "data-target": "#modalDetallesPlatos",
                   onclick: () => {
-                    Detalles(i.id_plato);
+                    DetallesPlato(i.id_plato);
                   },
                 },
                 "Detalles"
@@ -1237,10 +1467,10 @@ function ListaPlatos() {
                 {
                   class: "btn btn-primary",
                   "data-toggle": "modal",
-                  "data-target": "#modalModificar",
+                  "data-target": "#modalModificarPlatos",
                   onclick: () => {
-                    console.log(i.id_usuario);
-                    mostrarModalModificar(
+                    console.log(i.id_plato);
+                    mostrarModalModificarPlatos(
                       i.id_plato,
                       i.nombre,
                       i.ingredientes,
@@ -1260,9 +1490,9 @@ function ListaPlatos() {
                 {
                   class: "btn btn-danger",
                   "data-toggle": "modal",
-                  "data-target": "#modalDetalles",
+                  "data-target": "#modalDetallesPlatos",
                   onclick: () => {
-                    Borrar(i.id_plato);
+                    BorrarPlatos(i.id_plato);
                   },
                 },
                 "Eliminar"
@@ -1285,7 +1515,7 @@ function ListaPlatos() {
         {
           class: "btn btn-primary mt-5 mx-5 ",
           onclick: () => {
-            mostrarModalInsercion();
+            mostrarModalInsercionPlatos();
           },
         },
         "AÑADIR"
@@ -1322,4 +1552,136 @@ function ListaPlatos() {
       ),
     ],
   };
+}
+
+function InsertarPlato() {
+  var formulario = $("#FormularioPlatos");
+  console.log(formulario);
+
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Platos/insertarPlato.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      if (response.error) {
+        console.log("Error en la solicitud AJAX:", response.error);
+      } else {
+        ocultarInsertarModal();
+        window.location.reload();
+        m(ListaUser);
+      }
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      ocultarInsertarModalPlatos(); // Ocultar el modal de inserción
+
+      // Mostrar mensaje de éxito en el contenedor de detalles
+      $("#detallesContainer").html("El Plato se ha insertado correctamente");
+
+      // Modificar el título del modal
+      $(".modal-title").html("Plato Insertado");
+
+      // Mostrar el modal de detalles
+      $("#detallesModal").modal("show");
+
+      window.location.reload();
+    },
+  });
+}
+
+function DetallesPlato(id) {
+  let datos;
+  console.log(id);
+  fetch("../controlador/Platos/detallePlato.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      // m.redraw();
+      console.log(data);
+      datos = data;
+      console.log(datos);
+      var detallesHtml = `
+            <p>ID: ${datos.id_plato}</p>
+            <p>Nombre: ${datos.nombre}</p>
+            <p>Ingredientes: ${datos.ingredientes}</p>
+            <p>Foto: ${datos.foto}</p>
+            <p>Calorias: ${datos.calorias}</p>
+            <p>Proteinas: ${datos.proteinas}</p>
+            <p>Carbohidratos: ${datos.carbohidratos}</p>
+            <p>Grasas: ${datos.grasas}</p>
+            <p>Descripcion: ${datos.descripcion}</p>
+          `;
+      console.log(detallesHtml);
+      $(".modal-header").html("Detalles Platos");
+
+      // Mostrar los detalles del cliente en el contenedor
+      $("#detallesContainer").html(detallesHtml);
+
+      // Modificar el título del modal
+      $(".modal-title").html("Detalles Platos");
+
+      // Mostrar el modal de detalles
+      $("#modalDetallesPlatos").modal("show");
+    });
+}
+
+function BorrarPlatos(id) {
+  fetch("../controlador/Platos/borrarPlato.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      $("#detallesContainer").html("El plato se ha borrado correctamente");
+
+      // Modificar el título del modal
+      $(".modal-title").html("Borrado Exitoso");
+
+      // Mostrar el modal de detalles
+      $("#modalDetallesPlatos").modal("show");
+
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function ModificarPlatos(id) {
+  var formulario = $("#form-modificarPlatos");
+  var ids = formulario.find('input[name="id_plato"]').val();
+  console.log(ids);
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Platos/modificarPlato.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      console.log(response);
+      // window.location.reload();
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      // window.location.reload();
+    },
+  });
 }

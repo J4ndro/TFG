@@ -63,9 +63,9 @@
     );
 
     CREATE TABLE IF NOT EXISTS MenuUsuario (
-    id_menu INT,
-    id_usuario INT,
-    FOREIGN KEY (id_menu) REFERENCES Menus(id_menu),
-    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
-    PRIMARY KEY (id_menu, id_usuario)
-);
+        id_menu INT,
+        id_usuario INT,
+        FOREIGN KEY (id_menu) REFERENCES Menus(id_menu),
+        FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+        PRIMARY KEY (id_menu, id_usuario)
+    );

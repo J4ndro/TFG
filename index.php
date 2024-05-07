@@ -23,7 +23,11 @@
             <i class="fa fa-key"></i>
             <button>
                 <i class="spinner"></i>
-                <span class="state">Entrar</span>
+                <span class="state">Iniciar Sesion</span>
+            </button>
+            <button>
+                <i class="spinner"></i>
+                <span class="state">Crear Cuenta</span>
             </button>
         </form>
 </body>

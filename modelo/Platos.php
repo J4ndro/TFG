@@ -74,10 +74,10 @@ class Platos
 			die();
 		}
 	}
-	function buscar($link)
+	function buscar($link, $id_plato)
 	{
 		try {
-			$consulta = "SELECT * FROM Platos where id_plato='$this->id_plato'";
+			$consulta = "SELECT * FROM Platos where id_plato='$id_plato'";
 			$link = $link->getLink();
 			$result = $link->prepare($consulta);
 			$result->execute();
@@ -92,10 +92,10 @@ class Platos
 	function insertar($link)
 	{
 		try {
-			$consulta = "INSERT INTO Platos VALUES (:id_plato, :nombre, :ingredientes, :foto, :calorias, :proteinas, :carbohidratos, :grasas, :descripcion, :precio)";
+			$consulta = "INSERT INTO Platos(nombre,ingredientes,foto,calorias,proteinas,carbohidratos,grasas,descripcion) 
+			VALUES (:nombre, :ingredientes, :foto, :calorias, :proteinas, :carbohidratos, :grasas, :descripcion)";
 			$link = $link->getLink();
 			$result = $link->prepare($consulta);
-			$result->bindParam(':id_plato', $this->id_plato);
 			$result->bindParam(':nombre', $this->nombre);
 			$result->bindParam(':ingredientes', $this->ingredientes);
 			$result->bindParam(':foto', $this->foto);
@@ -114,10 +114,10 @@ class Platos
 		}
 	}
 
-	function borrar($link)
+	function borrar($link, $id_plato)
 	{
 		try {
-			$consulta = "DELETE FROM Platos where id_plato='$this->id_plato'";
+			$consulta = "DELETE FROM Platos where id_plato='$id_plato'";
 			$result = $link->link->prepare($consulta);
 			$result->execute();
 			return $result->fetch(PDO::FETCH_ASSOC);
@@ -128,14 +128,13 @@ class Platos
 		}
 	}
 
-	function modificar($link)
+	function modificar($link, $id_plato)
 	{
 		try {
-			$update = "UPDATE Platos SET nombre = :nombre, ingredientes = :ingredientes, foto = :foto, calorias = :calorias, proteinas = :proteinas, carbohidratos = :carbohidratos, grasas = :grasas, descripcion = :descripcion, precio = :precio WHERE id_plato = :id_plato";
+			$update = "UPDATE Platos SET nombre = :nombre, ingredientes = :ingredientes, foto = :foto, calorias = :calorias, proteinas = :proteinas, carbohidratos = :carbohidratos, grasas = :grasas, descripcion = :descripcion WHERE id_plato = '$id_plato'";
 
 			$stmnt = $link->link->prepare($update);
 			$stmnt->execute([
-				':id_plato' => $this->id_plato,
 				':nombre' => $this->nombre,
 				':ingredientes' => $this->ingredientes,
 				':foto' => $this->foto,
@@ -152,4 +151,5 @@ class Platos
 			die();
 		}
 	}
+
 }

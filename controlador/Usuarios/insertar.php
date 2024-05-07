@@ -8,10 +8,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $apellido = isset($_POST['apellido']) ? $_POST['apellido'] : '';
     $email = isset($_POST['email']) ? $_POST['email'] : '';
     $pwd = isset($_POST['pwd']) ? $_POST['pwd'] : '';
-    $administrador = isset($_POST['admin']) ? $_POST['admin'] : '';
 
     // Crear una instancia de Usuario con los datos recibidos
-    $user = new Usuario($nombre, $apellido, $email, $pwd, $administrador);
+    $user = new Usuario($nombre, $apellido, $email, $pwd);
     $link = new Bd;
 
     // Intenta insertar el usuario en la base de datos
@@ -22,7 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'apellido' => $apellido,
             'email' => $email,
             'pwd' => $pwd,
-            'administrador' => $administrador
         );
         echo json_encode($response);
     } else {

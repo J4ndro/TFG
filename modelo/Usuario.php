@@ -8,14 +8,12 @@ class Usuario
     private $apellido;
     private $email;
     private $pwd;
-    private $administrador;
-    function __construct($nombre, $apellido, $email, $pwd, $administrador)
+    function __construct($nombre, $apellido, $email, $pwd)
     {
         $this->nombre = $nombre;
         $this->apellido = $apellido;
         $this->email = $email;
         $this->pwd = $pwd;
-        $this->administrador = $administrador;
     }
 
     static function getAll($link)
@@ -76,14 +74,13 @@ class Usuario
     function insertar($link)
     {
         try {
-            $consulta = "INSERT INTO Usuarios (nombre, apellido, email, pwd, administrador) VALUES (:nombre, :apellido, :email, :pwd, :administrador)";
+            $consulta = "INSERT INTO Usuarios (nombre, apellido, email, pwd) VALUES (:nombre, :apellido, :email, :pwd)";
             $link = $link->getLink();
             $result = $link->prepare($consulta);
             $result->bindParam(':nombre', $this->nombre);
             $result->bindParam(':apellido', $this->apellido);
             $result->bindParam(':email', $this->email);
             $result->bindParam(':pwd', $this->pwd);
-            $result->bindValue(':administrador', $this->administrador == 1 ? "true" : "false");
 
             $result->execute();
             return $result;
@@ -111,7 +108,7 @@ class Usuario
     function modificar($link, $id_usuario)
     {
         try {
-            $update = "UPDATE Usuarios SET nombre = :nombre, apellido = :apellido, email = :email, pwd = :pwd, administrador = :administrador WHERE id_usuario = '$id_usuario'";
+            $update = "UPDATE Usuarios SET nombre = :nombre, apellido = :apellido, email = :email, pwd = :pwd WHERE id_usuario = '$id_usuario'";
 
             $stmnt = $link->link->prepare($update);
             $stmnt->execute([
@@ -119,7 +116,6 @@ class Usuario
                 ':apellido' => $this->apellido,
                 ':email' => $this->email,
                 ':pwd' => $this->pwd,
-                ':administrador' => $this->administrador
             ]);
 
             return $stmnt;

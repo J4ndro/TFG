@@ -1,6 +1,6 @@
 const pages = [Home, Alimentos, Perfil, Suscripcion];
 
-const components = [Header, Banner, Stats, AsidePerfil];
+const components = [Header, Banner, Stats, PerfilSection];
 
 export { pages, components };
 
@@ -13,13 +13,13 @@ function Home() {
 
 function Alimentos() {
   return {
-    view: () => [m(Header), m(Seccion), m(Banner)],
+    view: () => [m(Header), m(Seccion)],
   };
 }
 
 function Perfil() {
   return {
-    view: () => [m(Header), m(AsidePerfil)],
+    view: () => [m(Header), m(PerfilSection)],
   };
 }
 
@@ -32,8 +32,6 @@ function Suscripcion() {
 function Header() {
   return {
     model: {
-      topHeader:
-        " Oferta Black Friday: Ahorra hasta un 60% de descuento con el codigo BLACKFRIDAY ",
       itemsMenu: [
         {
           href: "#",
@@ -42,57 +40,7 @@ function Header() {
             options: [],
           },
         },
-        /*         {
-          href: null,
-          item: {
-            label: "Tienda",
-            options: [
-              {
-                label: "Productos",
-                items: [
-                  { label: "Producto v1", href: "#" },
-                  { label: "Producto v2", href: "#" },
-                  { label: "Video", href: "#" },
-                  { label: "Agrupado", href: "#" },
-                  { label: "Variable", href: "#" },
-                  { label: "Externo", href: "#" },
-                  { label: "Tarjeta Regalo", href: "#" },
-                  { label: "Rebajas", href: "#" },
-                  { label: "Nuevo", href: "#" },
-                  { label: "Sold out", href: "#" },
-                ],
-              },
-              {
-                label: "Catalogo",
-                items: [
-                  { label: "Catalogo v1", href: "#" },
-                  { label: "Catalogo v2", href: "#" },
-                  { label: "Filtro Izq", href: "#" },
-                  { label: "Filtro Dch", href: "#" },
-                ],
-              },
-              {
-                label: "Catalogo Columnas",
-                items: [
-                  { label: "2 columnas", href: "#" },
-                  { label: "3 columnas", href: "#" },
-                  { label: "4 columnas", href: "#" },
-                  { label: "5 columnas", href: "#" },
-                ],
-              },
-              {
-                label: "Paginas tienda",
-                items: [
-                  { label: "Mi cuenta", href: "#" },
-                  { label: "Lista deseados", href: "#" },
-                  { label: "Carro", href: "#" },
-                  { label: "Pagar", href: "#" },
-                  { label: "Localizar tu pedido", href: "#" },
-                ],
-              },
-            ],
-          },
-        }, */
+
         {
           href: "#!Alimentos",
           item: {
@@ -110,18 +58,6 @@ function Header() {
             ],
           },
         },
-        /* {
-          href: "#!MiPerfil",
-          item: {
-            label: "Mi Perfil",
-            options: [
-              { label: "Configuracion", items: "", href: "#" },
-              { label: "Historial", items: "", href: "#" },
-              { label: "Estadisticas", items: "", href: "#" },
-              { label: "Perfil", items: "", href: "#!MiPerfil" },
-            ],
-          },
-        }, */
         {
           href: "#",
           item: {
@@ -238,6 +174,9 @@ function Header() {
               m(
                 "a",
                 {
+                  onclick: () => {
+                    window.location.href = "../controlador/login/logout.php";
+                  },
                   style: {
                     "margin-right": "20px",
                     "margin-left": "33px",
@@ -910,23 +849,357 @@ function Stats() {
   };
 }
 
-function AsidePerfil() {
+function PerfilSection() {
   return {
     view: () => [
-      m(
-        "div",
-        {
-          class: "col-12",
-        },
-        [
-          m("div", {
-            class: "col-4",
-          }),
-          m("div", {
-            class: "col-8",
-          }),
-        ]
-      ),
+      m("section", { style: "background-color: #eee;" }, [
+        m("div", { class: "container py-5" }, [
+          m("div", { class: "row" }, [
+            m("div", { class: "col" }, [
+              m(
+                "nav",
+                {
+                  "aria-label": "breadcrumb",
+                  class: "bg-body-tertiary rounded-3 p-3 mb-4",
+                },
+                [
+                  m("ol", { class: "breadcrumb mb-0" }, [
+                    m("li", { class: "breadcrumb-item" }, [
+                      m("a", { href: "#" }, "Home"),
+                    ]),
+                    m("li", { class: "breadcrumb-item" }, [
+                      m("a", { href: "#" }, "Perfil"),
+                    ]),
+                    m(
+                      "li",
+                      {
+                        class: "breadcrumb-item active",
+                        "aria-current": "page",
+                      },
+                      "Mi Perfil"
+                    ),
+                  ]),
+                ]
+              ),
+            ]),
+          ]),
+          m("div", { class: "row" }, [
+            m("div", { class: "col-lg-4" }, [
+              m("div", { class: "card mb-4" }, [
+                m("div", { class: "card-body text-center" }, [
+                  m("img", {
+                    src: "../images/perfil.jpg",
+                    alt: "avatar",
+                    class: "rounded-circle img-fluid",
+                    style: "width: 150px;",
+                  }),
+                  m("h5", { class: "my-3" }, "Juan Muñoz"),
+                  m("p", { class: "text-muted mb-1" }, "Id: 1"),
+
+                  m("div", { class: "d-flex justify-content-center mb-2" }, [
+                    m(
+                      "button",
+                      {
+                        type: "button",
+                        "data-mdb-button-init": "",
+                        "data-mdb-ripple-init": "",
+                        class: "btn btn-primary",
+                      },
+                      "Modificar"
+                    ),
+                    m(
+                      "button",
+                      {
+                        type: "button",
+                        "data-mdb-button-init": "",
+                        "data-mdb-ripple-init": "",
+                        class: "btn btn-danger ms-1",
+                      },
+                      "Eliminar Cuenta"
+                    ),
+                  ]),
+                ]),
+              ]),
+              m("div", { class: "card mb-4 mb-lg-0" }, [
+                m("div", { class: "card-body p-0" }, [
+                  m("ul", { class: "list-group list-group-flush rounded-3" }, [
+                    m(
+                      "li",
+                      {
+                        class:
+                          "list-group-item d-flex justify-content-between align-items-center p-3",
+                      },
+                      [
+                        m("i", { class: "fas fa-globe fa-lg text-warning" }),
+                        m("p", { class: "mb-0" }, "Altura: 1,80cm"),
+                      ]
+                    ),
+                    m(
+                      "li",
+                      {
+                        class:
+                          "list-group-item d-flex justify-content-between align-items-center p-3",
+                      },
+                      [
+                        m("i", {
+                          class: "fab fa-github fa-lg",
+                          style: "color: #333333;",
+                        }),
+                        m("p", { class: "mb-0" }, "Peso: 80kg"),
+                      ]
+                    ),
+                    m(
+                      "li",
+                      {
+                        class:
+                          "list-group-item d-flex justify-content-between align-items-center p-3",
+                      },
+                      [
+                        m("i", {
+                          class: "fab fa-twitter fa-lg",
+                          style: "color: #55acee;",
+                        }),
+                        m("p", { class: "mb-0" }, "Edad: 21 años"),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+            m("div", { class: "col-lg-8" }, [
+              m("div", { class: "card mb-4" }, [
+                m("div", { class: "card-body" }, [
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Nombre completo"),
+                    ]),
+                    m("div", { class: "col-sm-9" }, [
+                      m("p", { class: "text-muted mb-0" }, "Juan Muñoz"),
+                    ]),
+                  ]),
+                  m("hr"),
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Email"),
+                    ]),
+                    m("div", { class: "col-sm-9" }, [
+                      m(
+                        "p",
+                        { class: "text-muted mb-0" },
+                        "juanmuñoz@gmail.com"
+                      ),
+                    ]),
+                  ]),
+                  m("hr"),
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Numero"),
+                    ]),
+                    m("div", { class: "col-sm-9" }, [
+                      m("p", { class: "text-muted mb-0" }, "634-545-666"),
+                    ]),
+                  ]),
+                  m("hr"),
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Direccion"),
+                    ]),
+                    m("div", { class: "col-sm-9" }, [
+                      m(
+                        "p",
+                        { class: "text-muted mb-0" },
+                        "Calle Alcala derecha 1"
+                      ),
+                    ]),
+                  ]),
+                ]),
+              ]),
+              m("div", { class: "row" }, [
+                m("div", { class: "col-md-6" }, [
+                  m("div", { class: "card mb-4 mb-md-0" }, [
+                    m("div", { class: "card-body" }, [
+                      m("p", { class: "mb-4" }, [
+                        m(
+                          "span",
+                          { class: "text-primary font-italic me-1" },
+                          "Macros"
+                        ),
+                        " Actuales ",
+                      ]),
+                      m(
+                        "p",
+                        { class: "mb-1", style: "font-size: .77rem;" },
+                        "Calorias"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 80%",
+                            "aria-valuenow": "80",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Proteinas"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 72%",
+                            "aria-valuenow": "72",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Carbohidratos"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 89%",
+                            "aria-valuenow": "89",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Grasas"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 55%",
+                            "aria-valuenow": "55",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                    ]),
+                  ]),
+                ]),
+                m("div", { class: "col-md-6" }, [
+                  m("div", { class: "card mb-4 mb-md-0" }, [
+                    m("div", { class: "card-body" }, [
+                      m("p", { class: "mb-4" }, [
+                        m(
+                          "span",
+                          { class: "text-primary font-italic me-1" },
+                          "Macros"
+                        ),
+                        " Objetivo ",
+                      ]),
+                      m(
+                        "p",
+                        { class: "mb-1", style: "font-size: .77rem;" },
+                        "Calorias"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 80%",
+                            "aria-valuenow": "80",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Proteinas"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 72%",
+                            "aria-valuenow": "72",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Carbohidratos"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 89%",
+                            "aria-valuenow": "89",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                      m(
+                        "p",
+                        { class: "mt-4 mb-1", style: "font-size: .77rem;" },
+                        "Grasas"
+                      ),
+                      m(
+                        "div",
+                        { class: "progress rounded", style: "height: 5px;" },
+                        [
+                          m("div", {
+                            class: "progress-bar",
+                            role: "progressbar",
+                            style: "width: 55%",
+                            "aria-valuenow": "55",
+                            "aria-valuemin": "0",
+                            "aria-valuemax": "100",
+                          }),
+                        ]
+                      ),
+                    ]),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
     ],
   };
 }
@@ -1032,18 +1305,70 @@ function Suscripciones() {
 
 function Seccion() {
   return {
+    model: {
+      menus: [{}, {}, {}],
+      items: [{}, {}, {}, {}, {}],
+    },
     view: () => [
-      m(
-        "div",
-        {
-          class: "py-5 px-5 col-12 d-flex justify-content-end",
-        },
+      this.state.model.menus.map((c) =>
         m(
-          "button",
+          "div",
           {
-            class: "btn btn-lg btn-primary",
+            class: "py-5 px-5 col-12 d-flex flex-column", // Agregué flex-column para que los elementos se apilen verticalmente
           },
-          "AÑADIR"
+          m(
+            "p",
+            {
+              class: "h1 col-12 py-3",
+              style: {
+                borderBottom: "1px solid rgba(0,0,0,0.2)",
+              },
+            },
+            "Menu 1"
+          ),
+          // Aquí empieza el div para las cards
+          m(
+            "div",
+            { class: "col-12 mt-5 d-flex" },
+            this.state.model.items.map((i) =>
+              m(
+                "div",
+                {
+                  class: "card",
+                  style: "width: 18rem;",
+                },
+                [
+                  m("img", {
+                    class: "card-img-top",
+                    src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                    alt: "Card image cap",
+                  }),
+                  m("div", { class: "card-body" }, [
+                    m("h5", { class: "card-title" }, "Arroz con Tomate"),
+                    m(
+                      "p",
+                      { class: "card-text" },
+                      "Esta es una receta simple de un arroz a la cubana"
+                    ),
+                  ]),
+                  m("ul", { class: "list-group list-group-flush" }, [
+                    m("li", { class: "list-group-item" }, "Calorias: 457/kcal"),
+                    m("li", { class: "list-group-item" }, "Proteina: 45g/100g"),
+                    m(
+                      "li",
+                      { class: "list-group-item" },
+                      "Carbohidratos: 60g/100g"
+                    ),
+                    m("li", { class: "list-group-item" }, "Grasas: 5g/100g"),
+                  ]),
+                  m("div", { class: "card-body" }, [
+                    m("a", { href: "#", class: "card-link" }, "Modificar"),
+                    m("a", { href: "#", class: "card-link" }, "Eliminar"),
+                  ]),
+                ]
+              )
+            )
+          ) // Aquí termina el div para las cards
         )
       ),
     ],

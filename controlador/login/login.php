@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $user = new Usuario("", "", "", $username, $password, "");
+    $user = new Usuario("", "", $username, $password);
     $bd = new Bd();
     // Verificar las credenciales
     if ($user->buscarUsuario($bd)) {

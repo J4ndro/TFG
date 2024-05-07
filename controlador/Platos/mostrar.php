@@ -1,5 +1,5 @@
 <?php
-require "../../modelo/Alimentos.php";
+require "../../modelo/Platos.php";
 
 $link = new Bd();
 $user = Platos::getAll($link->link);

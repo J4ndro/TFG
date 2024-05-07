@@ -9,11 +9,10 @@ if (isset($_POST['email'])) {
     $apellido = $_POST['apellido'];
     $email = $_POST['email'];
     $pwd = $_POST['pwd'];
-    $administrador = isset($_POST['administrador']) ? 1 : 0;
 
     // Utiliza la misma instancia de Bd
     $link = new Bd;
-    $user = new Usuario($nombre, $apellido, $email, $pwd, $administrador);
+    $user = new Usuario($nombre, $apellido, $email, $pwd);
 
     // Asegúrate de pasar el objeto $link a la función modificar
     // $cliente->modificar($link);
@@ -23,7 +22,6 @@ if (isset($_POST['email'])) {
             'apellido' => $apellido,
             'email' => $email,
             'pwd' => $pwd,
-            'administrador' => $administrador
         );
 
         echo json_encode($response);
