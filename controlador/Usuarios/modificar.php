@@ -1,27 +1,26 @@
 <?php
-require "../../modelo/Cliente.php";
+require "../../modelo/Usuario.php";
 
 
-if (isset($_POST['dniCliente'])) {
+if (isset($_POST['email'])) {
     var_dump($_POST);
-    $dniCliente = $_POST['dniCliente'];
+    $id_usuario = $_POST['id_usuario'];
     $nombre = $_POST['nombre'];
-    $direccion = $_POST['direccion'];
+    $apellido = $_POST['apellido'];
     $email = $_POST['email'];
     $pwd = $_POST['pwd'];
     $administrador = isset($_POST['administrador']) ? 1 : 0;
 
     // Utiliza la misma instancia de Bd
     $link = new Bd;
-    $cliente = new Cliente($dniCliente, $nombre, $direccion, $email, $pwd, $administrador);
+    $user = new Usuario($nombre, $apellido, $email, $pwd, $administrador);
 
     // Asegúrate de pasar el objeto $link a la función modificar
     // $cliente->modificar($link);
-    if ($cliente->modificar($link)) {
+    if ($user->modificar($link, $id_usuario)) {
         $response = array(
-            'dni' => $dniCliente,
             'nombre' => $nombre,
-            'direccion' => $direccion,
+            'apellido' => $apellido,
             'email' => $email,
             'pwd' => $pwd,
             'administrador' => $administrador

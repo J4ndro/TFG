@@ -1,17 +1,272 @@
-const pages = [Home];
+const pages = [Home, Alimentos];
 
-const components = [Header, ListaUser];
+const components = [Header, ListaUser, Modal, DetallesModal, ModificarModal];
 
 export { pages, components };
 
 //!! PAGES
 function Home() {
   return {
-    view: () => [m(Header), m(ListaUser)],
+    view: () => [
+      m(Header),
+      m(ListaUser),
+      m(Modal),
+      m(DetallesModal),
+      m(ModificarModal),
+    ],
+  };
+}
+
+function Alimentos() {
+  return {
+    view: () => [m(Header), m(ListaPlatos)],
   };
 }
 
 //!! COMPONENTS
+$(document).ready(function () {
+  // Manejar el evento submit del formulario de inserción
+  $("#miFormulario").submit(function (e) {
+    e.preventDefault();
+    console.log(e);
+    Insertar(e); // Llamar a la función de inserción
+  });
+
+  // Manejar el evento submit del formulario de modificación
+  $("#form-modificar").submit(function (e) {
+    e.preventDefault();
+    var id = $("#id_usuario").val();
+    console.log(id);
+    Modificar(id);
+    ocultarModificarModal();
+
+    // Mostrar mensaje de éxito en el contenedor de detalles
+    $("#detallesContainer").html("El cliente se ha modificado correctamente");
+
+    // Modificar el título del modal
+    $(".modal-title").html("Cliente Insertado");
+
+    // Mostrar el modal de detalles
+    $("#detallesModal").modal("show");
+
+    window.location.reload();
+  });
+});
+var ocultar;
+
+var Modal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalInsercion",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Insertar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de inserción
+              m(
+                "form#miFormulario",
+                {
+                  method: "post",
+                  // action: "../controlador/Usuarios/Insertar.php",
+                },
+                [
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "apellido" }, "apellido: "),
+                  m("input", {
+                    type: "text",
+                    id: "apellido",
+                    name: "apellido",
+                  }),
+                  m("br"),
+                  m("label", { for: "email" }, "email: "),
+                  m("input", { type: "text", id: "email", name: "email" }),
+                  m("br"),
+                  m("label", { for: "pwd" }, "pwd: "),
+                  m("input", { type: "text", id: "pwd", name: "pwd" }),
+                  m("br"),
+                  m("label", { for: "administrador" }, "administrador: "),
+                  m("input", {
+                    type: "checkbox",
+                    id: "administrador",
+                    value: "1",
+                    name: "administrador",
+                  }),
+                  " Sí",
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var DetallesModal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "detallesModal",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Detalles del Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: () => {
+                    vnode.attrs.ocultarModal;
+                    ocultar = true;
+                  },
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body#detallesContainer", [
+              // Aquí se mostrarán los detalles del cliente
+              // Puedes agregar contenido dinámico aquí si lo necesitas
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var ModificarModal = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalModificar",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Modificar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de modificación
+              m(
+                "form#form-modificar",
+                {
+                  method: "post",
+                  // action: "../controlador/Usuarios/modificar.php",
+                },
+                [
+                  m("input[type=hidden]", {
+                    id: "id_usuario",
+                    name: "id_usuario",
+                  }),
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "apellido" }, "apellido: "),
+                  m("input", {
+                    type: "text",
+                    id: "apellido",
+                    name: "apellido",
+                  }),
+                  m("br"),
+                  m("label", { for: "email" }, "email: "),
+                  m("input", { type: "text", id: "email", name: "email" }),
+                  m("br"),
+                  m("label", { for: "pwd" }, "pwd: "),
+                  m("input", { type: "text", id: "pwd", name: "pwd" }),
+                  m("br"),
+                  m("label", { for: "administrador" }, "administrador: "),
+                  m("input", {
+                    type: "checkbox",
+                    id: "administrador",
+                    value: "1",
+                    name: "administrador",
+                  }),
+                  " Sí",
+                  m("br"),
+                  m("input[type=submit]", {
+                    id: "enviar2",
+                    onclick: () => {
+                      Modificar();
+                    },
+                  }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+function mostrarModalInsercion() {
+  $("#modalInsercion").modal("show");
+}
+function ocultarInsertarModal() {
+  $("#modalInsercion").modal("hide");
+}
+
+function mostrarModalModificar(
+  id_usuario,
+  nombre,
+  apellido,
+  email,
+  pwd,
+  administrador
+) {
+  console.log(id_usuario);
+  $("#modalModificar").find('input[name="id_usuario"]').val(id_usuario);
+  $("#modalModificar").find('input[name="nombre"]').val(nombre);
+  $("#modalModificar").find('input[name="apellido"]').val(apellido);
+  $("#modalModificar").find('input[name="email"]').val(email);
+  $("#modalModificar").find('input[name="pwd"]').val(pwd);
+  $("#modalModificar").find('input[name="administrador"]').val(administrador);
+  $("#modalModificar").modal("show");
+  // Modificar(id_usuario);
+}
+function ocultarModificarModal() {
+  $("#modalModificar").modal("hide");
+}
 function Header() {
   return {
     model: {
@@ -666,9 +921,9 @@ function ListaUser() {
       m(
         "button",
         {
-          class: "btn btn-primary my-5 mx-5 ",
+          class: "btn btn-primary mt-5 mx-5 ",
           onclick: () => {
-            showModal = true;
+            mostrarModalInsercion();
           },
         },
         "AÑADIR"
@@ -683,7 +938,7 @@ function ListaUser() {
       m(
         "table",
         {
-          class: " table table-striped my-5 px-5 mx-auto  ",
+          class: " table table-striped mt-2 px-5 mx-auto  ",
         },
         m(
           "thead",
@@ -700,82 +955,98 @@ function ListaUser() {
       ),
     ],
   };
-}
-function Listar() {
-  let datos = []; // Inicializa datos como un array vacío
+  function Listar() {
+    let datos = []; // Inicializa datos como un array vacío
 
-  // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
-  fetch("../controlador/Usuarios/mostrar.php", {
-    method: "GET",
-    headers: { "Content-Type": "application/json" },
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      } else {
-        console.log("Conectado");
-        return response.json();
-      }
+    // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
+    fetch("../controlador/Usuarios/mostrar.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
     })
-    .then((data) => {
-      console.log(data);
-      datos = data; // Actualiza datos cuando se reciban los datos
-      m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
-    });
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        datos = data; // Actualiza datos cuando se reciban los datos
+        m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+      });
 
-  // Devuelve un componente que muestra los datos
-  return {
-    view: () => [
-      datos.map((i) => [
-        m(
-          "tr",
-          m("th", i.id_usuario),
-          m("td", i.nombre),
-          m("td", i.apellido),
-          m("td", i.email),
-          m("td", i.administrador),
+    // Devuelve un componente que muestra los datos
+    return {
+      view: () => [
+        datos.map((i) => [
           m(
-            "td",
-            m("div", { class: "d-flex justify-content-around" }, [
-              m(
-                "button",
-                {
-                  class: "btn btn-success",
-                  "data-toggle": "modal",
-                  "data-target": "#modalDetalles",
-                  onclick: () => {
-                    Detalles(i.id_usuario);
+            "tr",
+            m("th", i.id_usuario),
+            m("td", i.nombre),
+            m("td", i.apellido),
+            m("td", i.email),
+            m("td", i.administrador),
+            m(
+              "td",
+              m("div", { class: "d-flex justify-content-around" }, [
+                m(
+                  "button",
+                  {
+                    class: "btn btn-success",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDetalles",
+                    onclick: () => {
+                      Detalles(i.id_usuario);
+                    },
                   },
-                  onInsert: function (data) {
-                    Insertar(data);
-                    showModal = false; // Ocultar el modal después de insertar los datos
+                  "Detalles"
+                ),
+                m(
+                  "button",
+                  {
+                    class: "btn btn-primary",
+                    "data-toggle": "modal",
+                    "data-target": "#modalModificar",
+                    onclick: () => {
+                      console.log(i.id_usuario);
+                      mostrarModalModificar(
+                        i.id_usuario,
+                        i.nombre,
+                        i.apellido,
+                        i.email,
+                        i.pwd,
+                        i.administrador
+                      );
+                    },
                   },
-                },
-                "Detalles"
-              ),
-              m("button", { class: "btn btn-primary" }, "Modificar"),
-              m(
-                "button",
-                {
-                  class: "btn btn-danger",
-                  "data-toggle": "modal",
-                  "data-target": "#modalDetalles",
-                  onclick: () => {
-                    Borrar(i.id_usuario);
+                  "Modificar"
+                ),
+                m(
+                  "button",
+                  {
+                    class: "btn btn-danger",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDetalles",
+                    onclick: () => {
+                      Borrar(i.id_usuario);
+                    },
                   },
-                },
-                "Eliminar"
-              ),
-            ])
-          )
-        ),
-      ]),
-    ],
-  };
+                  "Eliminar"
+                ),
+              ])
+            )
+          ),
+        ]),
+      ],
+    };
+  }
 }
 
 function Detalles(id) {
-  let datos = [];
+  let datos;
+  console.log(id);
   fetch("../controlador/Usuarios/detalle.php", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -794,48 +1065,26 @@ function Detalles(id) {
       console.log(data);
       datos = data;
       console.log(datos);
-      // m.redraw();
-    });
+      var detallesHtml = `
+            <p>ID: ${datos.id_usuario}</p>
+            <p>Nombre: ${datos.nombre}</p>
+            <p>Apellido: ${datos.apellido}</p>
+            <p>Email: ${datos.email}</p>
+            <p>Pwd: ${datos.pwd}</p>
+            <p>Administrador: ${datos.administrador}</p>
+          `;
+      console.log(detallesHtml);
+      $(".modal-header").html("Detalles Clientes");
 
-  return {
-    view: () => [
-      datos.map((i) =>
-        m(
-          "div#modalDetalles",
-          { tabindex: "-1", class: "modal", role: "dialog" },
-          [
-            m("div", { class: "modal-dialog", role: "document" }, [
-              m("div", { class: "modal-content" }, [
-                m("div", { class: "modal-header" }, [
-                  m("h5.modal-title", console.log(i.nombre)),
-                  m(
-                    "button.close",
-                    { type: "button", "aria-label": "Close", class: "close" },
-                    [m("span", { "aria-hidden": "true" }, "x")]
-                  ),
-                ]),
-                m("div", { class: "modal-body" }, [
-                  m("p", "ID:" + i.id_usuario),
-                ]),
-                m("div", { clas: "modal-footer" }, [
-                  m(
-                    "button.btn.btn-primary",
-                    { type: "button" },
-                    "Guardar Cambios"
-                  ),
-                  m(
-                    "button.btn.btn-secondary",
-                    { type: "button", "data-dismiss": "modal" },
-                    "Cerrar"
-                  ),
-                ]),
-              ]),
-            ]),
-          ]
-        )
-      ),
-    ],
-  };
+      // Mostrar los detalles del cliente en el contenedor
+      $("#detallesContainer").html(detallesHtml);
+
+      // Modificar el título del modal
+      $(".modal-title").html("Detalles Clientes");
+
+      // Mostrar el modal de detalles
+      $("#detallesModal").modal("show");
+    });
 }
 
 function Borrar(id) {
@@ -853,155 +1102,224 @@ function Borrar(id) {
       }
     })
     .then((data) => {
-      console.log(data);
-      window.location.reload();
-      m.redraw();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
-}
+      $("#detallesContainer").html("El cliente se ha borrado correctamente");
 
-function Insertar(data) {
-  console.log(data);
-  fetch("../controlador/Usuarios/insertar.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      } else {
-        console.log("Conectado");
-        return response.json();
+      // Modificar el título del modal
+      $(".modal-title").html("Borrado Exitoso");
+
+      // Mostrar el modal de detalles
+      $("#detallesModal").modal("show");
+
+      if (ocultar === true) {
+        ocultar = false;
+        window.location.reload();
       }
-    })
-    .then((data) => {
-      console.log(data);
-      window.location.reload();
       m.redraw();
     })
     .catch((error) => {
       console.error("Error:", error);
     });
-  return {};
 }
 
-const ModalForm = {
-  view: (vnode) => {
-    let nombre = "";
-    let apellido = "";
-    let email = "";
-    let pwd = "";
-    let isAdmin = false;
+function Insertar() {
+  var formulario = $("#miFormulario");
+  console.log(formulario);
 
-    return m(
-      ".modal.fade.show",
-      {
-        style: {
-          display: vnode.attrs.showModal ? "block" : "none",
-        },
-      },
-      [
-        m(".modal-dialog", [
-          m(".modal-content", [
-            m(".modal-header", [
-              m("h5.modal-title", "Añadir Usuario"),
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Usuarios/insertar.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      if (response.error) {
+        console.log("Error en la solicitud AJAX:", response.error);
+      } else {
+        ocultarInsertarModal();
+        window.location.reload();
+        m(ListaUser);
+      }
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      ocultarInsertarModal(); // Ocultar el modal de inserción
+
+      // Mostrar mensaje de éxito en el contenedor de detalles
+      $("#detallesContainer").html("El cliente se ha insertado correctamente");
+
+      // Modificar el título del modal
+      $(".modal-title").html("Cliente Insertado");
+
+      // Mostrar el modal de detalles
+      $("#detallesModal").modal("show");
+    },
+  });
+}
+
+function Modificar(id) {
+  var formulario = $("#form-modificar");
+  var ids = formulario.find('input[name="id_usuario"]').val();
+  console.log(ids);
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Usuarios/modificar.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      console.log(response);
+      window.location.reload();
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      window.location.reload();
+    },
+  });
+}
+
+//!!ALIMENTOS
+
+function ListaPlatos() {
+  let showModal = false;
+
+  // Función para obtener los datos de los platos
+  function fetchPlatosData() {
+    fetch("../controlador/Alimentos/mostrar.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Devuelve la promesa de los datos JSON
+      })
+      .then((data) => {
+        // Maneja los datos aquí
+        renderizarDatos(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+
+  // Función para renderizar los datos obtenidos
+  function renderizarDatos(datos) {
+    m.render(
+      document.getElementById("datos-platos"),
+      datos.map((i) => [
+        m(
+          "tr",
+          m("th", i.id_plato),
+          m("td", i.nombre),
+          m("td", i.ingredientes),
+          m("td", i.foto),
+          m("td", i.calorias),
+          m("td", i.proteinas),
+          m("td", i.carbohidratos),
+          m("td", i.grasas),
+          m("td", i.descripcion),
+          m(
+            "td",
+            m("div", { class: "d-flex justify-content-around" }, [
               m(
-                "button.close",
+                "button",
                 {
-                  "data-dismiss": "modal",
-                  ariaLabel: "Close",
-                  onclick: function () {
-                    vnode.attrs.onClose(); // Llama a la función onClose del padre para cerrar el modal
+                  class: "btn btn-success",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetalles",
+                  onclick: () => {
+                    Detalles(i.id_plato);
                   },
                 },
-                m("span", { "aria-hidden": "true" }, "×")
+                "Detalles"
               ),
-            ]),
-            m(".modal-body", [
               m(
-                "form",
+                "button",
                 {
-                  onsubmit: function (event) {
-                    event.preventDefault(); // Evitar el envío del formulario por defecto
-                    // Llamar a la función Insertar con los datos del formulario
-                    vnode.attrs.onInsert({
-                      nombre: nombre,
-                      apellido: apellido,
-                      email: email,
-                      pwd: pwd,
-                      isAdmin: isAdmin,
-                    });
+                  class: "btn btn-primary",
+                  "data-toggle": "modal",
+                  "data-target": "#modalModificar",
+                  onclick: () => {
+                    console.log(i.id_usuario);
+                    mostrarModalModificar(
+                      i.id_plato,
+                      i.nombre,
+                      i.ingredientes,
+                      i.foto,
+                      i.calorias,
+                      i.proteinas,
+                      i.carbohidratos,
+                      i.grasas,
+                      i.descripcion
+                    );
                   },
                 },
-                [
-                  // Definición de campos del formulario
-                  m(".form-group", [
-                    m("label", { for: "nombre" }, "Nombre"),
-                    m("input.form-control", {
-                      type: "text",
-                      id: "nombre",
-                      value: nombre,
-                    }),
-                  ]),
-                  m(".form-group", [
-                    m("label", { for: "apellido" }, "Apellido"),
-                    m("input.form-control", {
-                      type: "text",
-                      id: "apellido",
-                      value: apellido,
-                    }),
-                  ]),
-                  m(".form-group", [
-                    m("label", { for: "email" }, "Email"),
-                    m("input.form-control", {
-                      type: "email",
-                      id: "email",
-                      value: email,
-                    }),
-                  ]),
-                  m(".form-group", [
-                    m("label", { for: "pwd" }, "Contraseña"),
-                    m("input.form-control", {
-                      type: "password",
-                      id: "pwd",
-                      value: pwd,
-                    }),
-                  ]),
-                  m(".form-group", [
-                    m("label", { for: "admin" }, "Administrador"),
-                    m("input.form-check-input", {
-                      type: "checkbox",
-                      id: "admin",
-                    }),
-                  ]),
-                ]
+                "Modificar"
               ),
-            ]),
-            m(".modal-footer", [
               m(
-                "button.btn.btn-secondary",
+                "button",
                 {
-                  "data-dismiss": "modal",
-                  onclick: function () {
-                    vnode.attrs.onClose();
+                  class: "btn btn-danger",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetalles",
+                  onclick: () => {
+                    Borrar(i.id_plato);
                   },
                 },
-                "Cancelar"
+                "Eliminar"
               ),
-              m(
-                "button.btn.btn-primary",
-                {
-                  type: "submit", // Cambiar el tipo de botón a submit para activar el controlador de eventos del formulario
-                },
-                "Guardar"
-              ),
-            ]),
-          ]),
-        ]),
-      ]
+            ])
+          )
+        ),
+      ])
     );
-  },
-};
+  }
+
+  // Llama a la función para obtener los datos cuando se renderiza el componente
+  fetchPlatosData();
+
+  // Renderiza el componente
+  return {
+    view: () => [
+      m(
+        "button",
+        {
+          class: "btn btn-primary mt-5 mx-5 ",
+          onclick: () => {
+            mostrarModalInsercion();
+          },
+        },
+        "AÑADIR"
+      ),
+      showModal &&
+        m(ModalForm, {
+          showModal: showModal,
+          onClose: function () {
+            showModal = false; // Ocultar el modal cuando se llame a onClose
+          },
+        }),
+      m(
+        "table",
+        {
+          class: " table table-striped mt-2 px-5 mx-auto  ",
+        },
+        m(
+          "thead",
+          m("tr", [
+            m("th", { scope: "col" }, "Id Plato"),
+            m("th", { scope: "col" }, "Nombre"),
+            m("th", { scope: "col" }, "Ingredientes"),
+            m("th", { scope: "col" }, "Foto"),
+            m("th", { scope: "col" }, "Calorias"),
+            m("th", { scope: "col" }, "Proteinas"),
+            m("th", { scope: "col" }, "Caarbohidratos"),
+            m("th", { scope: "col" }, "Grasas"),
+            m("th", { scope: "col" }, "Descripcion"),
+            m("th", { scope: "col" }, "Acciones"),
+          ])
+        ),
+        // Donde se renderizarán los datos
+        m("tbody", { id: "datos-platos" })
+      ),
+    ],
+  };
+}

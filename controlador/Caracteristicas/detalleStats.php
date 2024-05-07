@@ -1,5 +1,5 @@
 <?php
-require "../../modelo/Usuario.php";
+require "../../modelo/CaracteristicaUsuario.php";
 
 $body = file_get_contents("php://input");
 $data = json_decode($body);
@@ -8,9 +8,9 @@ $data = json_decode($body);
 $id = $data->id;
 
 $link = new BD();
-$user = new Usuario("", "", "", "", "");
+$user = new CaracteristicaUsuario($id, "", "", "", "", "", "", "");
 
-$resultado = $user->buscar($link, $id);
+$resultado = $user->buscar($link);
 
 // Configurar el encabezado de respuesta como JSON
 header('Content-Type: application/json');
