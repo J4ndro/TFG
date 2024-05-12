@@ -6,6 +6,18 @@ export { pages, components };
 
 //!! PAGES
 function Home() {
+  // Obtener el nombre de usuario de la URL
+  const urlParams = new URLSearchParams(window.location.search);
+  console.log("Parámetros de la URL:", urlParams);
+
+  // Verificar si el parámetro 'username' está presente en la URL
+  if (urlParams.has("username")) {
+    const username = urlParams.get("username");
+    console.log("Nombre de usuario:", username);
+  } else {
+    console.log("No se encontró el parámetro 'username' en la URL");
+  }
+
   return {
     view: () => [m(Header), m(Hero), m(Info), m(HeroFooter), m(Footer)],
   };
@@ -18,8 +30,13 @@ function Menus() {
 }
 
 function Perfil() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const username = urlParams.get("username");
+
+  console.log("Nombre de usuario:", username);
+
   return {
-    view: () => [m(Header), m(PerfilSection), m(Footer)],
+    view: () => [m(Header), m(PerfilSection, { username }), m(Footer)],
   };
 }
 
@@ -35,7 +52,14 @@ function Header() {
     view: () => [
       m(
         "header",
-        { id: "header", class: "fixed-top d-flex align-items-center" },
+        {
+          id: "header",
+          class: "fixed-top d-flex align-items-center",
+          style: {
+            background:
+              "linear-gradient(to right,rgba(39, 70, 133, 0.8) 0%,rgba(61, 179, 197, 0.8) 100%) ",
+          },
+        },
         [
           m(
             "div",
@@ -100,7 +124,21 @@ function Header() {
                   m("li", {}, [
                     m("a", { href: "#!Suscripcion" }, "Mi Suscripción"),
                   ]),
-                  m("li", {}, [m("a", { href: "#!Perfil" }, "Mi Perfil")]),
+                  m("li", { class: "dropdown" }, [
+                    m("a", { href: "#!Perfil" }, [
+                      m("span", {}, "Mi Perfil"),
+                      m("i", { class: "bi bi-chevron-down" }),
+                    ]),
+                    m("ul", {}, [
+                      m("li", {}, [m("a", { href: "#!Perfil" }, "Ver Perfil")]),
+                      m("li", { class: "dropdown" }, [
+                        m("a", { href: "../index.php" }, [
+                          m("span", {}, "Cerrar Sesion"),
+                          m("i", { class: "bi bi-chevron-right" }),
+                        ]),
+                      ]),
+                    ]),
+                  ]),
                 ]),
                 m("i", { class: "bi bi-list mobile-nav-toggle" }),
               ]),
@@ -226,7 +264,12 @@ function Info() {
             m("div", { class: "col-md-5", "data-aos": "fade-up" }, [
               m(
                 "h2",
-                { class: "section-heading" },
+                {
+                  class: "section-heading",
+                  style: {
+                    color: "white",
+                  },
+                },
                 "Ahorra tiempo usando Vita"
               ),
             ]),
@@ -389,7 +432,7 @@ function Info() {
         m("div", { class: "container" }, [
           m("div", { class: "row align-items-center" }, [
             m("div", { class: "col-md-4 ms-auto order-2" }, [
-              m("h2", { class: "mb-4" }, "Danos tu Feedback"),
+              m("h2", { class: "mb-4" }, "Envía tu Feedback"),
               m(
                 "p",
                 { class: "mb-4" },
@@ -733,11 +776,62 @@ function Testimonio() {
   };
 }
 
-function PerfilSection() {
+function PerfilSection(vnode) {
+  let nombre = "";
+  let apellido = ""; // Estado local para almacenar el nombre completo
+  let email = "";
+  let pwd = "";
+  let userData = null;
+  let inputsHabilitados = false;
+  const username = vnode.attrs.username;
+  console.log(username);
+  // Función para realizar la llamada AJAX y obtener los datos del usuario
+  function fetchData() {
+    // Realizar la llamada AJAX
+    fetch("../controlador/Usuarios/buscarID.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: username }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          return response.json();
+        }
+      })
+      .then((data) => {
+        // m.redraw();
+        console.log(data);
+        userData = data;
+        console.log(userData.id);
+        m.redraw();
+      });
+  }
+  function habilitarInputs() {
+    inputsHabilitados = true;
+  }
+  function deshabilitarInputs() {
+    inputsHabilitados = false;
+  }
+
+  function handleSubmit() {
+    // Aquí puedes acceder a los valores de los inputs desde el estado local
+    console.log("Nombre completo:", nombre + " " + apellido);
+    console.log("Email:", email);
+    // Aquí puedes enviar los datos al servidor o realizar otras acciones
+  }
   return {
-    view: () => [
-      m("section", { style: "background-color: #eee;" }, [
-        m("div", { class: "container py-5" }, [
+    oninit() {
+      fetchData();
+    },
+    view: () => {
+      if (!userData) {
+        return m("div", "Cargando...");
+      }
+      return m("section", { style: "background-color: #eee;" }, [
+        m("div", { class: "container py-5 mt-5" }, [
           m("div", { class: "row" }, [
             m("div", { class: "col" }, [
               m(
@@ -777,8 +871,12 @@ function PerfilSection() {
                     class: "rounded-circle img-fluid",
                     style: "width: 150px;",
                   }),
-                  m("h5", { class: "my-3" }, "Juan Muñoz"),
-                  m("p", { class: "text-muted mb-1" }, "Id: 1"),
+                  m(
+                    "h5",
+                    { class: "my-3" },
+                    userData.nombre + " " + userData.apellido
+                  ),
+                  m("p", { class: "text-muted mb-1" }, "Id: " + userData.id),
 
                   m("div", { class: "d-flex justify-content-center mb-2" }, [
                     m(
@@ -788,6 +886,9 @@ function PerfilSection() {
                         "data-mdb-button-init": "",
                         "data-mdb-ripple-init": "",
                         class: "btn btn-primary",
+                        onclick: () => {
+                          habilitarInputs();
+                        },
                       },
                       "Modificar"
                     ),
@@ -855,10 +956,37 @@ function PerfilSection() {
                 m("div", { class: "card-body" }, [
                   m("div", { class: "row" }, [
                     m("div", { class: "col-sm-3" }, [
-                      m("p", { class: "mb-0" }, "Nombre completo"),
+                      m("p", { class: "mb-0" }, "Nombre"),
                     ]),
                     m("div", { class: "col-sm-9" }, [
-                      m("p", { class: "text-muted mb-0" }, "Juan Muñoz"),
+                      m("input", {
+                        type: "text",
+                        disabled: !inputsHabilitados,
+                        class: "text-muted mb-0",
+                        placeholder: userData.nombre,
+                        value: nombre,
+                        oninput: (e) => {
+                          nombre = e.target.value;
+                        },
+                      }),
+                    ]),
+                  ]),
+                  m("hr"),
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Apellido"),
+                    ]),
+                    m("div", { class: "col-sm-9" }, [
+                      m("input", {
+                        type: "text",
+                        disabled: !inputsHabilitados,
+                        class: "text-muted mb-0",
+                        placeholder: userData.apellido,
+                        value: apellido,
+                        oninput: (e) => {
+                          apellido = e.target.value;
+                        },
+                      }),
                     ]),
                   ]),
                   m("hr"),
@@ -867,11 +995,16 @@ function PerfilSection() {
                       m("p", { class: "mb-0" }, "Email"),
                     ]),
                     m("div", { class: "col-sm-9" }, [
-                      m(
-                        "p",
-                        { class: "text-muted mb-0" },
-                        "juanmuñoz@gmail.com"
-                      ),
+                      m("input", {
+                        type: "email",
+                        disabled: !inputsHabilitados,
+                        class: "text-muted mb-0",
+                        placeholder: userData.email,
+                        value: email,
+                        oninput: (e) => {
+                          email = e.target.value;
+                        },
+                      }),
                     ]),
                   ]),
                   m("hr"),
@@ -886,16 +1019,37 @@ function PerfilSection() {
                   m("hr"),
                   m("div", { class: "row" }, [
                     m("div", { class: "col-sm-3" }, [
-                      m("p", { class: "mb-0" }, "Direccion"),
+                      m("p", { class: "mb-0" }, "Contraseña"),
                     ]),
                     m("div", { class: "col-sm-9" }, [
-                      m(
-                        "p",
-                        { class: "text-muted mb-0" },
-                        "Calle Alcala derecha 1"
-                      ),
+                      m("input", {
+                        class: "text-muted mb-0",
+                        placeholder: userData.pwd,
+                        oninput: (e) => {
+                          pwd = e.target.value;
+                        },
+                      }),
                     ]),
                   ]),
+                  inputsHabilitados
+                    ? m("div", { class: "row" }, [
+                        m("input", {
+                          type: "submit",
+                          class: "btn btn-info",
+                          onclick: () => {
+                            deshabilitarInputs();
+                            handleSubmit();
+                            Modificar(
+                              userData.id_usuario,
+                              nombre,
+                              apellido,
+                              email,
+                              pwd
+                            );
+                          },
+                        }),
+                      ])
+                    : null,
                 ]),
               ]),
               m("div", { class: "row" }, [
@@ -1083,9 +1237,30 @@ function PerfilSection() {
             ]),
           ]),
         ]),
-      ]),
-    ],
+      ]);
+    },
   };
+  function Modificar(id_usuario, nombre, apellido, email, password) {
+    console.log(nombre);
+    fetch("../controlador/Usuarios/modificarUser.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_usuario: id_usuario ? id_usuario : userData.id,
+        nombre: nombre ? nombre : userData.nombre,
+        apellido: apellido ? apellido : userData.apellido,
+        email: email ? email : userData.email,
+        pwd: password ? password : userData.pwd,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return window.location.reload();
+      }
+    });
+  }
 }
 
 function Suscripciones() {
@@ -1198,7 +1373,7 @@ function Seccion() {
         m(
           "div",
           {
-            class: "py-5 px-5 col-12 d-flex flex-column", // Agregué flex-column para que los elementos se apilen verticalmente
+            class: "py-5 px-5 col-12 d-flex flex-column mt-5", // Agregué flex-column para que los elementos se apilen verticalmente
           },
           m(
             "p",

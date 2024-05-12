@@ -1,5 +1,6 @@
 <?php
 require "../../modelo/Menu.php";
+require "../../modelo/MenuPlato.php";
 
 // Obtener los datos de los Menus
 $link = new Bd();

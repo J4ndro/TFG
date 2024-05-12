@@ -79,6 +79,7 @@ section {
   font-size: 3rem;
   font-weight: 700;
   background: linear-gradient(-45deg, #3db3c5, #274685);
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -180,6 +181,7 @@ section {
 
 .step .number {
   background: linear-gradient(-45deg, #1391a5, #274685);
+  -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   font-weight: 700;
   letter-spacing: 0.2rem;
@@ -1038,4 +1040,11 @@ section {
 
 .social a i {
   line-height: 0;
+}
+
+input,
+input:focus {
+  border: 0px none;
+  outline: none;
+  background-color: white;
 }

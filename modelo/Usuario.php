@@ -28,12 +28,12 @@ class Usuario
             die();
         }
     }
-    static function getAllID($link, $id_usuario)
+    static function getAllID($link, $email)
     {
         try {
-            $consulta = "SELECT * FROM Usuarios WHERE id_usuario=:id_usuario";
+            $consulta = "SELECT * FROM Usuarios WHERE email='$email'";
             $result = $link->prepare($consulta);
-            $result->bindParam(':id_usuario', $id_usuario);
+            // $result->bindParam(':email', $email);
             $result->execute();
             return $result;
         } catch (PDOException $e) {

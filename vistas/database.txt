@@ -11,6 +11,7 @@
         apellido VARCHAR(50),
         email VARCHAR(100),
         pwd VARCHAR(100),
+        suscripcion VARCHAR(50),
         PRIMARY KEY (id_usuario, email)
         -- Otros campos relevantes sobre el usuario
     );

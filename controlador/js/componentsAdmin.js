@@ -1,4 +1,4 @@
-const pages = [Home, Alimentos];
+const pages = [Home, Platos, Menus];
 
 const components = [Header, ListaUser, Modal, DetallesModal, ModificarModal];
 
@@ -9,7 +9,7 @@ function Home() {
   return {
     view: () => [
       m(Header),
-      m(ListaUser),
+      m(mainUser),
       m(Modal),
       m(DetallesModal),
       m(ModificarModal),
@@ -17,14 +17,26 @@ function Home() {
   };
 }
 
-function Alimentos() {
+function Platos() {
   return {
     view: () => [
       m(Header),
-      m(ListaPlatos),
+      m(mainPlatos),
       m(ModalPlatos),
       m(DetallesModalPlatos),
       m(ModificarModalPlatos),
+    ],
+  };
+}
+
+function Menus() {
+  return {
+    view: () => [
+      m(Header),
+      m(ListaMenus),
+      m(ModalMenus),
+      m(DetallesModalMenus),
+      m(ModificarModalMenus),
     ],
   };
 }
@@ -84,584 +96,77 @@ $(document).ready(function () {
 
 function Header() {
   return {
-    model: {
-      itemsMenu: [
-        {
-          href: "#",
-          item: {
-            label: "Home",
-            options: [],
-          },
-        },
-        {
-          href: "#!Alimentos",
-          item: {
-            label: "Alimentos",
-            options: [],
-          },
-        },
-        {
-          href: "#!Menus",
-          item: {
-            label: "Menus",
-            options: [],
-          },
-        },
-        {
-          href: "#",
-          item: {
-            label: "Otros",
-            options: [
-              { label: "Contacto", items: "", href: "#" },
-              { label: "Proximamente", items: "", href: "#" },
-              { label: "Envios y devoluciones", items: "", href: "#" },
-              { label: "FAQ", items: "", href: "#" },
-              { label: "Terminos y Conidiciones", items: "", href: "#" },
-              { label: "Politica y privacidad", items: "", href: "#" },
-            ],
-          },
-        },
-        {
-          href: "#!Suscripcion",
-          item: {
-            label: "Mi Suscripcion",
-            options: [],
-          },
-        },
-      ],
-    },
     view: () => [
-      m(
-        "div",
-        {
-          style: {
-            height: "81px",
-            left: "0px",
-            padding: "0px 50px",
-            position: "relative",
-            width: "100%",
-            "z-index": "1",
-            "box-sizing": "border-box",
-            margin: "0px",
-            outline: "rgb(0, 0, 0) none 0px",
-            transition: "all 0.4s ease",
-            display: "flex",
-            justifyContent: "space-between",
-          },
-        },
-        [
-          m(
-            "div",
-            {
-              style: {
-                display: "flex",
-                alignItems: "center",
-              },
-            },
-            m("img", {
-              src: "../images/logo.png",
-              style: {
-                width: "70px",
-                height: "70px",
-              },
-            })
-          ),
-          m(
-            "ul",
-            {
-              onmouseenter: (e) => {
-                e.target.style.background = "white";
-                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-              },
-              onmouseleave: (e) => {
-                e.target.style.background = null;
-                e.target.style.boxShadow = null;
-              },
-              style: {
-                "-webkit-box-align": "center",
-                "align-items": "center",
-                display: "flex",
-                "-webkit-box-pack": "center",
-                height: "82px",
-                "justify-content": "center",
-                "margin-bottom": "-1px",
-                "box-sizing": "border-box",
-                margin: "0px 0px -1px",
-                padding: "0px",
-                outline: "rgb(0, 0, 0) none 0px",
-                transition: "all 0.4s ease",
-                borderRadius: "33px",
-              },
-            },
-            [this.state.model.itemsMenu.map((i) => m(Menu, i))]
-          ),
-          m(
-            "div",
-            {
-              style: {
-                "align-items": "center",
-                display: "flex",
-                position: "relative",
-                "z-index": "10",
-                "box-sizing": "border-box",
-                margin: "0px",
-                padding: "0px",
-                outline: "rgb(0, 0, 0) none 0px",
-                borderRadius: "33px",
-                transition: "all 0.4s ease",
-              },
-              onmouseenter: (e) => {
-                e.target.style.background = "white";
-                e.target.style.boxShadow = "0 0 10px rgba(0, 0, 0, 0.2)";
-              },
-              onmouseleave: (e) => {
-                e.target.style.background = null;
-                e.target.style.boxShadow = null;
-              },
-            },
-            [
-              m(
-                "a",
-                {
-                  onclick: () => {
-                    window.location.href = "../controlador/login/logout.php";
-                  },
-                  style: {
-                    "margin-right": "20px",
-                    "margin-left": "33px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out 0s",
-                    "align-items": "center",
-                    display: "flex",
-                    "box-sizing": "border-box",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                },
-                m("img", {
-                  src: "../images/search.svg",
-                  alt: "Search icon",
-                  style: {
-                    "border-style": "none",
-                    display: "block",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                })
-              ),
-
-              m(
-                "a",
-                {
-                  href: "#!Perfil",
-                  style: {
-                    "margin-right": "33px",
-                    "margin-left": "20px",
-                    cursor: "pointer",
-                    transition: "all 0.2s ease-in-out 0s",
-                    "align-items": "center",
-                    display: "flex",
-                    "box-sizing": "border-box",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                },
-                m("img", {
-                  src: "../images/search-2.svg",
-                  alt: "Authorization icon",
-                  style: {
-                    "border-style": "none",
-                    display: "block",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                })
-              ),
-            ]
-          ),
-        ]
-      ),
-    ],
-  };
-
-  function Menu() {
-    const dropdownState = {
-      isVisible: false,
-      toggleVisibility: function () {
-        dropdownState.isVisible = !dropdownState.isVisible;
-      },
-    };
-    return {
-      view: ({ attrs }) => [
+      m("aside.main-sidebar.sidebar-dark-primary.elevation-4", [
+        // Brand Logo
         m(
-          "li",
-          {
-            onmouseenter: () => {
-              dropdownState.isHovered = true; // Cuando el mouse entra en el menú desplegable
-              attrs.item.isDropdownVisible = true;
-            },
-            onmouseleave: () => {
-              dropdownState.isHovered = false;
-              // Cerrar el menú desplegable solo si el mouse no está dentro de él
-              if (!dropdownState.isHovered) {
-                dropdownState.isVisible = false;
-                attrs.item.isDropdownVisible = false;
-              }
-            },
-            style: {
-              "margin-right": "40px",
-              "margin-left": "40px",
-              position: "relative",
-              height: "82px",
-              "list-style": "outside none none",
-              "align-items": "center",
-              display: "flex",
-              "box-sizing": "border-box",
-              padding: "0px",
-              outline: "rgb(0, 0, 0) none 0px",
-            },
-          },
+          "a.brand-link.d-flex.justify-content-between",
+          { href: "../index.php" },
           [
-            m(
-              "a",
-              {
-                href: attrs.href,
-                onmouseenter: (e) => {
-                  e.target.style.textDecoration = "underline";
-                },
-                onmouseleave: (e) => {
-                  e.target.style.textDecoration = "none";
-                },
-                style: {
-                  "border-bottom": "1px solid rgba(0, 0, 0, 0)",
-                  color: "rgb(0, 0, 0)",
-                  "font-size": "15px",
-                  "font-style": "normal",
-                  "font-weight": "700",
-                  "letter-spacing": "0.6px",
-                  "line-height": "19px",
-                  padding: "3px 0px",
-                  "text-align": "center",
-                  transition: "all 0.2s ease-in-out 0s",
-                  "background-color": "rgba(0, 0, 0, 0)",
-                  "text-decoration": "none solid rgb(0, 0, 0)",
-                  "box-sizing": "border-box",
-                  margin: "0px",
-                  outline: "rgb(0, 0, 0) none 0px",
-                },
-              },
-              [
-                attrs.item.label,
-                m("img", {
-                  src: "https://firstsight.design/levre/mono/wp-content/themes/levre/assets/img/chevron.svg",
-                  alt: "Chevron icon",
-                  style: {
-                    display: "none",
-                    "border-style": "none",
-                    "box-sizing": "border-box",
-                    margin: "0px",
-                    padding: "0px",
-                    outline: "rgb(0, 0, 0) none 0px",
-                  },
-                }),
-              ]
-            ),
-            attrs.item.options.length > 0
-              ? m(
-                  "ul",
-                  {
-                    onmouseenter: () => {
-                      dropdownState.isHovered = true;
-                    },
-                    onmouseleave: () => {
-                      dropdownState.isHovered = false;
-                      if (!dropdownState.isHovered) {
-                        dropdownState.isVisible = false;
-                        attrs.item.isDropdownVisible = false;
-                      }
-                    },
-                    style: {
-                      /* display:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "flex"
-                          : "none", */
-                      display: "flex",
-                      flexDirection:
-                        attrs.item.label === "Tienda" ? "row" : "column",
-                      "background-color": "rgb(255, 255, 255)",
-                      left: "-16px",
-                      borderRadius: "33px",
-                      opacity:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "1"
-                          : "0",
-
-                      transform:
-                        dropdownState.isVisible || dropdownState.isHovered
-                          ? "scale(1)"
-                          : "scale(0)",
-
-                      margin: "auto",
-                      padding: "0px",
-                      position: "absolute",
-                      top: "99%",
-                      transition: "opacity 0.4s ease-in-out 0s",
-                      width: "200px",
-                      "z-index": "10",
-                      "box-sizing": "border-box",
-                      margin: "0px",
-                      outline: "rgb(0, 0, 0) none 0px",
-                    },
-                  },
-                  [
-                    attrs.item.options.map((option, index) =>
-                      m(
-                        "ul",
-                        {
-                          onmouseenter: () => {
-                            attrs.item.isDropdownVisible = true;
-                          },
-                          onmouseleave: () => {
-                            attrs.item.isDropdownVisible = false;
-                          },
-                          style: {
-                            display: "flex",
-                            flexDirection: "column",
-                            "border-bottom-left-radius": "33px",
-                            "border-bottom-right-radius": "33px",
-                            // padding: "0px",
-                            left: "0px",
-                            padding: "16px",
-                            margin: "0px",
-                            "max-width": "100%",
-                            "min-width": "100%",
-                            "padding-bottom": "0px",
-                            width: "100% !important",
-                            display: "flex",
-                            "flex-wrap": "wrap",
-                            "flex-direction": "column",
-                            position: "relative",
-                            "background-color": "rgb(255, 255, 255)",
-                            "margin-left": "auto",
-                            "margin-right": "auto",
-                            right: "0px",
-                            transition: "all 0.2s ease-in-out 0s",
-                            "z-index": "10",
-                            "box-sizing": "border-box",
-                            outline: "rgb(0, 0, 0) none 0px",
-                          },
-                        },
-                        option.items.length > 0
-                          ? m(
-                              "ul",
-                              {
-                                style: {
-                                  display: "flex",
-                                  flexDirection: "column",
-                                  padding: "0px",
-                                  left: "0px",
-                                  margin: "0px",
-                                  "max-width": "100%",
-                                  "min-width": "100%",
-                                  "padding-bottom": "0px",
-                                  width: "100% !important",
-                                  display: "flex",
-                                  "flex-wrap": "wrap",
-                                  "flex-direction": "column",
-                                  position: "relative",
-                                  "background-color": "rgb(255, 255, 255)",
-                                  "margin-left": "auto",
-                                  "margin-right": "auto",
-                                  right: "0px",
-                                  transition: "all 0.2s ease-in-out 0s",
-                                  "z-index": "10",
-                                  "box-sizing": "border-box",
-                                  outline: "rgb(0, 0, 0) none 0px",
-                                },
-                              },
-                              m(
-                                "li",
-                                {
-                                  style: {
-                                    "margin-right": "0px",
-                                    "margin-bottom": "20px",
-                                    width: "100%",
-                                    height: "20px",
-                                    "list-style": "outside none none",
-                                    "-webkit-box-align": "center",
-                                    "align-items": "center",
-                                    display: "flex",
-                                    "box-sizing": "border-box",
-                                    padding: "0px",
-                                    outline: "rgb(0, 0, 0) none 0px",
-                                  },
-                                },
-                                m(
-                                  "a",
-                                  {
-                                    href: "#",
-                                    style: {
-                                      fontWeight:
-                                        index === 0 ? "bold" : "normal",
-                                      "-webkit-box-pack": "justify",
-                                      border: "0px none rgb(0, 0, 0)",
-                                      display: "flex",
-                                      "font-size": "14px",
-                                      "font-style": "normal",
-                                      "font-weight": "500",
-                                      "justify-content": "space-between",
-                                      "letter-spacing": "0.28px",
-                                      "line-height": "20px",
-                                      padding: "0px 16px",
-                                      width: "100%",
-                                      "text-align": "left",
-                                      "border-bottom": "0px none rgb(0, 0, 0)",
-                                      color: "rgb(0, 0, 0)",
-                                      transition: "all 0.2s ease-in-out 0s",
-                                      "background-color": "rgba(0, 0, 0, 0)",
-                                      "text-decoration":
-                                        "none solid rgb(0, 0, 0)",
-                                      "box-sizing": "border-box",
-                                      margin: "0px",
-                                      outline: "rgb(0, 0, 0) none 0px",
-                                      cursor: "pointer",
-                                    },
-                                    onmouseenter: (e) => {
-                                      e.target.style.textDecoration =
-                                        "underline";
-                                    },
-                                    onmouseleave: (e) => {
-                                      e.target.style.textDecoration = "none";
-                                    },
-                                  },
-                                  option.label
-                                )
-                              ),
-                              option.items.map((item) =>
-                                m(
-                                  "li",
-                                  {
-                                    style: {
-                                      "margin-right": "0px",
-                                      "margin-bottom": "20px",
-                                      width: "100%",
-                                      height: "20px",
-                                      "list-style": "outside none none",
-                                      "-webkit-box-align": "center",
-                                      "align-items": "center",
-                                      display: "flex",
-                                      "box-sizing": "border-box",
-                                      padding: "0px",
-                                      outline: "rgb(0, 0, 0) none 0px",
-                                    },
-                                  },
-                                  m(
-                                    "a",
-                                    {
-                                      href: "#",
-                                      style: {
-                                        "-webkit-box-pack": "justify",
-                                        border: "0px none rgb(0, 0, 0)",
-                                        display: "flex",
-                                        "font-size": "14px",
-                                        "font-style": "normal",
-                                        "font-weight": "500",
-                                        "justify-content": "space-between",
-                                        "letter-spacing": "0.28px",
-                                        "line-height": "20px",
-                                        padding: "0px 16px",
-                                        width: "100%",
-                                        "text-align": "left",
-                                        "border-bottom":
-                                          "0px none rgb(0, 0, 0)",
-                                        color: "rgb(0, 0, 0)",
-                                        transition: "all 0.2s ease-in-out 0s",
-                                        "background-color": "rgba(0, 0, 0, 0)",
-                                        "text-decoration":
-                                          "none solid rgb(0, 0, 0)",
-                                        "box-sizing": "border-box",
-                                        margin: "0px",
-                                        outline: "rgb(0, 0, 0) none 0px",
-                                        cursor: "pointer",
-                                      },
-                                      onmouseenter: (e) => {
-                                        e.target.style.textDecoration =
-                                          "underline";
-                                      },
-                                      onmouseleave: (e) => {
-                                        e.target.style.textDecoration = "none";
-                                      },
-                                    },
-                                    item.label
-                                  )
-                                )
-                              )
-                            )
-                          : m(
-                              "li",
-                              {
-                                style: {
-                                  "margin-right": "0px",
-                                  "margin-bottom": "20px",
-                                  width: "100%",
-                                  height: "20px",
-                                  "list-style": "outside none none",
-                                  "align-items": "center",
-                                  display: "flex",
-                                  "box-sizing": "border-box",
-                                  padding: "0px",
-                                  outline: "rgb(0, 0, 0) none 0px",
-                                },
-                              },
-                              m(
-                                "a",
-                                {
-                                  style: {
-                                    border: "0px none rgb(0, 0, 0)",
-                                    display: "flex",
-                                    "font-size": "14px",
-                                    "font-style": "normal",
-                                    "font-weight": "500",
-                                    "justify-content": "space-between",
-                                    "letter-spacing": "0.28px",
-                                    "line-height": "20px",
-                                    padding: "0px 16px",
-                                    width: "100%",
-                                    "text-align": "left",
-                                    "border-bottom": "0px none rgb(0, 0, 0)",
-                                    color: "rgb(0, 0, 0)",
-                                    transition: "all 0.2s ease-in-out 0s",
-                                    "background-color": "rgba(0, 0, 0, 0)",
-                                    "text-decoration":
-                                      "none solid rgb(0, 0, 0)",
-                                    margin: "0px",
-                                    outline: "rgb(0, 0, 0) none 0px",
-                                    cursor: "pointer",
-                                  },
-                                  onmouseenter: (e) => {
-                                    e.target.style.textDecoration = "underline";
-                                  },
-                                  onmouseleave: (e) => {
-                                    e.target.style.textDecoration = "none";
-                                  },
-                                },
-                                option.label
-                              )
-                            )
-                      )
-                    ),
-                  ]
-                )
-              : null,
+            m("img.brand-image.img-circle.elevation-3", {
+              src: "../images/logo.png",
+              alt: "Admin Logo",
+              style: "opacity: .8",
+              PointerEvent: "none",
+            }),
+            m("span.brand-text.font-weight-light", "Vita"),
+            m("img.mx-3", {
+              src: "../images/door.svg",
+              style: "opacity: .8",
+            }),
           ]
         ),
-      ],
-    };
-  }
+
+        // Sidebar
+        m("div.sidebar", [
+          // Sidebar user (optional)
+          m("div.user-panel.mt-3.pb-3.mb-3.d-flex", [
+            m("div.image", [
+              m("img.img-circle.elevation-2", {
+                src: "../images/logo.png",
+                alt: "User Image",
+              }),
+            ]),
+            m("div.info", [m("a", { href: "#" }, "Admin")]),
+          ]),
+
+          // Sidebar Menu
+          m("nav.mt-2", [
+            m(
+              "ul.nav.nav-pills.nav-sidebar.flex-column",
+              {
+                "data-widget": "treeview",
+                role: "menu",
+                "data-accordion": "false",
+              },
+              [
+                // Add your menu items here
+                // Example:
+                m("li.nav-item", [
+                  m("a.nav-link", { href: "#" }, [
+                    m("i.nav-icon.fas.fa-tachometer-alt"),
+                    m("p", ["Usuarios", m("i.right.fas.fa-angle-left")]),
+                  ]),
+                ]),
+                m("li.nav-item", [
+                  m("a.nav-link", { href: "#!Platos" }, [
+                    m("i.nav-icon.fas.fa-tachometer-alt"),
+                    m("p", ["Platos", m("i.right.fas.fa-angle-left")]),
+                  ]),
+                ]),
+                m("li.nav-item", [
+                  m("a.nav-link", { href: "#!Menus" }, [
+                    m("i.nav-icon.fas.fa-tachometer-alt"),
+                    m("p", ["Menus", m("i.right.fas.fa-angle-left")]),
+                  ]),
+                ]),
+              ]
+            ),
+          ]),
+        ]),
+      ]),
+    ],
+  };
 }
 
 //VARIABLES
@@ -994,6 +499,144 @@ function ListaUser() {
   }
 }
 
+function mainUser() {
+  return {
+    view: function () {
+      return m(".content-wrapper", [
+        // Encabezado
+        m("section.content-header", [
+          m(".container-fluid", [
+            m(".row.mb-2", [
+              m(".col-sm-6", [m("h1", "Usuarios")]),
+              m(".col-sm-6", [
+                m("ol.breadcrumb.float-sm-right", [
+                  m("li.breadcrumb-item", [m("a", { href: "#" }, "Home")]),
+                  m("li.breadcrumb-item.active", "Usuarios"),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+
+        // Contenido principal
+        m("section.content", [
+          m(".container-fluid", [
+            m(".row", [
+              m(".col-12", [
+                // Primera tabla con DataTables
+                m(".card", [
+                  m(".card-header.d-flex.justify-content-between", [
+                    m("h3.card-title", "Tabla de Usuarios"),
+                    m(
+                      "button",
+                      {
+                        class: "btn btn-dark ",
+                        onclick: () => {
+                          mostrarModalInsercionPlatos();
+                        },
+                      },
+                      "AÑADIR"
+                    ),
+                  ]),
+                  m(".card-body", [
+                    m("table#example2.table.table-bordered.table-hover", [
+                      m("thead", [
+                        m("tr", [
+                          m("th", "ID"),
+                          m("th", "Nombre"),
+                          m("th", "Apellido(s)"),
+                          m("th", "Email"),
+                          m("th", "Contraseña"),
+                          m("th", "Acciones"),
+                        ]),
+                      ]),
+                      m("tbody", m(Listar)),
+                    ]),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]);
+    },
+  };
+  function Listar() {
+    let datos = []; // Inicializa datos como un array vacío
+
+    // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
+    fetch("../controlador/Usuarios/mostrar.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        datos = data; // Actualiza datos cuando se reciban los datos
+        m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+      });
+
+    // Devuelve un componente que muestra los datos
+    return {
+      view: () => [
+        datos.map((i) => [
+          m(
+            "tr",
+            m("th", i.id_usuario),
+            m("td", i.nombre),
+            m("td", i.apellido),
+            m("td", i.email),
+            m("td", i.pwd),
+            m(
+              "td",
+              m("div", { class: "d-flex justify-content-around" }, [
+                m(
+                  "button",
+                  {
+                    class: "btn btn-primary",
+                    "data-toggle": "modal",
+                    "data-target": "#modalModificar",
+                    onclick: () => {
+                      console.log(i.id_usuario);
+                      mostrarModalModificar(
+                        i.id_usuario,
+                        i.nombre,
+                        i.apellido,
+                        i.email,
+                        i.pwd
+                      );
+                    },
+                  },
+                  "Modificar"
+                ),
+                m(
+                  "button",
+                  {
+                    class: "btn btn-danger",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDetalles",
+                    onclick: () => {
+                      Borrar(i.id_usuario);
+                    },
+                  },
+                  "Eliminar"
+                ),
+              ])
+            )
+          ),
+        ]),
+      ],
+    };
+  }
+}
+
 function Detalles(id) {
   let datos;
   console.log(id);
@@ -1124,7 +767,7 @@ function Modificar(id) {
   });
 }
 
-//!!ALIMENTOS
+//!!PLATOS
 
 //Modales
 
@@ -1554,6 +1197,152 @@ function ListaPlatos() {
   };
 }
 
+function mainPlatos() {
+  return {
+    view: function () {
+      return m(".content-wrapper", [
+        // Encabezado
+        m("section.content-header", [
+          m(".container-fluid", [
+            m(".row.mb-2", [
+              m(".col-sm-6", [m("h1", "Platos")]),
+              m(".col-sm-6", [
+                m("ol.breadcrumb.float-sm-right", [
+                  m("li.breadcrumb-item", [m("a", { href: "#" }, "Home")]),
+                  m("li.breadcrumb-item.active", "Platos"),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+
+        // Contenido principal
+        m("section.content", [
+          m(".container-fluid", [
+            m(".row", [
+              m(".col-12", [
+                // Primera tabla con DataTables
+                m(".card", [
+                  m(".card-header.d-flex.justify-content-between", [
+                    m("h3.card-title", "Tabla de Platos"),
+                    m(
+                      "button",
+                      {
+                        class: "btn btn-dark ",
+                        onclick: () => {
+                          mostrarModalInsercionPlatos();
+                        },
+                      },
+                      "AÑADIR"
+                    ),
+                  ]),
+                  m(".card-body", [
+                    m("table#example2.table.table-bordered.table-hover", [
+                      m("thead", [
+                        m("tr", [
+                          m("th", "ID"),
+                          m("th", "Nombre"),
+                          m("th", "Ingrediente(s)"),
+                          m("th", "Foto"),
+                          m("th", "Calorias"),
+                          m("th", "Proteinas"),
+                          m("th", "Carbohidratos"),
+                          m("th", "Grasas"),
+                          m("th", "Descripcion"),
+                          m("th", "Acciones"),
+                        ]),
+                      ]),
+                      m("tbody", m(ListarPlatos)),
+                    ]),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]);
+    },
+  };
+  function ListarPlatos() {
+    let datos = []; // Inicializa datos como un array vacío
+
+    // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
+    fetch("../controlador/Platos/mostrar.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        datos = data; // Actualiza datos cuando se reciban los datos
+        m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+      });
+
+    // Devuelve un componente que muestra los datos
+    return {
+      view: () => [
+        datos.map((i) => [
+          m(
+            "tr",
+            m("th", i.id_plato),
+            m("td", i.nombre),
+            m("td", i.ingredientes),
+            m("td", i.foto),
+            m("td", i.calorias),
+            m("td", i.proteinas),
+            m("td", i.carbohidratos),
+            m("td", i.grasas),
+            m("td", i.descripcion),
+            m(
+              "td",
+              m("div", { class: "d-flex justify-content-around" }, [
+                m(
+                  "button",
+                  {
+                    class: "btn btn-primary",
+                    "data-toggle": "modal",
+                    "data-target": "#modalModificar",
+                    onclick: () => {
+                      console.log(i.id_usuario);
+                      mostrarModalModificar(
+                        i.id_usuario,
+                        i.nombre,
+                        i.apellido,
+                        i.email,
+                        i.pwd
+                      );
+                    },
+                  },
+                  "Modificar"
+                ),
+                m(
+                  "button",
+                  {
+                    class: "btn btn-danger",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDetalles",
+                    onclick: () => {
+                      Borrar(i.id_usuario);
+                    },
+                  },
+                  "Eliminar"
+                ),
+              ])
+            )
+          ),
+        ]),
+      ],
+    };
+  }
+}
+
 function InsertarPlato() {
   var formulario = $("#FormularioPlatos");
   console.log(formulario);
@@ -1673,6 +1462,568 @@ function ModificarPlatos(id) {
   $.ajax({
     type: "POST",
     url: "../controlador/Platos/modificarPlato.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      console.log(response);
+      // window.location.reload();
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      // window.location.reload();
+    },
+  });
+}
+
+//!!MENUS
+
+//Modales
+
+var ModalMenus = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalInsercionMenus",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Insertar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de inserción
+              m(
+                "form#FormularioMenus",
+                {
+                  method: "post",
+                },
+                [
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "ingredientes" }, "ingredientes: "),
+                  m("input", {
+                    type: "text",
+                    id: "ingredientes",
+                    name: "ingredientes",
+                  }),
+                  m("br"),
+                  m("label", { for: "foto" }, "foto: "),
+                  m("input", {
+                    type: "text",
+                    id: "foto",
+                    name: "foto",
+                  }),
+                  m("br"),
+                  m("label", { for: "calorias" }, "calorias: "),
+                  m("input", {
+                    type: "text",
+                    id: "calorias",
+                    name: "calorias",
+                  }),
+                  m("br"),
+                  m("label", { for: "proteinas" }, "proteinas: "),
+                  m("input", {
+                    type: "text",
+                    id: "proteinas",
+                    name: "proteinas",
+                  }),
+                  m("br"),
+                  m("label", { for: "carbohidratos" }, "carbohidratos: "),
+                  m("input", {
+                    type: "text",
+                    id: "carbohidratos",
+                    name: "carbohidratos",
+                  }),
+                  m("br"),
+                  m("label", { for: "grasas" }, "grasas: "),
+                  m("input", {
+                    type: "text",
+                    id: "grasas",
+                    name: "grasas",
+                  }),
+                  m("br"),
+                  m("label", { for: "descripcion" }, "descripcion: "),
+                  m("input", {
+                    type: "textarea",
+                    id: "descripcion",
+                    name: "descripcion",
+                  }),
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var DetallesModalMenus = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalDetallesMenus",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Detalles del Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: () => {
+                    vnode.attrs.ocultarModal;
+                    ocultar = true;
+                  },
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body#detallesContainer", [
+              // Aquí se mostrarán los detalles del cliente
+              // Puedes agregar contenido dinámico aquí si lo necesitas
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+var ModificarModalMenus = {
+  view: function (vnode) {
+    return m(
+      ".modal",
+      {
+        id: "modalModificarMenus",
+        tabindex: "-1",
+        role: "dialog",
+        style: "display: none;",
+      },
+      [
+        m(".modal-dialog", { role: "document" }, [
+          m(".modal-content", [
+            m(".modal-header", [
+              m("h5.modal-title", "Modificar Cliente"),
+              m(
+                "button.close",
+                {
+                  type: "button",
+                  "aria-label": "Close",
+                  onclick: vnode.attrs.ocultarModal,
+                },
+                [m("span", { "aria-hidden": "true" }, "×")]
+              ),
+            ]),
+            m(".modal-body", [
+              // Formulario de modificación
+              m(
+                "form#form-modificarMenus",
+                {
+                  method: "post",
+                  // action: "../controlador/Usuarios/modificar.php",
+                },
+                [
+                  m("label", { for: "id_plato" }, "id_plato: "),
+                  m("input[type=text]", {
+                    readonly: "readonly",
+                    id: "id_plato",
+                    name: "id_plato",
+                  }),
+                  m("br"),
+                  m("label", { for: "nombre" }, "nombre: "),
+                  m("input", { type: "text", id: "nombre", name: "nombre" }),
+                  m("br"),
+                  m("label", { for: "ingredientes" }, "ingredientes: "),
+                  m("input", {
+                    type: "text",
+                    id: "ingredientes",
+                    name: "ingredientes",
+                  }),
+                  m("br"),
+                  m("label", { for: "foto" }, "foto: "),
+                  m("input", {
+                    type: "text",
+                    id: "foto",
+                    name: "foto",
+                  }),
+                  m("br"),
+                  m("label", { for: "calorias" }, "calorias: "),
+                  m("input", {
+                    type: "text",
+                    id: "calorias",
+                    name: "calorias",
+                  }),
+                  m("br"),
+                  m("label", { for: "proteinas" }, "proteinas: "),
+                  m("input", {
+                    type: "text",
+                    id: "proteinas",
+                    name: "proteinas",
+                  }),
+                  m("br"),
+                  m("label", { for: "carbohidratos" }, "carbohidratos: "),
+                  m("input", {
+                    type: "text",
+                    id: "carbohidratos",
+                    name: "carbohidratos",
+                  }),
+                  m("br"),
+                  m("label", { for: "grasas" }, "grasas: "),
+                  m("input", {
+                    type: "text",
+                    id: "grasas",
+                    name: "grasas",
+                  }),
+                  m("br"),
+                  m("label", { for: "descripcion" }, "descripcion: "),
+                  m("input", {
+                    type: "textarea",
+                    id: "descripcion",
+                    name: "descripcion",
+                  }),
+                  m("br"),
+                  m("input[type=submit]", { id: "enviar" }),
+                ]
+              ),
+            ]),
+          ]),
+        ]),
+      ]
+    );
+  },
+};
+
+//Funciones Modales
+
+function mostrarModalInsercionMenus() {
+  $("#modalInsercionMenus").modal("show");
+}
+function ocultarInsertarModalMenus() {
+  $("#modalInsercionMenus").modal("hide");
+}
+function mostrarModalModificarMenus(
+  id_plato,
+  nombre,
+  ingredientes,
+  foto,
+  calorias,
+  proteinas,
+  carbohidratos,
+  grasas,
+  descripcion
+) {
+  console.log(id_plato);
+  $("#modalModificarMenus").find('input[name="id_plato"]').val(id_plato);
+  $("#modalModificarMenus").find('input[name="nombre"]').val(nombre);
+  $("#modalModificarMenus")
+    .find('input[name="ingredientes"]')
+    .val(ingredientes);
+  $("#modalModificarMenus").find('input[name="foto"]').val(foto);
+  $("#modalModificarMenus").find('input[name="calorias"]').val(calorias);
+  $("#modalModificarMenus").find('input[name="proteinas"]').val(proteinas);
+  $("#modalModificarMenus")
+    .find('input[name="carbohidratos"]')
+    .val(carbohidratos);
+  $("#modalModificarMenus").find('input[name="grasas"]').val(grasas);
+  $("#modalModificarMenus").find('input[name="descripcion"]').val(descripcion);
+  $("#modalModificarMenus").modal("show");
+  // Modificar(id_usuario);
+}
+function ocultarModificarModalMenus() {
+  $("#modalModificarMenus").modal("hide");
+}
+
+//Funciones
+
+function ListaMenus() {
+  let showModal = false;
+
+  // Función para obtener los datos de los Menus
+  function fetchMenusData() {
+    fetch("../controlador/Menus/mostrarMenu.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // Devuelve la promesa de los datos JSON
+      })
+      .then((data) => {
+        // Maneja los datos aquí
+        renderizarDatos(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      });
+  }
+
+  // Función para renderizar los datos obtenidos
+  function renderizarDatos(datos) {
+    m.render(
+      document.getElementById("datos-menus"),
+      datos.map((i) => [
+        m(
+          "tr",
+          m("th", i.id_plato),
+          m("td", i.nombre),
+          m("td", i.ingredientes),
+          m("td", i.foto),
+          m("td", i.calorias),
+          m("td", i.proteinas),
+          m("td", i.carbohidratos),
+          m("td", i.grasas),
+          m("td", i.descripcion),
+          m(
+            "td",
+            m("div", { class: "d-flex justify-content-around" }, [
+              m(
+                "button",
+                {
+                  class: "btn btn-success",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetallesMenus",
+                  onclick: () => {
+                    DetallesPlato(i.id_plato);
+                  },
+                },
+                "Detalles"
+              ),
+              m(
+                "button",
+                {
+                  class: "btn btn-primary",
+                  "data-toggle": "modal",
+                  "data-target": "#modalModificarMenus",
+                  onclick: () => {
+                    console.log(i.id_plato);
+                    mostrarModalModificarMenus(
+                      i.id_plato,
+                      i.nombre,
+                      i.ingredientes,
+                      i.foto,
+                      i.calorias,
+                      i.proteinas,
+                      i.carbohidratos,
+                      i.grasas,
+                      i.descripcion
+                    );
+                  },
+                },
+                "Modificar"
+              ),
+              m(
+                "button",
+                {
+                  class: "btn btn-danger",
+                  "data-toggle": "modal",
+                  "data-target": "#modalDetallesMenus",
+                  onclick: () => {
+                    BorrarMenus(i.id_plato);
+                  },
+                },
+                "Eliminar"
+              ),
+            ])
+          )
+        ),
+      ])
+    );
+  }
+
+  // Llama a la función para obtener los datos cuando se renderiza el componente
+  fetchMenusData();
+
+  // Renderiza el componente
+  return {
+    view: () => [
+      m(
+        "button",
+        {
+          class: "btn btn-primary mt-5 mx-5 ",
+          onclick: () => {
+            mostrarModalInsercionMenus();
+          },
+        },
+        "AÑADIR"
+      ),
+      showModal &&
+        m(ModalForm, {
+          showModal: showModal,
+          onClose: function () {
+            showModal = false; // Ocultar el modal cuando se llame a onClose
+          },
+        }),
+      m(
+        "table",
+        {
+          class: " table table-striped mt-2 px-5 mx-auto  ",
+        },
+        m(
+          "thead",
+          m("tr", [
+            m("th", { scope: "col" }, "Id Plato"),
+            m("th", { scope: "col" }, "Nombre"),
+            m("th", { scope: "col" }, "Ingredientes"),
+            m("th", { scope: "col" }, "Foto"),
+            m("th", { scope: "col" }, "Calorias"),
+            m("th", { scope: "col" }, "Proteinas"),
+            m("th", { scope: "col" }, "Caarbohidratos"),
+            m("th", { scope: "col" }, "Grasas"),
+            m("th", { scope: "col" }, "Descripcion"),
+            m("th", { scope: "col" }, "Acciones"),
+          ])
+        ),
+        // Donde se renderizarán los datos
+        m("tbody", { id: "datos-menus" })
+      ),
+    ],
+  };
+}
+
+function InsertarMenus() {
+  var formulario = $("#FormularioMenus");
+  console.log(formulario);
+
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Menus/insertarPlato.php",
+    data: formulario.serialize(),
+    dataType: "json", // Esperar una respuesta en formato JSON
+    success: function (response) {
+      if (response.error) {
+        console.log("Error en la solicitud AJAX:", response.error);
+      } else {
+        ocultarInsertarModal();
+        window.location.reload();
+        m(ListaUser);
+      }
+    },
+    error: function (error) {
+      console.log("Error en la solicitud AJAX:", error.responseText);
+      ocultarInsertarModalMenus(); // Ocultar el modal de inserción
+
+      // Mostrar mensaje de éxito en el contenedor de detalles
+      $("#detallesContainer").html("El Plato se ha insertado correctamente");
+
+      // Modificar el título del modal
+      $(".modal-title").html("Plato Insertado");
+
+      // Mostrar el modal de detalles
+      $("#detallesModal").modal("show");
+
+      window.location.reload();
+    },
+  });
+}
+
+function DetallesMenus(id) {
+  let datos;
+  console.log(id);
+  fetch("../controlador/Menus/detallePlato.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      // m.redraw();
+      console.log(data);
+      datos = data;
+      console.log(datos);
+      var detallesHtml = `
+            <p>ID: ${datos.id_plato}</p>
+            <p>Nombre: ${datos.nombre}</p>
+            <p>Ingredientes: ${datos.ingredientes}</p>
+            <p>Foto: ${datos.foto}</p>
+            <p>Calorias: ${datos.calorias}</p>
+            <p>Proteinas: ${datos.proteinas}</p>
+            <p>Carbohidratos: ${datos.carbohidratos}</p>
+            <p>Grasas: ${datos.grasas}</p>
+            <p>Descripcion: ${datos.descripcion}</p>
+          `;
+      console.log(detallesHtml);
+      $(".modal-header").html("Detalles Menus");
+
+      // Mostrar los detalles del cliente en el contenedor
+      $("#detallesContainer").html(detallesHtml);
+
+      // Modificar el título del modal
+      $(".modal-title").html("Detalles Menus");
+
+      // Mostrar el modal de detalles
+      $("#modalDetallesMenus").modal("show");
+    });
+}
+
+function BorrarMenus(id) {
+  fetch("../controlador/Menus/borrarPlato.php", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ id: id }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return response.json();
+      }
+    })
+    .then((data) => {
+      $("#detallesContainer").html("El plato se ha borrado correctamente");
+
+      // Modificar el título del modal
+      $(".modal-title").html("Borrado Exitoso");
+
+      // Mostrar el modal de detalles
+      $("#modalDetallesMenus").modal("show");
+
+      window.location.reload();
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+    });
+}
+
+function ModificarMenus(id) {
+  var formulario = $("#form-modificarMenus");
+  var ids = formulario.find('input[name="id_plato"]').val();
+  console.log(ids);
+  $.ajax({
+    type: "POST",
+    url: "../controlador/Menus/modificarPlato.php",
     data: formulario.serialize(),
     dataType: "json", // Esperar una respuesta en formato JSON
     success: function (response) {

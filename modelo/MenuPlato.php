@@ -43,7 +43,7 @@ class MenuPlato
             die();
         }
     }
-    
+
     static function buscar($link, $id_menu)
     {
         try {
@@ -62,20 +62,20 @@ class MenuPlato
         }
     }
 
-   /*  function buscar($link)
-    {
-        try {
-            $consulta = "SELECT * FROM CaracteristicasUsuarios where id_usuario='$this->id_usuario'";
-            $link = $link->getLink();
-            $result = $link->prepare($consulta);
-            $result->execute();
-            return $result->fetch(PDO::FETCH_ASSOC);
-        } catch (PDOException $e) {
-            $dato = "¡Error!: " . $e->getMessage() . "<br/>";
-            require "vistas/mensaje.php";
-            die();
-        }
-    } */
+    /*  function buscar($link)
+     {
+         try {
+             $consulta = "SELECT * FROM CaracteristicasUsuarios where id_usuario='$this->id_usuario'";
+             $link = $link->getLink();
+             $result = $link->prepare($consulta);
+             $result->execute();
+             return $result->fetch(PDO::FETCH_ASSOC);
+         } catch (PDOException $e) {
+             $dato = "¡Error!: " . $e->getMessage() . "<br/>";
+             require "vistas/mensaje.php";
+             die();
+         }
+     } */
 
     function insertar($link)
     {
@@ -115,7 +115,7 @@ class MenuPlato
 
             $stmnt = $link->link->prepare($update);
             $stmnt->execute([
-                ':id_usuario' => $this->id_usuario,
+                ':id_plato' => $this->id_plato,
                 ':id_menu' => $this->id_menu,
 
             ]);

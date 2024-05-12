@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             exit;
         } else {
             $_SESSION['username'] = $username;
-            echo "<script>window.location.href='../../vistas/index.html';</script>";
+            echo "<script>window.location.href='../../vistas/index.html?username=$username';</script>";
             exit;
         }
     } else {
