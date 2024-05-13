@@ -5,13 +5,11 @@ class Menu
     private $id_menu;
     private $nombre;
     private $descripcion;
-    private $complejidad;
 
-    function __construct($nombre, $descripcion, $complejidad)
+    function __construct($nombre, $descripcion)
     {
         $this->nombre = $nombre;
         $this->descripcion = $descripcion;
-        $this->complejidad = $complejidad;
     }
 
     static function getAll($link)
@@ -20,9 +18,9 @@ class Menu
             $consulta = "SELECT * FROM Menus";
             $result = $link->prepare($consulta);
             $result->execute();
-            return $result->fetchAll(PDO::FETCH_ASSOC);
+            return $result;
         } catch (PDOException $e) {
-            echo "¡Error!: " . $e->getMessage() . "<br/>";
+            $dato = "¡Error!: " . $e->getMessage() . "<br/>";
             die();
         }
     }
@@ -58,12 +56,11 @@ class Menu
     function insertar($link)
     {
         try {
-            $consulta = "INSERT INTO Menus (nombre, descripcion, complejidad) 
-                         VALUES (:nombre, :descripcion, :complejidad)";
-            $result = $link->prepare($consulta);
+            $consulta = "INSERT INTO Menus (nombre, descripcion) 
+                         VALUES (:nombre, :descripcion)";
+            $result = $link->link->prepare($consulta);
             $result->bindParam(':nombre', $this->nombre);
             $result->bindParam(':descripcion', $this->descripcion);
-            $result->bindParam(':complejidad', $this->complejidad, PDO::PARAM_INT);
             $result->execute();
             return $result;
         } catch (PDOException $e) {
@@ -76,11 +73,10 @@ class Menu
     {
         try {
             $consulta = "UPDATE Menus SET nombre = :nombre, descripcion = :descripcion, 
-                         complejidad = :complejidad WHERE id_menu = :id_menu";
+                           WHERE id_menu = :id_menu";
             $result = $link->prepare($consulta);
             $result->bindParam(':nombre', $this->nombre);
             $result->bindParam(':descripcion', $this->descripcion);
-            $result->bindParam(':complejidad', $this->complejidad, PDO::PARAM_INT);
             $result->bindParam(':id_menu', $this->id_menu, PDO::PARAM_INT);
             $result->execute();
             return $result;

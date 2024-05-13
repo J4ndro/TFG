@@ -1,10 +1,9 @@
 <?php
 require "../../modelo/Menu.php";
-require "../../modelo/MenuPlato.php";
 
 // Obtener los datos de los Menus
 $link = new Bd();
-$menu = MenuPlato::getAll($link->link);
+$menu = Menu::getAll($link->link);
 
 // Crear un array para almacenar los datos de los Menus
 $menuArray = array();

@@ -23,20 +23,19 @@
         id_menu INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(100),
         descripcion TEXT,
-        complejidad INT
         -- Otros campos relevantes sobre los menús
     );
 
     -- Creación de la tabla CaracteristicasUsuarios
     CREATE TABLE IF NOT EXISTS CaracteristicasUsuarios (
-        id_usuario INT,
+        id_usuario INT AUTO_INCREMENT PRIMARY KEY,
         calorias INT,
         proteinas INT,
         carbohidratos INT,
         grasas INT,
         altura INT,
         peso INT,
-        edad INT,
+        edad INT,        
         FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
         -- Otros campos relevantes sobre las características del usuario
     );
@@ -51,6 +50,7 @@
         carbohidratos VARCHAR(50),
         grasas VARCHAR(50),
         descripcion TEXT,
+        complejidad INT
         -- Otros campos relevantes sobre los platos
     );
 

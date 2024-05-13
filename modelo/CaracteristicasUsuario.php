@@ -1,6 +1,5 @@
 <?php
 
-require "BD.php";
 class CaracteristicasUsuario
 {
     private $id_usuario;
@@ -12,9 +11,8 @@ class CaracteristicasUsuario
     private $peso;
     private $edad;
 
-    function __construct($id_usuario, $calorias, $proteinas, $carbohidratos, $grasas, $altura, $peso, $edad)
+    function __construct($calorias, $proteinas, $carbohidratos, $grasas, $altura, $peso, $edad)
     {
-        $this->id_usuario = $id_usuario;
         $this->calorias = $calorias;
         $this->proteinas = $proteinas;
         $this->carbohidratos = $carbohidratos;
@@ -54,10 +52,9 @@ class CaracteristicasUsuario
     function insertar($link)
     {
         try {
-            $consulta = "INSERT INTO CaracteristicasUsuarios (id_usuario, calorias, proteinas, carbohidratos, grasas, altura, peso, edad) 
-                         VALUES (:id_usuario, :calorias, :proteinas, :carbohidratos, :grasas, :altura, :peso, :edad)";
-            $result = $link->prepare($consulta);
-            $result->bindParam(':id_usuario', $this->id_usuario, PDO::PARAM_INT);
+            $consulta = "INSERT INTO CaracteristicasUsuarios ( calorias, proteinas, carbohidratos, grasas, altura, peso, edad) 
+                         VALUES ( :calorias, :proteinas, :carbohidratos, :grasas, :altura, :peso, :edad)";
+            $result = $link->link->prepare($consulta);
             $result->bindParam(':calorias', $this->calorias, PDO::PARAM_INT);
             $result->bindParam(':proteinas', $this->proteinas, PDO::PARAM_INT);
             $result->bindParam(':carbohidratos', $this->carbohidratos, PDO::PARAM_INT);

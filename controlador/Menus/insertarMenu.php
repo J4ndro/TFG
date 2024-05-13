@@ -6,10 +6,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Recibe los datos del formulario
     $nombre = isset($_POST['nombre']) ? $_POST['nombre'] : '';
     $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
-    $complejidad = isset($_POST['complejidad']) ? $_POST['complejidad'] : '';
 
+    echo ($nombre);
     // Crear una instancia de Usuario con los datos recibidos
-    $menu = new Menu("", $nombre, $descripcion, $complejidad);
+    $menu = new Menu($nombre, $descripcion);
     $link = new Bd;
 
     // Intenta insertar el usuario en la base de datos
@@ -18,7 +18,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = array(
             'nombre' => $nombre,
             'descripcion' => $descripcion,
-            'complejidad' => $complejidad,
         );
         echo json_encode($response);
     } else {

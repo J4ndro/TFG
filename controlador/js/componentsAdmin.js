@@ -33,7 +33,7 @@ function Menus() {
   return {
     view: () => [
       m(Header),
-      m(ListaMenus),
+      m(mainMenus),
       m(ModalMenus),
       m(DetallesModalMenus),
       m(ModificarModalMenus),
@@ -53,6 +53,11 @@ $(document).ready(function () {
     e.preventDefault();
     console.log(e);
     InsertarPlato(e); // Llamar a la función de inserción
+  });
+  $("#FormularioMenus").submit(function (e) {
+    e.preventDefault();
+    console.log(e);
+    InsertarMenu(e); // Llamar a la función de inserción
   });
 
   // Manejar el evento submit del formulario de modificación
@@ -532,7 +537,7 @@ function mainUser() {
                       {
                         class: "btn btn-dark ",
                         onclick: () => {
-                          mostrarModalInsercionPlatos();
+                          mostrarModalInsercion();
                         },
                       },
                       "AÑADIR"
@@ -1308,15 +1313,19 @@ function mainPlatos() {
                   {
                     class: "btn btn-primary",
                     "data-toggle": "modal",
-                    "data-target": "#modalModificar",
+                    "data-target": "#modalModificarPlatos",
                     onclick: () => {
-                      console.log(i.id_usuario);
-                      mostrarModalModificar(
-                        i.id_usuario,
+                      console.log(i.id_plato);
+                      mostrarModalModificarPlatos(
+                        i.id_plato,
                         i.nombre,
-                        i.apellido,
-                        i.email,
-                        i.pwd
+                        i.ingredientes,
+                        i.foto,
+                        i.calorias,
+                        i.proteinas,
+                        i.carbohidratos,
+                        i.grasas,
+                        i.descripcion
                       );
                     },
                   },
@@ -1329,7 +1338,7 @@ function mainPlatos() {
                     "data-toggle": "modal",
                     "data-target": "#modalDetalles",
                     onclick: () => {
-                      Borrar(i.id_usuario);
+                      BorrarPlatos(i.id_plato);
                     },
                   },
                   "Eliminar"
@@ -1356,9 +1365,9 @@ function InsertarPlato() {
       if (response.error) {
         console.log("Error en la solicitud AJAX:", response.error);
       } else {
-        ocultarInsertarModal();
-        window.location.reload();
-        m(ListaUser);
+        ocultarInsertarModalPlatos();
+        // window.location.reload();
+        m(ListaPlatos);
       }
     },
     error: function (error) {
@@ -1493,7 +1502,7 @@ var ModalMenus = {
         m(".modal-dialog", { role: "document" }, [
           m(".modal-content", [
             m(".modal-header", [
-              m("h5.modal-title", "Insertar Cliente"),
+              m("h5.modal-title", "Insertar Menú"),
               m(
                 "button.close",
                 {
@@ -1515,51 +1524,9 @@ var ModalMenus = {
                   m("label", { for: "nombre" }, "nombre: "),
                   m("input", { type: "text", id: "nombre", name: "nombre" }),
                   m("br"),
-                  m("label", { for: "ingredientes" }, "ingredientes: "),
-                  m("input", {
-                    type: "text",
-                    id: "ingredientes",
-                    name: "ingredientes",
-                  }),
-                  m("br"),
-                  m("label", { for: "foto" }, "foto: "),
-                  m("input", {
-                    type: "text",
-                    id: "foto",
-                    name: "foto",
-                  }),
-                  m("br"),
-                  m("label", { for: "calorias" }, "calorias: "),
-                  m("input", {
-                    type: "text",
-                    id: "calorias",
-                    name: "calorias",
-                  }),
-                  m("br"),
-                  m("label", { for: "proteinas" }, "proteinas: "),
-                  m("input", {
-                    type: "text",
-                    id: "proteinas",
-                    name: "proteinas",
-                  }),
-                  m("br"),
-                  m("label", { for: "carbohidratos" }, "carbohidratos: "),
-                  m("input", {
-                    type: "text",
-                    id: "carbohidratos",
-                    name: "carbohidratos",
-                  }),
-                  m("br"),
-                  m("label", { for: "grasas" }, "grasas: "),
-                  m("input", {
-                    type: "text",
-                    id: "grasas",
-                    name: "grasas",
-                  }),
-                  m("br"),
                   m("label", { for: "descripcion" }, "descripcion: "),
                   m("input", {
-                    type: "textarea",
+                    type: "text",
                     id: "descripcion",
                     name: "descripcion",
                   }),
@@ -1761,7 +1728,7 @@ function ocultarModificarModalMenus() {
 function ListaMenus() {
   let showModal = false;
 
-  // Función para obtener los datos de los Menus
+  // Función para obtener los datos de los platos
   function fetchMenusData() {
     fetch("../controlador/Menus/mostrarMenu.php", {
       method: "GET",
@@ -1785,7 +1752,7 @@ function ListaMenus() {
   // Función para renderizar los datos obtenidos
   function renderizarDatos(datos) {
     m.render(
-      document.getElementById("datos-menus"),
+      document.getElementById("datos-platos"),
       datos.map((i) => [
         m(
           "tr",
@@ -1804,25 +1771,13 @@ function ListaMenus() {
               m(
                 "button",
                 {
-                  class: "btn btn-success",
-                  "data-toggle": "modal",
-                  "data-target": "#modalDetallesMenus",
-                  onclick: () => {
-                    DetallesPlato(i.id_plato);
-                  },
-                },
-                "Detalles"
-              ),
-              m(
-                "button",
-                {
                   class: "btn btn-primary",
                   "data-toggle": "modal",
                   "data-target": "#modalModificarMenus",
                   onclick: () => {
-                    console.log(i.id_plato);
+                    console.log(i.id_menu);
                     mostrarModalModificarMenus(
-                      i.id_plato,
+                      i.id_menu,
                       i.nombre,
                       i.ingredientes,
                       i.foto,
@@ -1843,7 +1798,7 @@ function ListaMenus() {
                   "data-toggle": "modal",
                   "data-target": "#modalDetallesMenus",
                   onclick: () => {
-                    BorrarMenus(i.id_plato);
+                    BorrarMenus(i.id_menu);
                   },
                 },
                 "Eliminar"
@@ -1866,7 +1821,7 @@ function ListaMenus() {
         {
           class: "btn btn-primary mt-5 mx-5 ",
           onclick: () => {
-            mostrarModalInsercionMenus();
+            mostrarModalInsercionPlatos();
           },
         },
         "AÑADIR"
@@ -1886,7 +1841,7 @@ function ListaMenus() {
         m(
           "thead",
           m("tr", [
-            m("th", { scope: "col" }, "Id Plato"),
+            m("th", { scope: "col" }, "Id Menu"),
             m("th", { scope: "col" }, "Nombre"),
             m("th", { scope: "col" }, "Ingredientes"),
             m("th", { scope: "col" }, "Foto"),
@@ -1899,28 +1854,186 @@ function ListaMenus() {
           ])
         ),
         // Donde se renderizarán los datos
-        m("tbody", { id: "datos-menus" })
+        m("tbody", { id: "datos-platos" })
       ),
     ],
   };
 }
 
-function InsertarMenus() {
+function mainMenus() {
+  return {
+    view: function () {
+      return m(".content-wrapper", [
+        // Encabezado
+        m("section.content-header", [
+          m(".container-fluid", [
+            m(".row.mb-2", [
+              m(".col-sm-6", [m("h1", "Menus")]),
+              m(".col-sm-6", [
+                m("ol.breadcrumb.float-sm-right", [
+                  m("li.breadcrumb-item", [m("a", { href: "#" }, "Home")]),
+                  m("li.breadcrumb-item.active", "Menus"),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+
+        // Contenido principal
+        m("section.content", [
+          m(".container-fluid", [
+            m(".row", [
+              m(".col-12", [
+                // Primera tabla con DataTables
+                m(".card", [
+                  m(".card-header.d-flex.justify-content-between", [
+                    m("h3.card-title", "Tabla de Menus"),
+                    m(
+                      "button",
+                      {
+                        class: "btn btn-dark ",
+                        onclick: () => {
+                          mostrarModalInsercionMenus();
+                        },
+                      },
+                      "Nuevo Menu"
+                    ),
+                  ]),
+                  m(".card-body", [
+                    m("table#example2.table.table-bordered.table-hover", [
+                      m("thead", [
+                        m("tr", [
+                          m("th", "Id Menu"),
+                          m("th", "Nombre"),
+                          m("th", "Descripción"),
+                          m("th", "Acciones"),
+                        ]),
+                      ]),
+                      m("tbody", m(ListarMenus)),
+                    ]),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]);
+    },
+  };
+  function ListarMenus() {
+    let datos = [];
+    let datosMenu = [];
+
+    // Realiza la solicitud fetch y actualiza datos cuando se reciban los datos
+    function mostrarMenuPlato() {
+      fetch("../controlador/Menus/mostrarMenu.php", {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          } else {
+            console.log("Conectado");
+            // console.log(response.json());
+            return response.json();
+          }
+        })
+        .then((data) => {
+          console.log(data);
+          datos = data; // Actualiza datos cuando se reciban los datos
+          m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+        });
+    }
+
+    fetch("../controlador/Menus/mostrar.php", {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          // console.log(response.json());
+          return response.json();
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        datosMenu = data; // Actualiza datos cuando se reciban los datos
+        m.redraw(); // Vuelve a dibujar el componente para mostrar los datos actualizados
+      });
+    // Devuelve un componente que muestra los datos
+    return {
+      view: () => [
+        datosMenu.map((i) => [
+          m(
+            "tr",
+            m("th", i.id_menu),
+            m("td", i.nombre),
+            m("td", i.descripcion),
+            m(
+              "td",
+              m("div", { class: "d-flex justify-content-around" }, [
+                m(
+                  "button",
+                  {
+                    class: "btn btn-primary",
+                    "data-toggle": "modal",
+                    "data-target": "#modalModificarPlatos",
+                    onclick: () => {
+                      console.log(i.id_plato);
+                      mostrarModalModificarPlatos(
+                        i.id_plato,
+                        i.nombre,
+                        i.ingredientes,
+                        i.foto,
+                        i.calorias,
+                        i.proteinas,
+                        i.carbohidratos,
+                        i.grasas,
+                        i.descripcion
+                      );
+                    },
+                  },
+                  "Modificar"
+                ),
+                m(
+                  "button",
+                  {
+                    class: "btn btn-danger",
+                    "data-toggle": "modal",
+                    "data-target": "#modalDetalles",
+                    onclick: () => {
+                      BorrarPlatos(i.id_plato);
+                    },
+                  },
+                  "Eliminar"
+                ),
+              ])
+            )
+          ),
+        ]),
+      ],
+    };
+  }
+}
+
+function InsertarMenu() {
   var formulario = $("#FormularioMenus");
   console.log(formulario);
 
   $.ajax({
     type: "POST",
-    url: "../controlador/Menus/insertarPlato.php",
+    url: "../controlador/Menus/insertarMenu.php",
     data: formulario.serialize(),
     dataType: "json", // Esperar una respuesta en formato JSON
     success: function (response) {
       if (response.error) {
         console.log("Error en la solicitud AJAX:", response.error);
       } else {
-        ocultarInsertarModal();
-        window.location.reload();
-        m(ListaUser);
+        ocultarInsertarModalMenus();
       }
     },
     error: function (error) {
@@ -1928,63 +2041,17 @@ function InsertarMenus() {
       ocultarInsertarModalMenus(); // Ocultar el modal de inserción
 
       // Mostrar mensaje de éxito en el contenedor de detalles
-      $("#detallesContainer").html("El Plato se ha insertado correctamente");
+      $("#detallesContainer").html("El Menú se ha insertado correctamente");
 
       // Modificar el título del modal
-      $(".modal-title").html("Plato Insertado");
+      $(".modal-title").html("Menú Insertado");
 
       // Mostrar el modal de detalles
       $("#detallesModal").modal("show");
 
-      window.location.reload();
+      // window.location.reload();
     },
   });
-}
-
-function DetallesMenus(id) {
-  let datos;
-  console.log(id);
-  fetch("../controlador/Menus/detallePlato.php", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ id: id }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      } else {
-        console.log("Conectado");
-        return response.json();
-      }
-    })
-    .then((data) => {
-      // m.redraw();
-      console.log(data);
-      datos = data;
-      console.log(datos);
-      var detallesHtml = `
-            <p>ID: ${datos.id_plato}</p>
-            <p>Nombre: ${datos.nombre}</p>
-            <p>Ingredientes: ${datos.ingredientes}</p>
-            <p>Foto: ${datos.foto}</p>
-            <p>Calorias: ${datos.calorias}</p>
-            <p>Proteinas: ${datos.proteinas}</p>
-            <p>Carbohidratos: ${datos.carbohidratos}</p>
-            <p>Grasas: ${datos.grasas}</p>
-            <p>Descripcion: ${datos.descripcion}</p>
-          `;
-      console.log(detallesHtml);
-      $(".modal-header").html("Detalles Menus");
-
-      // Mostrar los detalles del cliente en el contenedor
-      $("#detallesContainer").html(detallesHtml);
-
-      // Modificar el título del modal
-      $(".modal-title").html("Detalles Menus");
-
-      // Mostrar el modal de detalles
-      $("#modalDetallesMenus").modal("show");
-    });
 }
 
 function BorrarMenus(id) {

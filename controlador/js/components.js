@@ -1,4 +1,4 @@
-const pages = [Home, Menus, Perfil, Suscripcion];
+const pages = [Home, Platos, Menus, Perfil, Suscripcion, AboutUs];
 
 const components = [Header, Hero, Info, PerfilSection];
 
@@ -23,6 +23,12 @@ function Home() {
   };
 }
 
+function Platos() {
+  return {
+    view: () => [m(Header), m(SectionPlatos), m(Footer)],
+  };
+}
+
 function Menus() {
   return {
     view: () => [m(Header), m(Seccion), m(Footer)],
@@ -43,6 +49,12 @@ function Perfil() {
 function Suscripcion() {
   return {
     view: () => [m(Header), m(Suscripciones), m(Footer)],
+  };
+}
+
+function AboutUs() {
+  return {
+    view: () => [m(Header), m(About), m(Footer)],
   };
 }
 //!! COMPONENTS
@@ -93,32 +105,7 @@ function Header() {
                     ]),
                     m("ul", {}, [
                       m("li", {}, [m("a", { href: "#" }, "Contacto")]),
-                      m("li", { class: "dropdown" }, [
-                        m("a", { href: "#" }, [
-                          m("span", {}, "About Us"),
-                          m("i", { class: "bi bi-chevron-right" }),
-                        ]),
-                        m("ul", {}, [
-                          m("li", {}, [
-                            m("a", { href: "#" }, "Deep Drop Down 1"),
-                          ]),
-                          m("li", {}, [
-                            m("a", { href: "#" }, "Deep Drop Down 2"),
-                          ]),
-                          m("li", {}, [
-                            m("a", { href: "#" }, "Deep Drop Down 3"),
-                          ]),
-                          m("li", {}, [
-                            m("a", { href: "#" }, "Deep Drop Down 4"),
-                          ]),
-                          m("li", {}, [
-                            m("a", { href: "#" }, "Deep Drop Down 5"),
-                          ]),
-                        ]),
-                      ]),
-                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 2")]),
-                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 3")]),
-                      // m("li", {}, [m("a", { href: "#" }, "Drop Down 4")]),
+                      m("li", {}, [m("a", { href: "#!AboutUs" }, "About Us")]),
                     ]),
                   ]),
                   m("li", {}, [
@@ -828,7 +815,7 @@ function PerfilSection(vnode) {
     },
     view: () => {
       if (!userData) {
-        return m("div", "Cargando...");
+        return m("span", { class: "loader" });
       }
       return m("section", { style: "background-color: #eee;" }, [
         m("div", { class: "container py-5 mt-5" }, [
@@ -1266,100 +1253,116 @@ function PerfilSection(vnode) {
 function Suscripciones() {
   return {
     view: () => [
-      m(".pricing-header.p-3.pb-md-4.mx-auto.text-center.col-8", [
-        m("h1.display-4.fw-normal", "Suscripcion"),
-        m(
-          "p.fs-5.text-muted",
-          "Podras suscribirte a nuestro servicio para poder acceder a nuestro contenido gratuitamente o pagando una cuota mensual."
-        ),
-      ]),
-      m(".row.row-cols-1.row-cols-md-3.mb-3.text-center.mx-auto.col-8", [
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm", [
-            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Plan Gratuito")]),
-            m(".card-body", [
+      m(subHero),
+      m("section.section", [
+        m(".container", [
+          m(".row.justify-content-center.text-center.mb-5", [
+            m(".col-md-7", [
+              m("h2.section-heading", "Elige un plan"),
               m(
-                "h1.card-title.pricing-card-title",
-                "$0",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "Acceso a tu perfil"),
-                m("li", "Seguimiento de tus alimentos"),
-                m("li", "Listado de menus"),
-                m("li", "Help center access"),
-              ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-outline-primary",
-                {
-                  onclick: function () {
-                    /* Handle sign up for free click event */
-                  },
-                },
-                "Tu plan actual"
+                "p",
+                "Estas son las suscripciones disponibles para poder adquirir beneficios."
               ),
             ]),
           ]),
-        ]),
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm", [
-            m(".card-header.py-3", [m("h4.my-0.fw-normal", "Vita Pro")]),
-            m(".card-body", [
-              m(
-                "h1.card-title.pricing-card-title",
-                "$15",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "20 users included"),
-                m("li", "10 GB of storage"),
-                m("li", "Priority email support"),
-                m("li", "Help center access"),
+          m(".row.align-items-stretch", [
+            m(".col-lg-4.mb-4.mb-lg-0", [
+              m(".pricing.h-100.text-center", [
+                m("span.popularity", "Gratis"),
+                m("h3", "Vita Basic"),
+                m("ul.list-unstyled", [
+                  m("li", "Crea y modifica tus menus favoritos"),
+                  m("li", "Añade y modifica tus platos"),
+                ]),
+                m(".price-cta", [
+                  m("strong.price", "Gratis"),
+                  m("p", [
+                    m("a.btn.btn-white", { href: "#" }, "Tu plan actual"),
+                  ]),
+                ]),
               ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-primary",
-                {
-                  onclick: function () {
-                    /* Handle get started click event */
-                  },
-                },
-                "Get started"
-              ),
             ]),
-          ]),
-        ]),
-        m(".col", [
-          m(".card.mb-4.rounded-3.shadow-sm.border-primary", [
-            m(".card-header.py-3.text-white.bg-primary.border-primary", [
-              m("h4.my-0.fw-normal", "Vita Family"),
-            ]),
-            m(".card-body", [
-              m(
-                "h1.card-title.pricing-card-title",
-                "$29",
-                m("small.text-muted.fw-light", "/mes")
-              ),
-              m("ul.list-unstyled.mt-3.mb-4", [
-                m("li", "30 users included"),
-                m("li", "15 GB of storage"),
-                m("li", "Phone and email support"),
-                m("li", "Help center access"),
+            m(".col-lg-4.mb-4.mb-lg-0", [
+              m(".pricing.h-100.text-center.popular", [
+                m("span.popularity", "Mas Popular"),
+                m("h3", "Vita Premium"),
+                m("ul.list-unstyled", [
+                  m("li", "Create up to 20 forms"),
+                  m("li", "Generate 2500 monthly reports"),
+                  m("li", "Manage a team of up to 5 people"),
+                ]),
+                m(".price-cta", [
+                  m("strong.price", "9.95€/mes"),
+                  m("p", [m("a.btn.btn-white", { href: "#" }, "Suscribirme")]),
+                ]),
               ]),
-              m(
-                "button.w-100.btn.btn-lg.btn-primary",
-                {
-                  onclick: function () {
-                    /* Handle contact us click event */
-                  },
-                },
-                "Contact us"
-              ),
+            ]),
+            m(".col-lg-4.mb-4.mb-lg-0", [
+              m(".pricing.h-100.text-center", [
+                m("span.popularity", "Mejor Valorada"),
+                m("h3", "Vita Family"),
+                m("ul.list-unstyled", [
+                  m("li", "Create up to 20 forms"),
+                  m("li", "Generate 2500 monthly reports"),
+                  m("li", "Manage a team of up to 5 people"),
+                ]),
+                m(".price-cta", [
+                  m("strong.price", "19.95€/mes"),
+                  m("p", [m("a.btn.btn-white", { href: "#" }, "Suscribirme")]),
+                ]),
+              ]),
             ]),
           ]),
         ]),
       ]),
     ],
   };
+  function subHero() {
+    return {
+      view: () => [
+        m("section.hero-section.inner-page", [
+          m(".wave", [
+            m(
+              "svg[width='1920px'][height='265px'][viewBox='0 0 1920 265'][xmlns='http://www.w3.org/2000/svg'][xmlns:xlink='http://www.w3.org/1999/xlink']",
+              [
+                m(
+                  "g#Page-1[stroke='none'][stroke-width='1'][fill='none'][fill-rule='evenodd']",
+                  [
+                    m(
+                      "g#Apple-TV[fill='#FFFFFF'][transform='translate(0.000000, -402.000000)']",
+                      [
+                        m(
+                          "path[d='M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z'][id='Path']"
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+          ]),
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-12", [
+                m(".row.justify-content-center", [
+                  m(".col-md-7.text-center.hero-text", [
+                    m(
+                      "h1[data-aos='fade-up'][data-aos-delay='']",
+                      "Suscripción"
+                    ),
+                    m(
+                      "p.mb-5[data-aos='fade-up'][data-aos-delay='100']",
+                      "Listado de suscripciones."
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ],
+    };
+  }
 }
 
 function Seccion() {
@@ -1369,67 +1372,1116 @@ function Seccion() {
       items: [{}, {}, {}, {}, {}],
     },
     view: () => [
-      this.state.model.menus.map((c) =>
-        m(
-          "div",
-          {
-            class: "py-5 px-5 col-12 d-flex flex-column mt-5", // Agregué flex-column para que los elementos se apilen verticalmente
-          },
-          m(
-            "p",
-            {
-              class: "h1 col-12 py-3",
-              style: {
-                borderBottom: "1px solid rgba(0,0,0,0.2)",
-              },
-            },
-            "Menu 1"
-          ),
-          // Aquí empieza el div para las cards
+      m(subHero),
+      m(
+        "div.col-12.row.my-5",
+
+        [
           m(
             "div",
-            { class: "col-12 mt-5 d-flex" },
-            this.state.model.items.map((i) =>
-              m(
+            {
+              class: "col-4",
+              style: {
+                position: "sticky",
+                top: "0",
+                zIndex: "1",
+                top: "100px",
+                overflowY: "auto",
+              },
+            },
+            m(Calendar)
+          ),
+          m(
+            "div",
+            {
+              class: "col-8 container",
+              style: {
+                borderRadius: "10px",
+                boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                padding: "20px",
+                backgroundColor: "#ffffff",
+                marginTop: "100px",
+              },
+            },
+            // Mapear los elementos de model.menus
+            // y devolver un div para cada uno de ellos
+            this.state.model.menus.map((menu) => {
+              return m(
                 "div",
                 {
-                  class: "card",
-                  style: "width: 18rem;",
+                  class: "py-5 px-5 col-12 d-flex flex-column",
                 },
                 [
-                  m("img", {
-                    class: "card-img-top",
-                    src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                    alt: "Card image cap",
-                  }),
-                  m("div", { class: "card-body" }, [
-                    m("h5", { class: "card-title" }, "Arroz con Tomate"),
-                    m(
-                      "p",
-                      { class: "card-text" },
-                      "Esta es una receta simple de un arroz a la cubana"
-                    ),
-                  ]),
-                  m("ul", { class: "list-group list-group-flush" }, [
-                    m("li", { class: "list-group-item" }, "Calorias: 457/kcal"),
-                    m("li", { class: "list-group-item" }, "Proteina: 45g/100g"),
-                    m(
-                      "li",
-                      { class: "list-group-item" },
-                      "Carbohidratos: 60g/100g"
-                    ),
-                    m("li", { class: "list-group-item" }, "Grasas: 5g/100g"),
-                  ]),
-                  m("div", { class: "card-body" }, [
-                    m("a", { href: "#", class: "card-link" }, "Modificar"),
-                    m("a", { href: "#", class: "card-link" }, "Eliminar"),
-                  ]),
+                  m(
+                    "details",
+                    {
+                      class: "col-12",
+                    },
+                    [
+                      m(
+                        "summary",
+                        {
+                          class: "h1 col-12 py-3",
+                          style: {
+                            borderBottom: "1px solid rgba(0,0,0,0.2)",
+                          },
+                        },
+                        "Menu 1"
+                      ),
+                      m(
+                        "div",
+                        {
+                          class: "col-12 mt-5 d-flex fade-up",
+                        },
+                        this.state.model.items.map((item) =>
+                          m(
+                            "div",
+                            {
+                              class: "card",
+                              style: "width: 18rem;",
+                            },
+                            [
+                              m("img", {
+                                class: "card-img-top",
+                                src: "../images/arroz.jpg",
+                                alt: "Card image cap",
+                              }),
+                              m(
+                                "div",
+                                {
+                                  class: "card-body",
+                                },
+                                [
+                                  m(
+                                    "h5",
+                                    {
+                                      class: "card-title",
+                                    },
+                                    "Arroz con Tomate"
+                                  ),
+                                  m(
+                                    "p",
+                                    {
+                                      class: "card-text",
+                                    },
+                                    "Esta es una receta simple de un arroz a la cubana"
+                                  ),
+                                ]
+                              ),
+                              m(
+                                "ul",
+                                {
+                                  class: "list-group list-group-flush",
+                                },
+                                [
+                                  m(
+                                    "li",
+                                    {
+                                      class: "list-group-item",
+                                    },
+                                    "Calorias: 457/kcal"
+                                  ),
+                                  m(
+                                    "li",
+                                    {
+                                      class: "list-group-item",
+                                    },
+                                    "Proteina: 45g/100g"
+                                  ),
+                                  m(
+                                    "li",
+                                    {
+                                      class: "list-group-item",
+                                    },
+                                    "Carbohidratos: 60g/100g"
+                                  ),
+                                  m(
+                                    "li",
+                                    {
+                                      class: "list-group-item",
+                                    },
+                                    "Grasas: 5g/100g"
+                                  ),
+                                ]
+                              ),
+                              m(
+                                "div",
+                                {
+                                  class: "card-body",
+                                },
+                                [
+                                  m(
+                                    "a",
+                                    {
+                                      href: "#",
+                                      class: "card-link",
+                                    },
+                                    "Modificar"
+                                  ),
+                                  m(
+                                    "a",
+                                    {
+                                      href: "#",
+                                      class: "card-link",
+                                    },
+                                    "Eliminar"
+                                  ),
+                                ]
+                              ),
+                            ]
+                          )
+                        )
+                      ),
+                    ]
+                  ),
                 ]
-              )
-            )
-          ) // Aquí termina el div para las cards
-        )
+              );
+            })
+          ),
+        ]
       ),
     ],
   };
+
+  function Calendar() {
+    let selectedDate = null;
+    const days = ["L", "M", "X", "J", "V", "S", "D"];
+    const months = [
+      "Enero",
+      "Febrero",
+      "Marzo",
+      "Abril",
+      "Mayo",
+      "Junio",
+      "Julio",
+      "Agosto",
+      "Septiembre",
+      "Octubre",
+      "Noviembre",
+      "Diciembre",
+    ];
+    const currentDate = new Date();
+
+    function handleDateSelect(date) {
+      selectedDate = date;
+      m.redraw();
+    }
+
+    function getFirstDayOfMonth(date) {
+      return new Date(date.getFullYear(), date.getMonth(), 1).getDay();
+    }
+
+    function getDaysInMonth(date) {
+      return new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
+    }
+
+    function prevMonth() {
+      currentDate.setMonth(currentDate.getMonth() - 1);
+    }
+
+    function nextMonth() {
+      currentDate.setMonth(currentDate.getMonth() + 1);
+    }
+
+    return {
+      view: () => [
+        m(
+          "div",
+          {
+            class: "container col-8",
+            style: {
+              marginTop: "200px",
+            },
+          },
+          [
+            m("input#datepicker", {
+              type: "text",
+              placeholder: "Introduce la fecha",
+              oncreate: () => {
+                console.log("Datepicker creado");
+                $("#datepicker").datepicker({
+                  dateFormat: "dd/mm/yy",
+                  onSelect: (dateText) => {
+                    const [day, month, year] = dateText.split("/");
+                    const date = new Date(year, month - 1, day);
+                    handleDateSelect(date);
+                  },
+                });
+              },
+            }),
+            m(
+              ".calendar",
+              {
+                style: {
+                  borderRadius: "10px",
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                  padding: "20px",
+                  backgroundColor: "#ffffff",
+                },
+              },
+              [
+                m(".header", [
+                  m(
+                    "button",
+                    {
+                      onclick: () => prevMonth(),
+                    },
+                    "◄"
+                  ),
+                  m(
+                    "span",
+                    {
+                      style: {
+                        fontWeight: "bold",
+                        fontSize: "20px",
+                      },
+                    },
+                    months[currentDate.getMonth()] +
+                      " " +
+                      currentDate.getFullYear()
+                  ),
+                  m(
+                    "button",
+                    {
+                      onclick: () => nextMonth(),
+                    },
+                    "►"
+                  ),
+                ]),
+                m(
+                  ".row.text-center.text-white.bg-dark",
+                  days.map((day) => m(".col.day", day))
+                ),
+                m(
+                  ".row",
+                  Array.from(
+                    {
+                      length: getDaysInMonth(currentDate),
+                    },
+                    (_, i) =>
+                      m(
+                        ".col-1.date",
+                        {
+                          class:
+                            i + 1 === new Date().getDate() &&
+                            currentDate.getMonth() === new Date().getMonth() &&
+                            currentDate.getFullYear() ===
+                              new Date().getFullYear()
+                              ? "today"
+                              : "",
+                          style: {
+                            width: "calc(100% / 7)",
+                            textAlign: "center",
+                            marginBottom: "5px",
+                          },
+                        },
+                        i + 1
+                      )
+                  )
+                ),
+              ]
+            ),
+          ]
+        ),
+      ],
+    };
+  }
+  function subHero() {
+    return {
+      view: () => [
+        m("section.hero-section.inner-page", [
+          m(".wave", [
+            m(
+              "svg[width='1920px'][height='265px'][viewBox='0 0 1920 265'][xmlns='http://www.w3.org/2000/svg'][xmlns:xlink='http://www.w3.org/1999/xlink']",
+              [
+                m(
+                  "g#Page-1[stroke='none'][stroke-width='1'][fill='none'][fill-rule='evenodd']",
+                  [
+                    m(
+                      "g#Apple-TV[fill='#FFFFFF'][transform='translate(0.000000, -402.000000)']",
+                      [
+                        m(
+                          "path[d='M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z'][id='Path']"
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+          ]),
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-12", [
+                m(".row.justify-content-center", [
+                  m(".col-md-7.text-center.hero-text", [
+                    m("h1[data-aos='fade-up'][data-aos-delay='']", "Menus"),
+                    m(
+                      "p.mb-5[data-aos='fade-up'][data-aos-delay='100']",
+                      "Listado de Menus."
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ],
+    };
+  }
+}
+
+function SectionPlatos() {
+  return {
+    view: () => [
+      m(subHero),
+      m("section#menu.menu.py-5.mt-5", [
+        m(
+          '.container[data-aos="fade-up.py-5.mt-5"]',
+          { style: { "max-width": "1500px", marginTop: "100px" } },
+          [
+            m(
+              'ul.nav.nav-tabs.d-flex.justify-content-center[data-aos="fade-up"][data-aos-delay="200"]',
+              [
+                m("li.nav-item", [
+                  m(
+                    'a.nav-link.active.show[data-bs-toggle="tab"][data-bs-target="#menu-starters"]',
+                    [m("h4", "Todos")]
+                  ),
+                ]),
+                m("li.nav-item", [
+                  m(
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-breakfast"]',
+                    [m("h4", "Sencillos")]
+                  ),
+                ]),
+                m("li.nav-item", [
+                  m(
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-lunch"]',
+                    [m("h4", "Intermedio")]
+                  ),
+                ]),
+                m("li.nav-item", [
+                  m(
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-dinner"]',
+                    [m("h4", "Complejos")]
+                  ),
+                ]),
+              ]
+            ),
+            m('.tab-content[data-aos="fade-up"][data-aos-delay="300"]', [
+              m(".tab-pane.fade.active.show#menu-starters", [
+                m(".tab-header.text-center", [
+                  m("p", "Platos"),
+                  m("h3", "Todos"),
+                ]),
+                m(".row.gy-5", [
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m("div", { class: "row no-gutters" }, [
+                          m("div", { class: "col-md-6" }, [
+                            m("img", {
+                              class: "card-img",
+                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                              alt: "Card image cap",
+                              style: {
+                                width: "100%",
+                                height: "100%",
+                                "background-size": "cover",
+                              },
+                            }),
+                          ]),
+                          m("div", { class: "col-md-6" }, [
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "h5",
+                                { class: "card-title" },
+                                "Arroz con Tomate"
+                              ),
+                              m(
+                                "p",
+                                { class: "card-text" },
+                                "Esta es una receta simple de un arroz a la cubana"
+                              ),
+                            ]),
+                            m("ul", { class: "list-group list-group-flush" }, [
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Calorias: ",
+                                m("span.text-muted", "457/kcal")
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Proteina: ",
+                                m("span.text-muted", "457/kcal")
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Carbohidratos:",
+                                m("span.text-muted", "457/kcal")
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Grasas:",
+                                m("span.text-muted", "457/kcal")
+                              ),
+                            ]),
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Modificar"
+                              ),
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Eliminar"
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m(
+                          "div",
+                          { class: "row no-gutters justify-content-center" },
+                          [
+                            m("div", {
+                              class: "col-md-6 card-img",
+                              style: {
+                                width: "45%",
+                                "background-image":
+                                  "url('../images/arroz.jpg')",
+                                "background-size": "cover",
+                                "background-position": "center",
+                              },
+                            }),
+                            m("div", { class: "col-md-6" }, [
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "h5",
+                                  { class: "card-title" },
+                                  "Arroz con Tomate"
+                                ),
+                                m(
+                                  "p",
+                                  { class: "card-text" },
+                                  "Esta es una receta simple de un arroz a la cubana"
+                                ),
+                              ]),
+                              m(
+                                "ul",
+                                { class: "list-group list-group-flush" },
+                                [
+                                  m(
+                                    "li",
+                                    { class: "list-group-item" },
+                                    "Calorias: 457/kcal"
+                                  ),
+                                  m(
+                                    "li",
+                                    { class: "list-group-item" },
+                                    "Proteina: 45g/100g"
+                                  ),
+                                  m(
+                                    "li",
+                                    { class: "list-group-item" },
+                                    "Carbohidratos: 60g/100g"
+                                  ),
+                                  m(
+                                    "li",
+                                    { class: "list-group-item" },
+                                    "Grasas: 5g/100g"
+                                  ),
+                                ]
+                              ),
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Modificar"
+                                ),
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Eliminar"
+                                ),
+                              ]),
+                            ]),
+                          ]
+                        ),
+                      ]
+                    ),
+                  ]),
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m("div", { class: "row no-gutters" }, [
+                          m("div", { class: "col-md-6" }, [
+                            m("img", {
+                              class: "card-img",
+                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                              alt: "Card image cap",
+                              style: {
+                                width: "100%",
+                                height: "100%",
+                              },
+                            }),
+                          ]),
+                          m("div", { class: "col-md-6" }, [
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "h5",
+                                { class: "card-title" },
+                                "Arroz con Tomate"
+                              ),
+                              m(
+                                "p",
+                                { class: "card-text" },
+                                "Esta es una receta simple de un arroz a la cubana"
+                              ),
+                            ]),
+                            m("ul", { class: "list-group list-group-flush" }, [
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Calorias: 457/kcal"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Proteina: 45g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Carbohidratos: 60g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Grasas: 5g/100g"
+                              ),
+                            ]),
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Modificar"
+                              ),
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Eliminar"
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m("div", { class: "row no-gutters" }, [
+                          m("div", { class: "col-md-6" }, [
+                            m("img", {
+                              class: "card-img",
+                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                              alt: "Card image cap",
+                              style: {
+                                width: "100%",
+                                height: "100%",
+                              },
+                            }),
+                          ]),
+                          m("div", { class: "col-md-6" }, [
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "h5",
+                                { class: "card-title" },
+                                "Arroz con Tomate"
+                              ),
+                              m(
+                                "p",
+                                { class: "card-text" },
+                                "Esta es una receta simple de un arroz a la cubana"
+                              ),
+                            ]),
+                            m("ul", { class: "list-group list-group-flush" }, [
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Calorias: 457/kcal"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Proteina: 45g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Carbohidratos: 60g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Grasas: 5g/100g"
+                              ),
+                            ]),
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Modificar"
+                              ),
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Eliminar"
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m("div", { class: "row no-gutters" }, [
+                          m("div", { class: "col-md-6" }, [
+                            m("img", {
+                              class: "card-img",
+                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                              alt: "Card image cap",
+                              style: {
+                                width: "100%",
+                                height: "100%",
+                              },
+                            }),
+                          ]),
+                          m("div", { class: "col-md-6" }, [
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "h5",
+                                { class: "card-title" },
+                                "Arroz con Tomate"
+                              ),
+                              m(
+                                "p",
+                                { class: "card-text" },
+                                "Esta es una receta simple de un arroz a la cubana"
+                              ),
+                            ]),
+                            m("ul", { class: "list-group list-group-flush" }, [
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Calorias: 457/kcal"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Proteina: 45g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Carbohidratos: 60g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Grasas: 5g/100g"
+                              ),
+                            ]),
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Modificar"
+                              ),
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Eliminar"
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                  m(".col-lg-6.menu-item", [
+                    m(
+                      "div",
+                      {
+                        class: "card",
+                        // style: "width: 18rem;",
+                        style: { width: "100%" },
+                      },
+                      [
+                        m("div", { class: "row no-gutters" }, [
+                          m("div", { class: "col-md-6" }, [
+                            m("img", {
+                              class: "card-img",
+                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
+                              alt: "Card image cap",
+                              style: {
+                                width: "100%",
+                                height: "100%",
+                              },
+                            }),
+                          ]),
+                          m("div", { class: "col-md-6" }, [
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "h5",
+                                { class: "card-title" },
+                                "Arroz con Tomate"
+                              ),
+                              m(
+                                "p",
+                                { class: "card-text" },
+                                "Esta es una receta simple de un arroz a la cubana"
+                              ),
+                            ]),
+                            m("ul", { class: "list-group list-group-flush" }, [
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Calorias: 457/kcal"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Proteina: 45g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Carbohidratos: 60g/100g"
+                              ),
+                              m(
+                                "li",
+                                { class: "list-group-item" },
+                                "Grasas: 5g/100g"
+                              ),
+                            ]),
+                            m("div", { class: "card-body" }, [
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Modificar"
+                              ),
+                              m(
+                                "a",
+                                { href: "#", class: "card-link" },
+                                "Eliminar"
+                              ),
+                            ]),
+                          ]),
+                        ]),
+                      ]
+                    ),
+                  ]),
+                ]),
+              ]),
+              m(".tab-pane.fade#menu-breakfast", [
+                m(".tab-header.text-center", [
+                  m("p", "Platos"),
+                  m("h3", "Sencillos"),
+                ]),
+                m(".row.gy-5", [
+                  // Add breakfast menu items here
+                ]),
+              ]),
+              m(".tab-pane.fade#menu-lunch", [
+                m(".tab-header.text-center", [
+                  m("p", "Platos"),
+                  m("h3", "Intermedio"),
+                ]),
+                m(".row.gy-5", [
+                  // Add lunch menu items here
+                ]),
+              ]),
+              m(".tab-pane.fade#menu-dinner", [
+                m(".tab-header.text-center", [
+                  m("p", "Platos"),
+                  m("h3", "Complejos"),
+                ]),
+                m(".row.gy-5", [
+                  // Add dinner menu items here
+                ]),
+              ]),
+            ]),
+          ]
+        ),
+      ]),
+    ],
+  };
+  function subHero() {
+    return {
+      view: () => [
+        m("section.hero-section.inner-page", [
+          m(".wave", [
+            m(
+              "svg[width='1920px'][height='265px'][viewBox='0 0 1920 265'][xmlns='http://www.w3.org/2000/svg'][xmlns:xlink='http://www.w3.org/1999/xlink']",
+              [
+                m(
+                  "g#Page-1[stroke='none'][stroke-width='1'][fill='none'][fill-rule='evenodd']",
+                  [
+                    m(
+                      "g#Apple-TV[fill='#FFFFFF'][transform='translate(0.000000, -402.000000)']",
+                      [
+                        m(
+                          "path[d='M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z'][id='Path']"
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+          ]),
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-12", [
+                m(".row.justify-content-center", [
+                  m(".col-md-7.text-center.hero-text", [
+                    m("h1[data-aos='fade-up'][data-aos-delay='']", "Platos"),
+                    m(
+                      "p.mb-5[data-aos='fade-up'][data-aos-delay='100']",
+                      "Aqui se mostraran los platos."
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ],
+    };
+  }
+}
+
+function subHero() {
+  return {
+    view: () => [
+      m("section.hero-section.inner-page", [
+        m(".wave", [
+          m(
+            "svg[width='1920px'][height='265px'][viewBox='0 0 1920 265'][xmlns='http://www.w3.org/2000/svg'][xmlns:xlink='http://www.w3.org/1999/xlink']",
+            [
+              m(
+                "g#Page-1[stroke='none'][stroke-width='1'][fill='none'][fill-rule='evenodd']",
+                [
+                  m(
+                    "g#Apple-TV[fill='#FFFFFF'][transform='translate(0.000000, -402.000000)']",
+                    [
+                      m(
+                        "path[d='M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z'][id='Path']"
+                      ),
+                    ]
+                  ),
+                ]
+              ),
+            ]
+          ),
+        ]),
+        m(".container", [
+          m(".row.align-items-center", [
+            m(".col-12", [
+              m(".row.justify-content-center", [
+                m(".col-md-7.text-center.hero-text", [
+                  m(
+                    "h1[data-aos='fade-up'][data-aos-delay='']",
+                    "SoftLand Features"
+                  ),
+                  m(
+                    "p.mb-5[data-aos='fade-up'][data-aos-delay='100']",
+                    "Lorem ipsum dolor sit amet, consectetur adipisicing elit."
+                  ),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ],
+  };
+}
+
+function About() {
+  return {
+    view: () => [
+      m(subHero),
+      m.fragment({}, [
+        m("section.section.pb-0", [
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-md-4.me-auto", [
+                m("h2.mb-4", "Seamlessly Communicate"),
+                m(
+                  "p.mb-4",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+                ),
+                m("p", [m("a[href='#']", "Read More")]),
+              ]),
+              m(".col-md-6", { "data-aos": "fade-left" }, [
+                m("img.img-fluid", {
+                  src: "assets/img/undraw_svg_2.svg",
+                  alt: "Image",
+                }),
+              ]),
+            ]),
+          ]),
+        ]),
+        m("section.section", [
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-md-4.ms-auto.order-2", [
+                m("h2.mb-4", "Gather Feedback"),
+                m(
+                  "p.mb-4",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+                ),
+                m("p", [m("a[href='#']", "Read More")]),
+              ]),
+              m(".col-md-6", { "data-aos": "fade-right" }, [
+                m("img.img-fluid", {
+                  src: "assets/img/undraw_svg_3.svg",
+                  alt: "Image",
+                }),
+              ]),
+            ]),
+          ]),
+        ]),
+        m("section.section.pb-0", [
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-md-4.me-auto", [
+                m("h2.mb-4", "Present Designs Inspiration"),
+                m(
+                  "p.mb-4",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+                ),
+                m("p", [m("a[href='#']", "Read More")]),
+              ]),
+              m(".col-md-6", { "data-aos": "fade-left" }, [
+                m("img.img-fluid", {
+                  src: "assets/img/undraw_svg_3.svg",
+                  alt: "Image",
+                }),
+              ]),
+            ]),
+          ]),
+        ]),
+        m("section.section", [
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-md-4.ms-auto.order-2", [
+                m("h2.mb-4", "Powerful App Design"),
+                m(
+                  "p.mb-4",
+                  "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur at reprehenderit optio, laudantium eius quod, eum maxime molestiae porro omnis. Dolores aspernatur delectus impedit incidunt dolore mollitia esse natus beatae."
+                ),
+                m("p", [m("a[href='#']", "Read More")]),
+              ]),
+              m(".col-md-6", { "data-aos": "fade-right" }, [
+                m("img.img-fluid", {
+                  src: "assets/img/undraw_svg_4.svg",
+                  alt: "Image",
+                }),
+              ]),
+            ]),
+          ]),
+        ]),
+      ]),
+    ],
+  };
+  function subHero() {
+    return {
+      view: () => [
+        m("section.hero-section.inner-page", [
+          m(".wave", [
+            m(
+              "svg[width='1920px'][height='265px'][viewBox='0 0 1920 265'][xmlns='http://www.w3.org/2000/svg'][xmlns:xlink='http://www.w3.org/1999/xlink']",
+              [
+                m(
+                  "g#Page-1[stroke='none'][stroke-width='1'][fill='none'][fill-rule='evenodd']",
+                  [
+                    m(
+                      "g#Apple-TV[fill='#FFFFFF'][transform='translate(0.000000, -402.000000)']",
+                      [
+                        m(
+                          "path[d='M0,439.134243 C175.04074,464.89273 327.944386,477.771974 458.710937,477.771974 C654.860765,477.771974 870.645295,442.632362 1205.9828,410.192501 C1429.54114,388.565926 1667.54687,411.092417 1920,477.771974 L1920,667 L1017.15166,667 L0,667 L0,439.134243 Z'][id='Path']"
+                        ),
+                      ]
+                    ),
+                  ]
+                ),
+              ]
+            ),
+          ]),
+          m(".container", [
+            m(".row.align-items-center", [
+              m(".col-12", [
+                m(".row.justify-content-center", [
+                  m(".col-md-7.text-center.hero-text", [
+                    m("h1[data-aos='fade-up'][data-aos-delay='']", "About Us"),
+                    m(
+                      "p.mb-5[data-aos='fade-up'][data-aos-delay='100']",
+                      "Información sobre Vita."
+                    ),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ],
+    };
+  }
 }

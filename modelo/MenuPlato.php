@@ -1,6 +1,5 @@
 <?php
 
-require "BD.php";
 class MenuPlato
 {
     private $id_menu;
@@ -14,8 +13,8 @@ class MenuPlato
     static function getAll($link)
     {
         try {
-            $consulta = "SELECT m.nombre AS nombre_menu, m.descripcion AS descripcion_menu, m.complejidad,
-            p.nombre AS nombre_plato, p.ingredientes, p.calorias, p.proteinas, p.carbohidratos, p.grasas, p.descripcion AS descripcion_plato
+            $consulta = "SELECT m.id_menu, m.nombre AS nombre_menu, m.descripcion AS descripcion_menu,
+            p.id_plato,p.nombre AS nombre_plato, p.ingredientes, p.calorias, p.proteinas, p.carbohidratos, p.grasas, p.descripcion AS descripcion_plato, p.complejidad
             FROM Menus m
             INNER JOIN MenuPlato mp ON m.id_menu = mp.id_menu
             INNER JOIN Platos p ON mp.id_plato = p.id_plato;";
