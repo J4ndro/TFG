@@ -74,7 +74,7 @@ class Usuario
     function insertar($link)
     {
         try {
-            $consulta = "INSERT INTO Usuarios (nombre, apellido, email, pwd) VALUES (:nombre, :apellido, :email, :pwd)";
+            $consulta = "INSERT INTO Usuarios (nombre, apellido, email, pwd, suscripcion) VALUES (:nombre, :apellido, :email, :pwd, 0)";
             $link = $link->getLink();
             $result = $link->prepare($consulta);
             $result->bindParam(':nombre', $this->nombre);
@@ -124,6 +124,30 @@ class Usuario
             die();
         }
     }
+
+
+    static function modificarSub($link, $id_usuario, $sub) {
+        try {
+            $update = "UPDATE Usuarios SET suscripcion = :sub WHERE id_usuario = :id_usuario";
+            $stmnt = $link->prepare($update);
+            $stmnt->bindParam(':sub', $sub, PDO::PARAM_INT);
+            $stmnt->bindParam(':id_usuario', $id_usuario, PDO::PARAM_STR);
+            $stmnt->execute();
+    
+            // Verificar el número de filas afectadas
+            $affectedRows = $stmnt->rowCount();
+            if ($affectedRows > 0) {
+                return true;
+            } else {
+                file_put_contents('php://stderr', "No se actualizó ninguna fila\n");
+                return false;
+            }
+        } catch (PDOException $e) {
+            file_put_contents('php://stderr', "Error en la actualización: " . $e->getMessage() . "\n");
+            return false;
+        }
+    }
+    
 
 
     function lista($conexion, $tabla, $campoclave, $campoamostrar)

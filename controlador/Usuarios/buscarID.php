@@ -17,12 +17,11 @@ while ($fila = $lineas->fetch(PDO::FETCH_ASSOC)) {
         "nombre" => $fila['nombre'],
         "apellido" => $fila['apellido'],
         "email" => $fila['email'],
-        "pwd" => $fila['pwd']
+        "pwd" => $fila['pwd'],
+        "suscripcion" => $fila['suscripcion']
     );
-    // $lineasArray[] = $linea;
 }
 
-// Devolver los datos en formato JSON
 header('Content-Type: application/json');
 echo json_encode($lineasArray);
 

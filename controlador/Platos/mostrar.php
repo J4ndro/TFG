@@ -10,6 +10,5 @@ while ($fila = $user->fetch(PDO::FETCH_ASSOC)) {
     $userArray[] = $fila;
 }
 
-// Devuelve los datos en formato JSON y asegúrate de que no haya salida adicional
 header('Content-Type: application/json');
 echo json_encode($userArray);

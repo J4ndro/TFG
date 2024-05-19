@@ -1,20 +1,25 @@
 <?php
-require "../../modelo/CaracteristicaUsuario.php";
+require "../../modelo/CaracteristicasUsuario.php";
+$body = file_get_contents("php://input");
+$data = json_decode($body);
 
-if (isset($_GET['id_usuario'])) {
-    $user = $_GET['id_usuario'];
+// Obtener el nombre de usuario de los datos recibidos
+$id_usuario = $data->id_usuario;
 
-    $link = new Bd;
-    $lineas = CaracteristicaUsuario::buscar($link->link, $user);
+// Lógica para obtener los datos necesarios (por ejemplo, desde la base de datos)
+$link = new Bd;
+$lineas = CaracteristicasUsuario::getAllID($link->link, $id_usuario);
+$lineasArray = array();
 
-    $lineasArray = array();
-
-    while ($fila = $lineas->fetch(PDO::FETCH_ASSOC)) {
-        $lineasArray[] = $fila['edad'];
-    }
-
-    header('Content-Type: application/json');
-    echo json_encode($lineasArray);
-} else {
-    echo json_encode(array('error' => 'ID de pedido no proporcionado'));
+while ($fila = $lineas->fetch(PDO::FETCH_ASSOC)) {
+    $lineasArray = array(
+        "id" => $fila['id_usuario'],
+        "altura" => $fila['altura'],
+        "peso" => $fila['peso'],
+        "edad" => $fila['edad'],
+    );
 }
+
+header('Content-Type: application/json');
+echo json_encode($lineasArray);
+

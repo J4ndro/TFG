@@ -1,5 +1,6 @@
 <?php
 require "../../modelo/Usuario.php";
+require "../../modelo/CaracteristicasUsuario.php";
 
 // Verifica si se recibieron datos del formulario
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -11,10 +12,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Crear una instancia de Usuario con los datos recibidos
     $user = new Usuario($nombre, $apellido, $email, $pwd);
+    $statUser = new CaracteristicasUsuario("", $nombre, "",);
     $link = new Bd;
 
     // Intenta insertar el usuario en la base de datos
-    if ($user->insertar($link)) {
+    if ($user->insertar($link) && $statUser->insertar($link)) {
+
         // Si se inserta correctamente, devuelve los datos del usuario como respuesta en formato JSON
         $response = array(
             'nombre' => $nombre,
@@ -23,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'pwd' => $pwd,
         );
         echo json_encode($response);
-        echo "<script>window.location.href='../../vistas/index.html?username=$email';</script>";
+        $userData = $user->buscarUsuario($bd);
+        $id_usuario = $userData['id_usuario'];
+        echo "<script>window.location.href='../../vistas/index.html?username=$email&id_usuario=$id_usuario';</script>";
         exit;
     } else {
         // Si ocurre un error al insertar, devuelve un mensaje de error en formato JSON

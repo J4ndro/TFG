@@ -11,25 +11,20 @@
         apellido VARCHAR(50),
         email VARCHAR(100),
         pwd VARCHAR(100),
-        administrador BOOLEAN DEFAULT false
+        suscripcion INT,
         PRIMARY KEY (id_usuario, email)
-        -- Otros campos relevantes sobre el usuario
     );
-
-
 
     -- Creación de la tabla Menus
     CREATE TABLE IF NOT EXISTS Menus (
         id_menu INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(100),
-        descripcion TEXT,
-        complejidad INT
-        -- Otros campos relevantes sobre los menús
+        descripcion TEXT
     );
 
     -- Creación de la tabla CaracteristicasUsuarios
     CREATE TABLE IF NOT EXISTS CaracteristicasUsuarios (
-        id_usuario INT,
+        id_usuario INT AUTO_INCREMENT,
         calorias INT,
         proteinas INT,
         carbohidratos INT,
@@ -38,7 +33,6 @@
         peso INT,
         edad INT,
         FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
-        -- Otros campos relevantes sobre las características del usuario
     );
 
     -- Creación de la tabla Platos
@@ -46,13 +40,17 @@
         id_plato INT AUTO_INCREMENT PRIMARY KEY,
         nombre VARCHAR(100),
         ingredientes VARCHAR(500),
+        foto VARCHAR(150)
         calorias VARCHAR(50),
         proteinas VARCHAR(50),
         carbohidratos VARCHAR(50),
         grasas VARCHAR(50),
         descripcion TEXT,
-        precio DECIMAL(10, 2)
-        -- Otros campos relevantes sobre los platos
+        complejidad VARCHAR(50),
+        id_usuario INT,
+        FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+
+
     );
 
     -- Creación de la tabla MenuPlato (relación muchos a muchos entre Menus y Platos)

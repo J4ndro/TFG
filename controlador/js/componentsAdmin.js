@@ -50,7 +50,7 @@ $(document).ready(function () {
     Insertar(e); // Llamar a la función de inserción
   });
   $("#FormularioPlatos").submit(function (e) {
-    e.preventDefault();
+    // e.preventDefault();
     console.log(e);
     InsertarPlato(e); // Llamar a la función de inserción
   });
@@ -177,6 +177,8 @@ function Header() {
 //VARIABLES
 
 var ocultar;
+
+//!! USUARIOS
 
 //MODALES
 
@@ -552,6 +554,7 @@ function mainUser() {
                           m("th", "Apellido(s)"),
                           m("th", "Email"),
                           m("th", "Contraseña"),
+                          m("th", "Suscripción"),
                           m("th", "Acciones"),
                         ]),
                       ]),
@@ -599,6 +602,14 @@ function mainUser() {
             m("td", i.apellido),
             m("td", i.email),
             m("td", i.pwd),
+            m(
+              "td",
+              i.suscripcion === "0"
+                ? "Vita Basic"
+                : i.suscripcion === "1"
+                ? "Vita Premium"
+                : "Vita Family"
+            ),
             m(
               "td",
               m("div", { class: "d-flex justify-content-around" }, [
@@ -790,7 +801,7 @@ var ModalPlatos = {
         m(".modal-dialog", { role: "document" }, [
           m(".modal-content", [
             m(".modal-header", [
-              m("h5.modal-title", "Insertar Cliente"),
+              m("h5.modal-title", "Insertar Plato"),
               m(
                 "button.close",
                 {
@@ -861,7 +872,18 @@ var ModalPlatos = {
                     name: "descripcion",
                   }),
                   m("br"),
-                  m("input[type=submit]", { id: "enviar" }),
+                  m("label", { for: "complejidad" }, "complejidad: "),
+                  m("select", { id: "complejidad", name: "complejidad" }, [
+                    m(
+                      "option",
+                      { value: "Sencillo", selected: true },
+                      "Sencillo"
+                    ),
+                    m("option", { value: "Intermedio" }, "Intermedio"),
+                    m("option", { value: "Dificil" }, "Difícil"),
+                  ]),
+                  m("br"),
+                  m("input[type=submit]", { id: "Insertar" }),
                 ]
               ),
             ]),
@@ -1254,6 +1276,7 @@ function mainPlatos() {
                           m("th", "Carbohidratos"),
                           m("th", "Grasas"),
                           m("th", "Descripcion"),
+                          m("th", "Complejidad"),
                           m("th", "Acciones"),
                         ]),
                       ]),
@@ -1305,6 +1328,7 @@ function mainPlatos() {
             m("td", i.carbohidratos),
             m("td", i.grasas),
             m("td", i.descripcion),
+            m("td", i.complejidad),
             m(
               "td",
               m("div", { class: "d-flex justify-content-around" }, [
@@ -1367,7 +1391,7 @@ function InsertarPlato() {
       } else {
         ocultarInsertarModalPlatos();
         // window.location.reload();
-        m(ListaPlatos);
+        // m(ListaPlatos);
       }
     },
     error: function (error) {
@@ -1383,7 +1407,7 @@ function InsertarPlato() {
       // Mostrar el modal de detalles
       $("#detallesModal").modal("show");
 
-      window.location.reload();
+      // window.location.reload();
     },
   });
 }

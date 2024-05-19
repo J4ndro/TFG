@@ -1,8 +1,20 @@
-const pages = [Home, Platos, Menus, Perfil, Suscripcion, AboutUs];
+const pages = [
+  Home,
+  Platos,
+  Menus,
+  Perfil,
+  Suscripcion,
+  AboutUs,
+  PaymentInfo,
+  InsertarPlato,
+];
 
 const components = [Header, Hero, Info, PerfilSection];
 
 export { pages, components };
+
+let s_id;
+let s_user;
 
 //!! PAGES
 function Home() {
@@ -14,6 +26,7 @@ function Home() {
   if (urlParams.has("username")) {
     const username = urlParams.get("username");
     console.log("Nombre de usuario:", username);
+    s_user = username;
   } else {
     console.log("No se encontró el parámetro 'username' en la URL");
   }
@@ -24,8 +37,13 @@ function Home() {
 }
 
 function Platos() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id_usuario = urlParams.get("id_usuario");
+
+  console.log("ID de usuario:", id_usuario);
+  s_id = id_usuario;
   return {
-    view: () => [m(Header), m(SectionPlatos), m(Footer)],
+    view: () => [m(Header), m(SectionPlatos, { s_id }), m(Footer)],
   };
 }
 
@@ -38,11 +56,12 @@ function Menus() {
 function Perfil() {
   const urlParams = new URLSearchParams(window.location.search);
   const username = urlParams.get("username");
+  const id_usuario = urlParams.get("id_usuario");
 
   console.log("Nombre de usuario:", username);
 
   return {
-    view: () => [m(Header), m(PerfilSection, { username }), m(Footer)],
+    view: () => [m(Header), m(PerfilSection, { username, id_usuario }), m(Footer)],
   };
 }
 
@@ -57,6 +76,7 @@ function AboutUs() {
     view: () => [m(Header), m(About), m(Footer)],
   };
 }
+
 //!! COMPONENTS
 
 function Header() {
@@ -768,10 +788,16 @@ function PerfilSection(vnode) {
   let apellido = ""; // Estado local para almacenar el nombre completo
   let email = "";
   let pwd = "";
+  let altura = "";
+  let peso = "";
+  let edad = "";
   let userData = null;
+  let statData = null;
   let inputsHabilitados = false;
   const username = vnode.attrs.username;
+  const id_usuario = vnode.attrs.id_usuario;
   console.log(username);
+  console.log(id_usuario);
   // Función para realizar la llamada AJAX y obtener los datos del usuario
   function fetchData() {
     // Realizar la llamada AJAX
@@ -796,6 +822,29 @@ function PerfilSection(vnode) {
         m.redraw();
       });
   }
+  function fetchData2() {
+    // Realizar la llamada AJAX
+    fetch("../controlador/Caracteristicas/buscarIDStats.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id_usuario: id_usuario}),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        } else {
+          console.log("Conectado");
+          return response.json();
+        }
+      })
+      .then((data) => {
+        // m.redraw();
+        console.log(data);
+        statData = data;
+        console.log(statData.id);
+        m.redraw();
+      });
+  }
   function habilitarInputs() {
     inputsHabilitados = true;
   }
@@ -812,6 +861,7 @@ function PerfilSection(vnode) {
   return {
     oninit() {
       fetchData();
+      fetchData2();
     },
     view: () => {
       if (!userData) {
@@ -902,8 +952,23 @@ function PerfilSection(vnode) {
                           "list-group-item d-flex justify-content-between align-items-center p-3",
                       },
                       [
-                        m("i", { class: "fas fa-globe fa-lg text-warning" }),
-                        m("p", { class: "mb-0" }, "Altura: 1,80cm"),
+                        m("div", { class: "row" }, [
+                          m("div", { class: "col-sm-3" }, [
+                            m("p", { class: "mb-0" }, "Altura: "),
+                          ]),
+                          m("div", { class: "col-sm-9" }, [
+                            m("input", {
+                              type: "text",
+                              disabled: !inputsHabilitados,
+                              class: "text-muted mb-0",
+                              placeholder: statData.altura + "cm",
+                              value: altura,
+                              oninput: (e) => {
+                                altura = e.target.value;
+                              },
+                            }),
+                          ]),
+                        ]),
                       ]
                     ),
                     m(
@@ -913,11 +978,23 @@ function PerfilSection(vnode) {
                           "list-group-item d-flex justify-content-between align-items-center p-3",
                       },
                       [
-                        m("i", {
-                          class: "fab fa-github fa-lg",
-                          style: "color: #333333;",
-                        }),
-                        m("p", { class: "mb-0" }, "Peso: 80kg"),
+                        m("div", { class: "row" }, [
+                          m("div", { class: "col-sm-3" }, [
+                            m("p", { class: "mb-0" }, "Peso: "),
+                          ]),
+                          m("div", { class: "col-sm-9" }, [
+                            m("input", {
+                              type: "text",
+                              disabled: !inputsHabilitados,
+                              class: "text-muted mb-0",
+                              placeholder: statData.peso + "kg",
+                              value: peso,
+                              oninput: (e) => {
+                                peso = e.target.value;
+                              },
+                            }),
+                          ]),
+                        ]),
                       ]
                     ),
                     m(
@@ -927,11 +1004,23 @@ function PerfilSection(vnode) {
                           "list-group-item d-flex justify-content-between align-items-center p-3",
                       },
                       [
-                        m("i", {
-                          class: "fab fa-twitter fa-lg",
-                          style: "color: #55acee;",
-                        }),
-                        m("p", { class: "mb-0" }, "Edad: 21 años"),
+                        m("div", { class: "row" }, [
+                          m("div", { class: "col-sm-3" }, [
+                            m("p", { class: "mb-0" }, "Edad: "),
+                          ]),
+                          m("div", { class: "col-sm-9" }, [
+                            m("input", {
+                              type: "text",
+                              disabled: !inputsHabilitados,
+                              class: "text-muted mb-0",
+                              placeholder: statData.edad,
+                              value: edad,
+                              oninput: (e) => {
+                                edad = e.target.value;
+                              },
+                            }),
+                          ]),
+                        ]),
                       ]
                     ),
                   ]),
@@ -997,15 +1086,6 @@ function PerfilSection(vnode) {
                   m("hr"),
                   m("div", { class: "row" }, [
                     m("div", { class: "col-sm-3" }, [
-                      m("p", { class: "mb-0" }, "Numero"),
-                    ]),
-                    m("div", { class: "col-sm-9" }, [
-                      m("p", { class: "text-muted mb-0" }, "634-545-666"),
-                    ]),
-                  ]),
-                  m("hr"),
-                  m("div", { class: "row" }, [
-                    m("div", { class: "col-sm-3" }, [
                       m("p", { class: "mb-0" }, "Contraseña"),
                     ]),
                     m("div", { class: "col-sm-9" }, [
@@ -1017,6 +1097,59 @@ function PerfilSection(vnode) {
                         },
                       }),
                     ]),
+                  ]),
+                  m("hr"),
+                  m("div", { class: "row" }, [
+                    m("div", { class: "col-sm-3" }, [
+                      m("p", { class: "mb-0" }, "Suscripción"),
+                    ]),
+                    console.log(userData.suscripcion),
+                    userData.suscripcion == 0 ?
+                    m("div", { class: "col-sm-2" }, [
+                      m("span", {
+                        class:"badge bg-secondary",
+                        type: "text",
+                        style: {
+                          backgroundColor: "grey",
+                          color: "white"
+                        }
+                      },"Vita Basic"),
+                    ])
+                    : userData.suscripcion == 1 ?
+                    m("div", { class: "col-sm-2" }, [
+                      m("span", {
+                        class:"badge bg-success",
+                        type: "text",
+                        style: {
+                          backgroundColor: "green",
+                          color: "white",
+                          borderRadius:"5px"
+                        }
+                      }, "Vita Premium"),
+                    ])
+                    : userData.suscripcion == 2 ?
+                    m("div", { class: "col-sm-2" }, [
+                      m("span", {
+                        class:"badge bg-primary",
+                        type: "text",
+                        value: apellido,
+                        style: {
+                          backgroundColor: "blue",
+                          color: "white"
+                        }
+                      },"Vita Family"),
+                    ])
+                    :
+                    m("div", { class: "col-sm-9" }, [
+                      m("p", {
+                        type: "text",
+                        value: apellido,
+                        style: {
+                          backgroundColor: "blue",
+                          color: "white"
+                        }
+                      },"Nada"),
+                    ])
                   ]),
                   inputsHabilitados
                     ? m("div", { class: "row" }, [
@@ -1032,6 +1165,12 @@ function PerfilSection(vnode) {
                               apellido,
                               email,
                               pwd
+                            );
+                            ModificarStat(
+                              statData.id,
+                              altura,
+                              peso,
+                              edad
                             );
                           },
                         }),
@@ -1248,9 +1387,239 @@ function PerfilSection(vnode) {
       }
     });
   }
+
+  function ModificarStat(id_usuario, altura, peso, edad) {
+    console.log(nombre);
+    fetch("../controlador/Caracteristicas/modificarStat.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        id_usuario: id_usuario ? id_usuario : userData.id,
+        altura: altura ? altura : userData.altura,
+        peso: peso ? peso : userData.peso,
+        edad: edad ? edad : userData.edad,
+      }),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        return window.location.reload();
+      }
+    });
+  }
 }
 
+function PaymentInfo() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const precio = urlParams.get("precio");
+  const user = urlParams.get("user");
+  const id = urlParams.get("id");
+  console.log(precio);
+  console.log(window.location.search);
+  return {
+    view: () => [
+      m(
+        ".col-12",
+        {
+          style: {
+            background:
+              "linear-gradient(to right, rgba(0, 0, 255, 0.6) 0%, rgba(0, 0, 255, 0.8) 100%)",
+
+            height: "100vh",
+          },
+        },
+        m(".col-md-4.container.py-5", [
+          m(
+            ".payment-info",
+            {
+              style: {
+                background: "blue",
+                padding: "10px",
+                borderRadius: "10px",
+                color: "#fff",
+                fontWeight: "bold",
+                boxShadow: "20px 20px #000089",
+              },
+            },
+            [
+              m(".d-flex.justify-content-between.align-items-center", [
+                m("span", "Detalles de Pago"),
+                m("img.rounded", {
+                  src: "../images/logo.png",
+                  width: "30",
+                }),
+              ]),
+              m(
+                "span.type.d-block.mt-3.mb-1",
+                { style: { fontSize: "10px", fontWeight: "400" } },
+                "Método de Pago"
+              ),
+              m("label.radio", [
+                m("input[type=radio][name=card][value=payment][checked]"),
+                m("span", [
+                  m("img", {
+                    width: "30",
+                    src: "https://img.icons8.com/color/48/000000/mastercard.png",
+                  }),
+                ]),
+              ]),
+              m("label.radio", [
+                m("input[type=radio][name=card][value=payment]"),
+                m("span", [
+                  m("img", {
+                    width: "30",
+                    src: "https://img.icons8.com/officel/48/000000/visa.png",
+                  }),
+                ]),
+              ]),
+              m("label.radio", [
+                m("input[type=radio][name=card][value=payment]"),
+                m("span", [
+                  m("img", {
+                    width: "30",
+                    src: "https://img.icons8.com/ultraviolet/48/000000/amex.png",
+                  }),
+                ]),
+              ]),
+              m("div", [
+                m(
+                  "label.credit-card-label",
+                  { style: { fontSize: "9px", fontWeight: "300" } },
+                  "Nombre de la tarjeta"
+                ),
+                m("input.form-control.credit-inputs", {
+                  type: "text",
+                  placeholder: "Name",
+                  style: {
+                    background: "rgb(102,102,221)",
+                    color: "#fff !important",
+                    borderColor: "rgb(102,102,221)",
+                  },
+                }),
+              ]),
+              m("div", [
+                m(
+                  "label.credit-card-label",
+                  { style: { fontSize: "9px", fontWeight: "300" } },
+                  "Número de la tarjeta"
+                ),
+                m("input.form-control.credit-inputs", {
+                  type: "text",
+                  placeholder: "0000 0000 0000 0000",
+                  style: {
+                    background: "rgb(102,102,221)",
+                    color: "#fff !important",
+                    borderColor: "rgb(102,102,221)",
+                  },
+                }),
+              ]),
+              m(".row", [
+                m(".col-md-6", [
+                  m(
+                    "label.credit-card-label",
+                    { style: { fontSize: "9px", fontWeight: "300" } },
+                    "Fecha de caducidad"
+                  ),
+                  m("input.form-control.credit-inputs", {
+                    type: "text",
+                    placeholder: "12/24",
+                    style: {
+                      background: "rgb(102,102,221)",
+                      color: "#fff !important",
+                      borderColor: "rgb(102,102,221)",
+                    },
+                  }),
+                ]),
+                m(".col-md-6", [
+                  m(
+                    "label.credit-card-label",
+                    { style: { fontSize: "9px", fontWeight: "300" } },
+                    "CVV"
+                  ),
+                  m("input.form-control.credit-inputs", {
+                    type: "text",
+                    placeholder: "342",
+                    style: {
+                      background: "rgb(102,102,221)",
+                      color: "#fff !important",
+                      borderColor: "rgb(102,102,221)",
+                    },
+                  }),
+                ]),
+              ]),
+              m("hr.line", {
+                style: { borderBottom: "1px solid rgb(102,102,221)" },
+              }),
+              m(
+                ".d-flex.justify-content-between.information",
+                { style: { marginBottom: "5px" } },
+                [
+                  m(
+                    "span",
+                    { style: { fontSize: "12px", fontWeight: "500" } },
+                    "Subtotal"
+                  ),
+                  m("span", precio + "€ "),
+                ]
+              ),
+              m(
+                "button.btn.btn-primary.btn-block.d-flex.justify-content-between.mt-3",
+                { type: "button", onclick:()=>{CambiarSub()}, style: { background: "blue", boxShadow: "5px 5px #000009" } },
+                [
+                  m("span", precio + "€ "),
+                  m("span", { style: { color: "#fff" } }, [
+                    " Pagar ",
+                    m("i.fa.fa-long-arrow-right.ml-1"),
+                  ]),
+                ]
+              ),
+            ]
+          ),
+        ])
+      ),
+    ],
+  };
+
+  function CambiarSub() {
+    console.log(user, precio);
+    alert("Pago realizado con exito");
+    fetch("../controlador/Usuarios/modificarSub.php", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ precio: precio, id_usuario: id }),
+    }).then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      } else {
+        console.log("Conectado");
+        alert("Pago realizado con exito");
+        return response.json(); // Asegúrate de manejar la respuesta como JSON
+      }
+    }).then((data) => {
+      console.log(data); // Verificar la respuesta del servidor
+      if (data.success) {
+        window.location.href = "?id_usuario="+id+"&username="+user+"#!Perfil";
+      } else {
+        alert("Error al actualizar la suscripción");
+      }
+    }).catch((error) => {
+      console.error("Hubo un problema con la solicitud de fetch:", error);
+    });
+  }
+  
+  
+}
+
+// Función para enviar el token de Stripe a tu servidor
+
+// Para renderizar el componente en tu página, podrías usar algo como:
+// m.mount(document.body, FormularioPago);
 function Suscripciones() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const id = urlParams.get("id_usuario");
+  const user = urlParams.get("username");
+  console.log(user)
   return {
     view: () => [
       m(subHero),
@@ -1293,7 +1662,15 @@ function Suscripciones() {
                 ]),
                 m(".price-cta", [
                   m("strong.price", "9.95€/mes"),
-                  m("p", [m("a.btn.btn-white", { href: "#" }, "Suscribirme")]),
+                  m("p", [
+                    m(
+                      "a.btn.btn-white",
+                      {
+                        href: "?precio=9.95&user="+ user +"&id="+id+"#!PaymentInfo",
+                      },
+                      "Suscribirme"
+                    ),
+                  ]),
                 ]),
               ]),
             ]),
@@ -1308,7 +1685,13 @@ function Suscripciones() {
                 ]),
                 m(".price-cta", [
                   m("strong.price", "19.95€/mes"),
-                  m("p", [m("a.btn.btn-white", { href: "#" }, "Suscribirme")]),
+                  m("p", [m(
+                    "a.btn.btn-white",
+                    {
+                      href: "?precio=19.95&user="+ user +"&id="+ id +"#!PaymentInfo",
+                    },
+                    "Suscribirme"
+                  ),]),
                 ]),
               ]),
             ]),
@@ -1731,191 +2114,153 @@ function Seccion() {
   }
 }
 
-function SectionPlatos() {
+function SectionPlatos(vnode) {
+  let userData = null;
+  const id_usuario = vnode.attrs.id_usuario;
+  console.log(s_id);
+
+  function fetchData() {
+    fetch("../controlador/Platos/mostrarID.php", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_usuario: s_id }),
+    })
+    .then((response) => {
+        if (!response.ok) {
+            throw new Error("Error de red: " + response.statusText);
+        }
+        return response.json();
+    })
+    .then((data) => {
+        if (data.error) {
+            throw new Error("Error del servidor: " + data.error);
+        }
+        console.log(data);
+        userData = data;
+        m.redraw();
+    })
+    .catch((error) => {
+        console.error('Error:', error.message);
+        // Manejar el error adecuadamente, por ejemplo, mostrando un mensaje al usuario
+    });
+}
   return {
-    view: () => [
-      m(subHero),
-      m("section#menu.menu.py-5.mt-5", [
+    oninit() {
+      fetchData();
+    },
+    view: () => {
+      m(subHero);
+      if (!userData) {
+        return m("span", { class: "loader" });
+      }
+      return m("section#menu.menu.py-5.mt-5.col-10.conatiner.mx-auto", [
         m(
           '.container[data-aos="fade-up.py-5.mt-5"]',
-          { style: { "max-width": "1500px", marginTop: "100px" } },
+          { style: { "max-width": "1300px", marginTop: "100px" } },
           [
             m(
               'ul.nav.nav-tabs.d-flex.justify-content-center[data-aos="fade-up"][data-aos-delay="200"]',
               [
                 m("li.nav-item", [
                   m(
-                    'a.nav-link.active.show[data-bs-toggle="tab"][data-bs-target="#menu-starters"]',
+                    'a.nav-link.active.show[data-bs-toggle="tab"][data-bs-target="#todos"]',
                     [m("h4", "Todos")]
                   ),
                 ]),
                 m("li.nav-item", [
                   m(
-                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-breakfast"]',
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#sencillos"]',
                     [m("h4", "Sencillos")]
                   ),
                 ]),
                 m("li.nav-item", [
                   m(
-                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-lunch"]',
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#intermedio"]',
                     [m("h4", "Intermedio")]
                   ),
                 ]),
                 m("li.nav-item", [
                   m(
-                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#menu-dinner"]',
+                    'a.nav-link[data-bs-toggle="tab"][data-bs-target="#dificil"]',
                     [m("h4", "Complejos")]
                   ),
+                ]),
+                m("li.nav-item", [
+                  m("a.nav-link", { href: "#!InsertarPlato" }, [
+                    m("h4", "+ Nuevo"),
+                  ]),
                 ]),
               ]
             ),
             m('.tab-content[data-aos="fade-up"][data-aos-delay="300"]', [
-              m(".tab-pane.fade.active.show#menu-starters", [
+              m(".tab-pane.fade.active.show#todos", [
                 m(".tab-header.text-center", [
                   m("p", "Platos"),
                   m("h3", "Todos"),
                 ]),
                 m(".row.gy-5", [
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m("div", { class: "row no-gutters" }, [
-                          m("div", { class: "col-md-6" }, [
-                            m("img", {
-                              class: "card-img",
-                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                              alt: "Card image cap",
-                              style: {
-                                width: "100%",
-                                height: "100%",
-                                "background-size": "cover",
-                              },
-                            }),
-                          ]),
-                          m("div", { class: "col-md-6" }, [
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "h5",
-                                { class: "card-title" },
-                                "Arroz con Tomate"
-                              ),
-                              m(
-                                "p",
-                                { class: "card-text" },
-                                "Esta es una receta simple de un arroz a la cubana"
-                              ),
+                  userData.map((p) => {
+                    return m(".col-lg-6.menu-item", [
+                      m(
+                        "div",
+                        {
+                          class: "card",
+                          // style: "width: 18rem;",
+                          style: { width: "100%" },
+                        },
+                        [
+                          m("div", { class: "row no-gutters" }, [
+                            m("div", { class: "col-md-6" }, [
+                              m("img", {
+                                class: "card-img",
+                                src: p.foto, 
+                                alt: "Card image cap",
+                                style: {
+                                  width: "100%",
+                                  height: "100%",
+                                  "background-size": "cover",
+                                },
+                              }),
                             ]),
-                            m("ul", { class: "list-group list-group-flush" }, [
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Calorias: ",
-                                m("span.text-muted", "457/kcal")
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Proteina: ",
-                                m("span.text-muted", "457/kcal")
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Carbohidratos:",
-                                m("span.text-muted", "457/kcal")
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Grasas:",
-                                m("span.text-muted", "457/kcal")
-                              ),
-                            ]),
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Modificar"
-                              ),
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Eliminar"
-                              ),
-                            ]),
-                          ]),
-                        ]),
-                      ]
-                    ),
-                  ]),
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m(
-                          "div",
-                          { class: "row no-gutters justify-content-center" },
-                          [
-                            m("div", {
-                              class: "col-md-6 card-img",
-                              style: {
-                                width: "45%",
-                                "background-image":
-                                  "url('../images/arroz.jpg')",
-                                "background-size": "cover",
-                                "background-position": "center",
-                              },
-                            }),
                             m("div", { class: "col-md-6" }, [
                               m("div", { class: "card-body" }, [
                                 m(
                                   "h5",
                                   { class: "card-title" },
-                                  "Arroz con Tomate"
+                                  p.nombre
                                 ),
                                 m(
                                   "p",
                                   { class: "card-text" },
-                                  "Esta es una receta simple de un arroz a la cubana"
+                                  p.descripcion 
                                 ),
                               ]),
-                              m(
-                                "ul",
-                                { class: "list-group list-group-flush" },
-                                [
-                                  m(
-                                    "li",
-                                    { class: "list-group-item" },
-                                    "Calorias: 457/kcal"
-                                  ),
-                                  m(
-                                    "li",
-                                    { class: "list-group-item" },
-                                    "Proteina: 45g/100g"
-                                  ),
-                                  m(
-                                    "li",
-                                    { class: "list-group-item" },
-                                    "Carbohidratos: 60g/100g"
-                                  ),
-                                  m(
-                                    "li",
-                                    { class: "list-group-item" },
-                                    "Grasas: 5g/100g"
-                                  ),
-                                ]
-                              ),
+                              m("ul", { class: "list-group list-group-flush" }, [
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Calorias: ",
+                                  m("span.text-muted", p.calorias + "/kcal")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Proteina: ",
+                                  m("span.text-muted", p.proteinas + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Carbohidratos:",
+                                  m("span.text-muted", p.carbohidratos + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Grasas:",
+                                  m("span.text-muted", p.grasas + "g/100g")
+                                ),
+                              ]),
                               m("div", { class: "card-body" }, [
                                 m(
                                   "a",
@@ -1929,337 +2274,285 @@ function SectionPlatos() {
                                 ),
                               ]),
                             ]),
-                          ]
-                        ),
-                      ]
-                    ),
-                  ]),
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m("div", { class: "row no-gutters" }, [
-                          m("div", { class: "col-md-6" }, [
-                            m("img", {
-                              class: "card-img",
-                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                              alt: "Card image cap",
-                              style: {
-                                width: "100%",
-                                height: "100%",
-                              },
-                            }),
                           ]),
-                          m("div", { class: "col-md-6" }, [
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "h5",
-                                { class: "card-title" },
-                                "Arroz con Tomate"
-                              ),
-                              m(
-                                "p",
-                                { class: "card-text" },
-                                "Esta es una receta simple de un arroz a la cubana"
-                              ),
-                            ]),
-                            m("ul", { class: "list-group list-group-flush" }, [
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Calorias: 457/kcal"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Proteina: 45g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Carbohidratos: 60g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Grasas: 5g/100g"
-                              ),
-                            ]),
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Modificar"
-                              ),
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Eliminar"
-                              ),
-                            ]),
-                          ]),
-                        ]),
-                      ]
-                    ),
-                  ]),
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m("div", { class: "row no-gutters" }, [
-                          m("div", { class: "col-md-6" }, [
-                            m("img", {
-                              class: "card-img",
-                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                              alt: "Card image cap",
-                              style: {
-                                width: "100%",
-                                height: "100%",
-                              },
-                            }),
-                          ]),
-                          m("div", { class: "col-md-6" }, [
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "h5",
-                                { class: "card-title" },
-                                "Arroz con Tomate"
-                              ),
-                              m(
-                                "p",
-                                { class: "card-text" },
-                                "Esta es una receta simple de un arroz a la cubana"
-                              ),
-                            ]),
-                            m("ul", { class: "list-group list-group-flush" }, [
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Calorias: 457/kcal"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Proteina: 45g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Carbohidratos: 60g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Grasas: 5g/100g"
-                              ),
-                            ]),
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Modificar"
-                              ),
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Eliminar"
-                              ),
-                            ]),
-                          ]),
-                        ]),
-                      ]
-                    ),
-                  ]),
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m("div", { class: "row no-gutters" }, [
-                          m("div", { class: "col-md-6" }, [
-                            m("img", {
-                              class: "card-img",
-                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                              alt: "Card image cap",
-                              style: {
-                                width: "100%",
-                                height: "100%",
-                              },
-                            }),
-                          ]),
-                          m("div", { class: "col-md-6" }, [
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "h5",
-                                { class: "card-title" },
-                                "Arroz con Tomate"
-                              ),
-                              m(
-                                "p",
-                                { class: "card-text" },
-                                "Esta es una receta simple de un arroz a la cubana"
-                              ),
-                            ]),
-                            m("ul", { class: "list-group list-group-flush" }, [
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Calorias: 457/kcal"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Proteina: 45g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Carbohidratos: 60g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Grasas: 5g/100g"
-                              ),
-                            ]),
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Modificar"
-                              ),
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Eliminar"
-                              ),
-                            ]),
-                          ]),
-                        ]),
-                      ]
-                    ),
-                  ]),
-                  m(".col-lg-6.menu-item", [
-                    m(
-                      "div",
-                      {
-                        class: "card",
-                        // style: "width: 18rem;",
-                        style: { width: "100%" },
-                      },
-                      [
-                        m("div", { class: "row no-gutters" }, [
-                          m("div", { class: "col-md-6" }, [
-                            m("img", {
-                              class: "card-img",
-                              src: "../images/arroz.jpg", // Aquí inserta la ruta de la imagen
-                              alt: "Card image cap",
-                              style: {
-                                width: "100%",
-                                height: "100%",
-                              },
-                            }),
-                          ]),
-                          m("div", { class: "col-md-6" }, [
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "h5",
-                                { class: "card-title" },
-                                "Arroz con Tomate"
-                              ),
-                              m(
-                                "p",
-                                { class: "card-text" },
-                                "Esta es una receta simple de un arroz a la cubana"
-                              ),
-                            ]),
-                            m("ul", { class: "list-group list-group-flush" }, [
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Calorias: 457/kcal"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Proteina: 45g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Carbohidratos: 60g/100g"
-                              ),
-                              m(
-                                "li",
-                                { class: "list-group-item" },
-                                "Grasas: 5g/100g"
-                              ),
-                            ]),
-                            m("div", { class: "card-body" }, [
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Modificar"
-                              ),
-                              m(
-                                "a",
-                                { href: "#", class: "card-link" },
-                                "Eliminar"
-                              ),
-                            ]),
-                          ]),
-                        ]),
-                      ]
-                    ),
-                  ]),
+                        ]
+                      ),
+                    ])
+                  })
                 ]),
               ]),
-              m(".tab-pane.fade#menu-breakfast", [
+              m(".tab-pane.fade#sencillos", [
                 m(".tab-header.text-center", [
                   m("p", "Platos"),
                   m("h3", "Sencillos"),
                 ]),
                 m(".row.gy-5", [
-                  // Add breakfast menu items here
+                  userData.map((p) => {
+                    if(p.complejidad == "Sencillo") { 
+                     return m(".col-lg-6.menu-item", [
+                      m(
+                        "div",
+                        {
+                          class: "card",
+                          // style: "width: 18rem;",
+                          style: { width: "100%" },
+                        },
+                        [
+                          m("div", { class: "row no-gutters" }, [
+                            m("div", { class: "col-md-6" }, [
+                              m("img", {
+                                class: "card-img",
+                                src: p.foto, 
+                                alt: "Card image cap",
+                                style: {
+                                  width: "100%",
+                                  height: "100%",
+                                  "background-size": "cover",
+                                },
+                              }),
+                            ]),
+                            m("div", { class: "col-md-6" }, [
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "h5",
+                                  { class: "card-title" },
+                                  p.nombre
+                                ),
+                                m(
+                                  "p",
+                                  { class: "card-text" },
+                                  p.descripcion 
+                                ),
+                              ]),
+                              m("ul", { class: "list-group list-group-flush" }, [
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Calorias: ",
+                                  m("span.text-muted", p.calorias + "/kcal")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Proteina: ",
+                                  m("span.text-muted", p.proteinas + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Carbohidratos:",
+                                  m("span.text-muted", p.carbohidratos + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Grasas:",
+                                  m("span.text-muted", p.grasas + "g/100g")
+                                ),
+                              ]),
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Modificar"
+                                ),
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Eliminar"
+                                ),
+                              ]),
+                            ]),
+                          ]),
+                        ]
+                      ),
+                    ])}
+                  })
                 ]),
               ]),
-              m(".tab-pane.fade#menu-lunch", [
+              m(".tab-pane.fade#intermedio", [
                 m(".tab-header.text-center", [
                   m("p", "Platos"),
                   m("h3", "Intermedio"),
                 ]),
                 m(".row.gy-5", [
-                  // Add lunch menu items here
+                  userData.map((p) => {
+                    if(p.complejidad == "Intermedio") { 
+                     return m(".col-lg-6.menu-item", [
+                      m(
+                        "div",
+                        {
+                          class: "card",
+                          // style: "width: 18rem;",
+                          style: { width: "100%" },
+                        },
+                        [
+                          m("div", { class: "row no-gutters" }, [
+                            m("div", { class: "col-md-6" }, [
+                              m("img", {
+                                class: "card-img",
+                                src: p.foto, 
+                                alt: "Card image cap",
+                                style: {
+                                  width: "100%",
+                                  height: "100%",
+                                  "background-size": "cover",
+                                },
+                              }),
+                            ]),
+                            m("div", { class: "col-md-6" }, [
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "h5",
+                                  { class: "card-title" },
+                                  p.nombre
+                                ),
+                                m(
+                                  "p",
+                                  { class: "card-text" },
+                                  p.descripcion 
+                                ),
+                              ]),
+                              m("ul", { class: "list-group list-group-flush" }, [
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Calorias: ",
+                                  m("span.text-muted", p.calorias + "/kcal")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Proteina: ",
+                                  m("span.text-muted", p.proteinas + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Carbohidratos:",
+                                  m("span.text-muted", p.carbohidratos + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Grasas:",
+                                  m("span.text-muted", p.grasas + "g/100g")
+                                ),
+                              ]),
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Modificar"
+                                ),
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Eliminar"
+                                ),
+                              ]),
+                            ]),
+                          ]),
+                        ]
+                      ),
+                    ])}
+                  })
                 ]),
               ]),
-              m(".tab-pane.fade#menu-dinner", [
+              m(".tab-pane.fade#dificil", [
                 m(".tab-header.text-center", [
                   m("p", "Platos"),
                   m("h3", "Complejos"),
                 ]),
                 m(".row.gy-5", [
-                  // Add dinner menu items here
+                  userData.map((p) => {
+                    if(p.complejidad == "Difícil") { 
+                     return m(".col-lg-6.menu-item", [
+                      m(
+                        "div",
+                        {
+                          class: "card",
+                          // style: "width: 18rem;",
+                          style: { width: "100%" },
+                        },
+                        [
+                          m("div", { class: "row no-gutters" }, [
+                            m("div", { class: "col-md-6" }, [
+                              m("img", {
+                                class: "card-img",
+                                src: p.foto, 
+                                alt: "Card image cap",
+                                style: {
+                                  width: "100%",
+                                  height: "100%",
+                                  "background-size": "cover",
+                                },
+                              }),
+                            ]),
+                            m("div", { class: "col-md-6" }, [
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "h5",
+                                  { class: "card-title" },
+                                  p.nombre
+                                ),
+                                m(
+                                  "p",
+                                  { class: "card-text" },
+                                  p.descripcion 
+                                ),
+                              ]),
+                              m("ul", { class: "list-group list-group-flush" }, [
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Calorias: ",
+                                  m("span.text-muted", p.calorias + "/kcal")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Proteina: ",
+                                  m("span.text-muted", p.proteinas + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Carbohidratos:",
+                                  m("span.text-muted", p.carbohidratos + "g/100g")
+                                ),
+                                m(
+                                  "li",
+                                  { class: "list-group-item" },
+                                  "Grasas:",
+                                  m("span.text-muted", p.grasas + "g/100g")
+                                ),
+                              ]),
+                              m("div", { class: "card-body" }, [
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Modificar"
+                                ),
+                                m(
+                                  "a",
+                                  { href: "#", class: "card-link" },
+                                  "Eliminar"
+                                ),
+                              ]),
+                            ]),
+                          ]),
+                        ]
+                      ),
+                    ])}
+                  })
                 ]),
               ]),
             ]),
           ]
         ),
-      ]),
-    ],
+      ]);
+    },
   };
   function subHero() {
     return {
@@ -2485,3 +2778,197 @@ function About() {
     };
   }
 }
+
+function InsertarPlato() {
+  var styleInput =
+    "outline: none; margin: 0;border: none;-webkit-box-shadow: none;-moz-box-shadow: none;box-shadow: none;width: 100%;font-size: 14px;font-family: inherit; margin-bottom: 32px; border-bottom: 1px solid #e5e5e5;";
+  return {
+    view: (vnode) => [
+      m(
+        ".page-wrapper.bg-red.p-t-180.p-b-100",
+        {
+          style: "background:#2c6ed5; height:100vh",
+        },
+        [
+          m(".wrapper.wrapper--w960.container", [
+            m(
+              ".card.card-2.col-12.flex-row.d-flex.flex-wrap",
+              {
+                style:
+                  "overflow: hidden; -webkit-border-radius: 3px;-moz-border-radius: 3px;border-radius: 3px;background: #fff;",
+              },
+              [
+                m(".card-heading.col-3", {
+                  style:
+                    "background: url('../images/bg-heading-02.jpg') top left/cover no-repeat; display: table-cell; padding-top: 300px; background-position: left center;",
+                }),
+                m(".card-body.col-9", [
+                  m(
+                    "h2.title",
+                    {
+                      style:
+                        "text-transform: uppercase;font-weight: 700;margin-bottom: 37px;",
+                    },
+                    "Insertar Plato"
+                  ),
+                  m("form[method=POST]", {
+                    onsubmit: (e) => {
+                      let formData = {
+                        name: e.target.name.value,
+                        ingredientes: e.target.ingredientes.value,
+                        foto: e.target.foto.value,
+                        calorias: e.target.calorias.value,
+                        proteinas: e.target.proteinas.value,
+                        carbohidratos: e.target.carbohidratos.value,
+                        grasas: e.target.grasas.value,
+                        descripcion: e.target.descripcion.value,
+                        complejidad: e.target.complejidad.value,
+                        id_usuario: s_id
+                      };
+                      console.log(formData)
+
+                      fetch("../controlador/Platos/insertarPlatoUser.php", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(formData),
+                      })
+                        .then((response) => {
+                          if (!response.ok) {
+                            throw new Error("Error de red: " + response.statusText);
+                          }
+                          return response.json();
+                        })
+                        .then((data) => {
+                          if (data.error) {
+                            throw new Error("Error del servidor: " + data.error);
+                          }
+                          console.log(data);
+                          window.location.href = "#!Platos";
+                          // Manejar la respuesta exitosa, por ejemplo, mostrar un mensaje al usuario
+                        })
+                        .catch((error) => {
+                          console.error('Error:', error.message);
+                          // Mostrar la respuesta completa para depuración
+                          console.log('Error completo:', error);
+                        });
+                        e.preventDefault();
+                    },
+                  }, [
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Nombre del plato",
+                        name: "name",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Ingredientes",
+                        name: "ingredientes",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Imagen",
+                        name: "foto",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Calorias",
+                        name: "calorias",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Proteinas",
+                        name: "proteinas",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Carbohidratos",
+                        name: "carbohidratos",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Grasas",
+                        name: "grasas",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".input-group.col-8", [
+                      m("input.input--style-2", {
+                        type: "text",
+                        placeholder: "Descripcion",
+                        name: "descripcion",
+                        style: styleInput,
+                      }),
+                    ]),
+                    m(".col-12", [
+                      m(".input-group", [
+                        m(".rs-select2.js-select-simple.select--no-search", [
+                          m("select[name=complejidad]", [
+                            m(
+                              "option[disabled=disabled][selected=selected]",
+                              "Complejidad"
+                            ),
+                            m("option", "Sencillo"),
+                            m("option", "Intermedio"),
+                            m("option", "Difícil"),
+                          ]),
+                          m(".select-dropdown"),
+                        ]),
+                      ]),
+                    ]),
+                    m(".p-t-30", [
+                      m(
+                        "button.btn.btn--radius.btn--green",
+                        {
+                          type: "submit",
+                          style: {
+                            "line-height": "40px",
+                            display: "inline-block",
+                            padding: "0 25px",
+                            cursor: "pointer",
+                            color: "#fff",
+                            "-webkit-transition": "all 0.4s ease",
+                            "-o-transition": "all 0.4s ease",
+                            "-moz-transition": "all 0.4s ease",
+                            transition: "all 0.4s ease",
+                            "font-size": "14px",
+                            "font-weight": "700",
+                            "-webkit-border-radius": "3px",
+                            "-moz-border-radius": "3px",
+                            "border-radius": "3px",
+                            background: "#57b846",
+                          },
+                        },
+                        "Enviar"
+                      ),
+                    ]),
+                  ]),
+                ]),
+              ]
+            ),
+          ]),
+        ]
+      ),
+    ],
+  };
+}
+
+

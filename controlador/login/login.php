@@ -16,13 +16,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $bd = new Bd();
     // Verificar las credenciales
     if ($user->buscarUsuario($bd)) {
+        $userData = $user->buscarUsuario($bd);
+        $id_usuario = $userData['id_usuario'];
         // Iniciar sesión y redirigir al usuario a una página de inicio
         if ($username === "admin" && $password === "admin") {
             echo "<script>window.location.href='../../vistas/indexAdmin.html';</script>";
             exit;
         } else {
             $_SESSION['username'] = $username;
-            echo "<script>window.location.href='../../vistas/index.html?username=$username';</script>";
+            echo "<script>window.location.href='../../vistas/index.html?username=$username&id_usuario=$id_usuario';</script>";
             exit;
         }
     } else {

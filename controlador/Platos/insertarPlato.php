@@ -12,9 +12,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $carbohidratos = isset($_POST['carbohidratos']) ? $_POST['carbohidratos'] : '';
     $grasas = isset($_POST['grasas']) ? $_POST['grasas'] : '';
     $descripcion = isset($_POST['descripcion']) ? $_POST['descripcion'] : '';
+    $complejidad = isset($_POST['complejidad']) ? $_POST['complejidad'] : '';
 
     // Crear una instancia de Usuario con los datos recibidos
-    $plato = new Platos($nombre, $ingredientes, $foto, $calorias, $proteinas, $carbohidratos, $grasas, $descripcion);
+    $plato = new Platos($nombre, $ingredientes, $foto, $calorias, $proteinas, $carbohidratos, $grasas, $descripcion, $complejidad);
     $link = new Bd;
     var_dump($plato);
     // Intenta insertar el usuario en la base de datos
@@ -29,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             'carbohidratos' => $carbohidratos,
             'grasas' => $grasas,
             'descripcion' => $descripcion,
+            'complejidad' => $complejidad
         );
         echo json_encode($response);
     } else {

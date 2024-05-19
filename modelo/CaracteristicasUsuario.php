@@ -1,5 +1,6 @@
 <?php
 
+require "BD.php";
 class CaracteristicasUsuario
 {
     private $id_usuario;
@@ -11,12 +12,8 @@ class CaracteristicasUsuario
     private $peso;
     private $edad;
 
-    function __construct($calorias, $proteinas, $carbohidratos, $grasas, $altura, $peso, $edad)
+    function __construct($altura, $peso, $edad)
     {
-        $this->calorias = $calorias;
-        $this->proteinas = $proteinas;
-        $this->carbohidratos = $carbohidratos;
-        $this->grasas = $grasas;
         $this->altura = $altura;
         $this->peso = $peso;
         $this->edad = $edad;
@@ -35,6 +32,19 @@ class CaracteristicasUsuario
         }
     }
 
+    static function getAllID($link, $id_usuario)
+    {
+        try {
+            $consulta = "SELECT * FROM CaracteristicasUsuarios WHERE id_usuario='$id_usuario'";
+            $result = $link->prepare($consulta);
+            // $result->bindParam(':id_usuario', $id_usuario);
+            $result->execute();
+            return $result;
+        } catch (PDOException $e) {
+            $dato = "¡Error!: " . $e->getMessage() . "<br/>";
+            die();
+        }
+    }
     static function buscar($link, $id_usuario)
     {
         try {
@@ -70,25 +80,20 @@ class CaracteristicasUsuario
         }
     }
 
-    function modificar($link)
+    function modificar($link,$id_usuario)
     {
         try {
-            $consulta = "UPDATE CaracteristicasUsuarios SET calorias = :calorias, proteinas = :proteinas, 
-                         carbohidratos = :carbohidratos, grasas = :grasas, altura = :altura, peso = :peso, 
-                         edad = :edad WHERE id_usuario = :id_usuario";
-            $result = $link->prepare($consulta);
-            $result->bindParam(':calorias', $this->calorias, PDO::PARAM_INT);
-            $result->bindParam(':proteinas', $this->proteinas, PDO::PARAM_INT);
-            $result->bindParam(':carbohidratos', $this->carbohidratos, PDO::PARAM_INT);
-            $result->bindParam(':grasas', $this->grasas, PDO::PARAM_INT);
-            $result->bindParam(':altura', $this->altura, PDO::PARAM_INT);
-            $result->bindParam(':peso', $this->peso, PDO::PARAM_INT);
-            $result->bindParam(':edad', $this->edad, PDO::PARAM_INT);
-            $result->bindParam(':id_usuario', $this->id_usuario, PDO::PARAM_INT);
-            $result->execute();
-            return $result;
+            $consulta = "UPDATE CaracteristicasUsuarios SET altura = :altura, peso = :peso, edad = :edad WHERE id_usuario = '$id_usuario'";
+            $stmnt = $link->link->prepare($consulta);
+            $stmnt->execute([
+                ':altura' => $this->altura,
+                ':peso' => $this->peso,
+                ':edad' => $this->edad,
+            ]);
+
+            return $stmnt;
         } catch (PDOException $e) {
-            echo "¡Error!: " . $e->getMessage() . "<br/>";
+            echo "Error en la actualización: " . $e->getMessage();
             die();
         }
     }
